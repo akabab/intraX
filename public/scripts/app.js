@@ -18,7 +18,7 @@ angular.module('intraX', ["ngRoute"])
 .config(function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
-      template: "<b>start</b>",       // HERE DEFINE ROOT TEMPLATE
+      templateUrl: '/',
       controller: function() { console.log ("root")}
     })
     .when('/123', {

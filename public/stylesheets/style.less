@@ -1,27 +1,44 @@
+// IMPORTS
+@import 'ui/topmenu.less';
+
 // COLOR VARIABLES :
 @bg: #cbcbcb; // Background Light Grey
 @fg: #404040; // Foreground Dark Grey
 @hl: #39c7f3; // Highlight Light Blue
-@fg-dark: darken(@fg, 20%);
-@fg-darker: darken(@fg, 40%);
-@fg-light: lighten(@fg, 20%);
-@fg-lighter: lighten(@fg, 40%);
-@bg-dark: darken(@bg, 20%);
-@bg-darker: darken(@bg, 40%);
-@bg-light: lighten(@bg, 20%);
-@bg-lighter: lighten(@bg, 40%);
-@hl-dark: darken(@hl, 20%);
-@hl-darker: darken(@hl, 40%);
-@hl-light: lighten(@hl, 20%);
-@hl-lighter: lighten(@hl, 40%);
+@fg-dark:    mix(#000, @fg, 30%);
+@fg-darker:  mix(#000, @fg, 60%);
+@fg-light:   mix(#fff, @fg, 30%);
+@fg-lighter: mix(#fff, @fg, 60%);
+@bg-dark:    mix(#000, @bg, 30%);
+@bg-darker:  mix(#000, @bg, 60%);
+@bg-light:   mix(#fff, @bg, 30%);
+@bg-lighter: mix(#fff, @bg, 60%);
+@hl-dark:    mix(#000, @hl, 30%);
+@hl-darker:  mix(#000, @hl, 60%);
+@hl-light:   mix(#fff, @hl, 30%);
+@hl-lighter: mix(#fff, @hl, 60%);
 
 body {
-  background-color: @bg;
+  background-color: white;
   color: @fg;
-  padding: 50px;
+  padding: 0;
+  border: 0;
+  margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+input, button {
+  border: 1px solid @bg;
+  &:focus {
+    border-color: @hl-dark;
+    outline: none;
+  }
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
 a {
-  color: #00B7FF;
+  color: @hl;
 }
