@@ -1,6 +1,11 @@
+//◤◥◣◢◤◥◣◢◤
+//	ANGULAR JS
+//◣◢◤◥◣◢◤◥◣
+
+
 'use strict';
 
-angular.module('intraX', [])
+angular.module('intraX', ["ngRoute"])
 
 //◤◥◣◢◤◥◣◢◤◥◣◢◤◥◣
 //	STARTING CONFIG FILE
@@ -13,13 +18,15 @@ angular.module('intraX', [])
 .config(function ($routeProvider, $locationProvider) {
 	$routeProvider
 		.when('/', {
-			templateUrl: 'index'
+			template: "<b>start</b>",				// HERE DEFINE ROOT TEMPLATE
+			controller: function() { console.log ("root")}
 		})
-		.when('/#/test', {
-			templateUrl: '/template/user'
+		.when('/123', {
+			templateUrl: '/template/user',	// DEFINE PARTICULIAR ROOT
+			controller: function() { console.log ("template")}
 		})
 		.otherwise({
-			redirectTo: '/'
+			redirectTo: '/' // DEFAULT ROUTE
 		});
 	$locationProvider.html5Mode(true);
-});
+})

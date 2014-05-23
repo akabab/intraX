@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 
 // here should be the required route files
 var users = require('./routes/users');
+var redirect = require('./routes/redirect');
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('*', redirect)
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
