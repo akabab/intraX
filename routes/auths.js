@@ -6,11 +6,12 @@ router.get('/', function (req, res) {
   res.render('auths', { title: 'authentification' });
 });
 
-router.post('/login', function (req, res) {
+router.post('/', function (req, res) {
   if (!req.body.pwd || !req.body.login)
     res.send("empty variable");
   else {
     console.log(req.body.pwd, req.body.login);
+    res.send("GOOD");
   }
 });
 
