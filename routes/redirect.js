@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res) {
-  res.json({data:"hello"});
+router.get('*', function(req, res) {
+  res.render('index', { title: 'My index redirected' });
 });
 
 module.exports = router;
