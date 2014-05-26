@@ -13,7 +13,7 @@
 'use strict';
 
 var express = require('express');
-var model = require('../model/model_auths');
+//var model = require('../model/model_auths');
 var router = express.Router();
 
 var bcrypt = require('bcrypt-nodejs');
