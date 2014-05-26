@@ -2,10 +2,9 @@
 //	ANGULAR JS
 //◣◢◤◥◣◢◤◥◣
 
-
 'use strict';
 
-angular.module('intraX', ["ngRoute"])
+var app = angular.module('intraX', ["ngRoute"]);
 
 //◤◥◣◢◤◥◣◢◤◥◣◢◤◥◣
 //	STARTING CONFIG FILE
@@ -15,7 +14,7 @@ angular.module('intraX', ["ngRoute"])
 //	rooting
 //ᚅᚅᚅᚅᚅᚅ
 
-.config(function ($routeProvider, $locationProvider) {
+app.config(function ($routeProvider, $locationProvider) {
 	$routeProvider
 		.when('/', {
 			template: "<b>start</b>",				// HERE DEFINE ROOT TEMPLATE
@@ -29,4 +28,5 @@ angular.module('intraX', ["ngRoute"])
 			redirectTo: '/' // DEFAULT ROUTE
 		});
 	$locationProvider.html5Mode(true);
-})
+});
+
