@@ -3,7 +3,10 @@ html(ng-app="intraX")
   head
     title= title
     link(rel='stylesheet' href='/stylesheets/style.css')
-  body(ng-view)
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js")
+    script(src="https://code.angularjs.org/1.2.9/angular-route.js")
+    script(src="/scripts/app.js")
+  body
     #topmenu
       include ui/topmenu
     #sidebar
@@ -11,6 +14,4 @@ html(ng-app="intraX")
     #content
       block content
     #scripts
-      script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js")
-      script(src="https://code.angularjs.org/1.2.9/angular-route.js")
-      script(src="/scripts/app.js")
+

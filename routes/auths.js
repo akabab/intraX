@@ -99,10 +99,14 @@ router.get('/', function (req, res) {
 
 router.post('/', function (req, res) {
   if (!req.body.password || !req.body.login) {
+    console.log('here');
     return (res.send(D_ERR_AUTHS_EMPTY));
-  } else {
-    return (ft_model_auths({'login': req.body.login.toLowerCase(),
-                            'password': req.body.password}));
+  }
+  else {
+    console.log(req.body.login, req.body.password);
+    res.end('GOOD');
+/*    return (ft_model_auths({'login': req.body.login.toLowerCase(),
+                            'password': req.body.password}));*/
   }
 });
 
