@@ -1,34 +1,95 @@
 #topmenu {
-  padding-top: 7px;
-  padding-bottom: 8px;
-  background-color: @bg-lighter;
-  border: 1px solid @bg;
-  #search {
-    height: 26px;
-    width: 40%;
-    overflow: hidden;
-    margin: 0;
-    border: 0;
-    input {
-      width: calc(~'100% - 30px');
-      height: 26px!important;
-      margin: 0;
-      padding: 2px 6px;
-      font-size: 16px;
-      height: 100%;
-      box-sizing: border-box;
-      -moz-box-sizing: border-box;
-    }
-    button {
-      background-color: @hl;
-      border-color: @hl-dark;
-      color: white;
-      margin: 0;
-      padding: 0;
-      height: 26px;
-      width: 26px;
-      float: right;
+  width: 100%;
+  display: table-row;
+  a {
+    color:@fg-light;
+    &:hover, &:focus {
+      color: @hl-dark;
     }
   }
-
+  #logo {
+    display: table-cell;
+    background-image: url('/images/ui/42logo.png');
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+  }
+  background-color: @bg-lighter;
+  #topmenu-wrapper {
+    display: table-cell;
+  }
+  #search-wrapper {
+    height: 26px;
+    overflow: hidden;
+    margin: 12px 0;
+    border: 0;
+    float: left;
+    width: calc(~'100% - 100px');
+    #search {
+      width: 60%;
+      float: left;
+      input {
+        width: calc(~'100% - 30px');
+        height: 26px!important;
+        margin: 0;
+        padding: 2px 6px;
+        font-size: 16px;
+        height: 100%;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+      }
+      button {
+        background-color: @hl;
+        border-color: @hl-dark;
+        color: white;
+        margin: 0;
+        padding: 0;
+        height: 26px;
+        width: 26px;
+        float: right;
+        &:focus, &:hover {
+          background-color: @hl-light;
+        }
+        .fa {
+          font-size: 13px;
+        }
+      }
+    }
+    #user-name {
+      max-width: calc(~'40% - 30px');
+      overflow: hidden;
+      text-align: center;
+      vertical-align: middle;
+      float: right;
+      padding-right: 11px;
+      line-height: 26px;
+    }
+  }
+  #icons-wrapper {
+    .fa {
+      float: left;
+      font-size: 22px;
+      margin-top: 15px;
+      margin-right: 11px;
+    }
+    .avatar {
+      float: left;
+      background-image: url('/images/ui/default-avatar.png');
+      background-position: 0 4px;
+      background-repeat: no-repeat;
+      background-size: 100%;
+      display: block;
+      margin-top: 10px;
+      width: 28px;
+      height: 28px;
+      border: 2px solid @fg-light;
+      background-color: @fg-light;
+      &:hover, &:focus {
+        border-color: @hl-dark;
+        background-color: @hl-dark;
+      }
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+    }
+  }
 }
