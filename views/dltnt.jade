@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    title
+  body
+    form(action='/dltnt', method='post')
+      select(name='members', multiple='multiple', required='required')
+        - var member;
+        - var id;
+
+        - for (var count = 0; count < results.length; count++) {
+        -   member = results[count]['login'];
+        -   id = results[count]['_id'];
+        option(value=id)=member
+        - }
+      input(type='submit', value='delete')
