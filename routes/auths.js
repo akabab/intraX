@@ -60,7 +60,10 @@ Object.defineProperty(this, 'D_ERR_AUTHS_TIMEFORCE',
 ** the success to authentication.
 */
 
-//! The work is not finish.
+function initSession(session, account) {
+  session['account'] = account;
+  session['logged'] = true;
+}
 
 function auths_connect(argument, req, res) {
   'use strict';
@@ -70,9 +73,12 @@ function auths_connect(argument, req, res) {
     var account;
 
     while ((account = results.pre_next()))
-      if (bcrypt.compareSync(argument.password, account['password']))
-        res.end('true');
+      if (bcrypt.compareSync(argument.password, account['password'])) {
+        res.render('index', {"account": account});
+        return;
+      }
     res.end('false');
+    return;
   });
   return ;
 }
