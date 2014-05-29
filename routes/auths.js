@@ -1,14 +1,3 @@
-// ************************************************************************** //
-//                                                                            //
-//                                                        :::      ::::::::   //
-//   auths.js                                           :+:      :+:    :+:   //
-//                                                    +:+ +:+         +:+     //
-//   By: adjivas <adjivas@student.42.fr>            +#+  +:+       +#+        //
-//                                                +#+#+#+#+#+   +#+           //
-//   Created: 2014/05/24 20:24:00 by adjivas           #+#    #+#             //
-//   Updated: 2014/05/24 20:24:03 by adjivas          ###   ########.fr       //
-//                                                                            //
-// ************************************************************************** //
 
 'use strict';
 
@@ -21,20 +10,6 @@ var bcrypt = require('bcrypt-nodejs');
 var easymongo = require('easymongo');
 var mongo = new easymongo({dbname: 'db'});
 var accounts = mongo.collection('accounts');
-
-Array.prototype.pst_next = function() {
-  return (this[++this.current]);
-};
-Array.prototype.pst_prev = function() {
-  return (this[--this.current]);
-};
-Array.prototype.pre_next = function() {
-  return (this[this.current++]);
-};
-Array.prototype.pre_prev = function() {
-  return (this[this.current--]);
-};
-Array.prototype.current = 0;
 
 /* 00.
 ** All object is the error message according to context.
@@ -70,23 +45,23 @@ function auths_connect(argument, req, res) {
 
   accounts.find({login: argument['login']}, function(error, results) {
     'use strict';
-    console.log(results)
-    if (!results.length) {
+    var len = results.length;
+    if (!len) {
       res.end('Impossible to find account');
       return;
     }
 
-    var account;
-    while ((account = results.pre_next()))
-      if (bcrypt.compareSync(argument.password, account['password'])) {
-        initSession(req.session, account);
+    for (var i = 0; i < len; i++) {
+      if (bcrypt.compareSync(argument.password, results[i]['password'])) {
+        initSession(req.session, results[i]);
         res.end('true');
         return;
       }
+    };
     res.end('Impossible to match password and account');
     return;
   });
-  return ;
+  return;
 }
 
 /* 02.

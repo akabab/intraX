@@ -1,3 +1,4 @@
+
 var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
@@ -7,9 +8,8 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
-var routes = require('./routes/index');
-
 // here should be the required route files
+var index = require('./routes/index');
 var users = require('./routes/users');
 var redirect = require('./routes/redirect');
 var auths = require('./routes/auths');
@@ -32,7 +32,9 @@ app.use(cookieParser("suce mes bools"));
 app.use(session());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', routes);
+
+//routes
+app.use('/', index);
 app.use('/users', users);
 app.use('/auths', auths);
 app.use('/dltnt', dltnt);
