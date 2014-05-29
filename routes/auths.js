@@ -13,6 +13,7 @@
 'use strict';
 
 var express = require('express');
+//var model = require('../model/model_auths');
 var router = express.Router();
 
 var bcrypt = require('bcrypt-nodejs');
@@ -36,10 +37,11 @@ Array.prototype.pre_prev = function() {
 Array.prototype.current = 0;
 
 /* 00.
-** All variables.
+** All object is the error message according to context.
 */
 
-Object.defineProperty(this, 'D_ERR_AUTHS_EMPTY', {
+Object.defineProperty(this, 'D_ERR_AUTHS_EMPTY',
+{
   value: 'please, enter a authentication.',
   writable: false
 });
@@ -47,7 +49,8 @@ Object.defineProperty(this, 'D_ERR_AUTHS_EMPTY', {
 var D_ERR_AUTHS_FINDNO = 'please, enter a correct login or password.';
 
 // If hack:
-Object.defineProperty(this, 'D_ERR_AUTHS_TIMEFORCE', {
+Object.defineProperty(this, 'D_ERR_AUTHS_TIMEFORCE',
+{
   value: 'sorry, try to see this page more later.',
   writable: false
 });
@@ -79,9 +82,8 @@ function auths_connect(argument, req, res) {
 */
 
 router.get('/', function (req, res) {
-  res.render('auths', {title: 'authentification'});
+  res.render('auths', {title: 'Authentication'});
 });
-
 
 /* 03.
 ** The root loads all after pages -POST-.
@@ -89,36 +91,14 @@ router.get('/', function (req, res) {
 
 //!! Warning, this code is not protected of the brute force.
 
-router.post('/', function (req, res) {
+router.post('/signin', function (req, res) {
   if (!req.body.password || !req.body.login) {
     return (res.end(D_ERR_AUTHS_EMPTY));
-  } else {
+  }
+  else {
     auths_connect({'login': req.body.login.toLowerCase(),
                     'password': req.body.password}, req, res);
   }
 });
-
-/*router.post('/', function (req, res) {
-
-  var now = new Date(Date.now()).getTime();
-
-  if ((req.session.tryCount += 1)
-    && req.session.tryCount <= 3) {
-    req.session.lastTryTimeout = now + 60000;
-    return (res.send(D_ERR_AUTHS_TIMEFORCE));
-  }
-
-  var timeLeft = req.session.lastTryTimeout - now;
-  req.session.lastTryTimeout = now + 60000;
-  if (timeLeft > 1) {
-    req.session.tryCount = 1;
-  }
-  if (!req.body.password || !req.body.login) {
-    return (res.send(D_ERR_AUTHS_EMPTY));
-  } else {
-    auths_connect({'login': req.body.login.toLowerCase(),
-                    'password': req.body.password});
-  }
-});*/
 
 module.exports = router;

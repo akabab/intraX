@@ -9,3 +9,7 @@ Copy the nginx.conf to nginx install directory: `cp nginx.conf ~/.brew/etc/nginx
 **/!\** Change both `/PATH/TO/THE/APP/` with your own application path
 
 Reload nginx `nginx -s reload`
+
+## **/!\ WORK IN PROGRESS** APIARY API
+
+http://docs.intrax.apiary.io/
