@@ -1,8 +1,89 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+// IMPORTS
+@import 'content.less';
+@import 'ui/topmenu.less';
+@import 'ui/sidebar.less';
+
+// COLOR VARIABLES
+@bg: #cbcbcb; // Background Light Grey
+@fg: #404040; // Foreground Dark Grey
+@hl: #39c7f3; // Highlight Light Blue
+@fg-dark:    mix(#000, @fg, 30%);
+@fg-darker:  mix(#000, @fg, 60%);
+@fg-light:   mix(#fff, @fg, 30%);
+@fg-lighter: mix(#fff, @fg, 60%);
+@bg-dark:    mix(#000, @bg, 30%);
+@bg-darker:  mix(#000, @bg, 60%);
+@bg-light:   mix(#fff, @bg, 30%);
+@bg-lighter: mix(#fff, @bg, 60%);
+@hl-dark:    mix(#000, @hl, 30%);
+@hl-darker:  mix(#000, @hl, 60%);
+@hl-light:   mix(#fff, @hl, 30%);
+@hl-lighter: mix(#fff, @hl, 60%);
+
+// FONT AWESOME
+@import 'font/variables.less';
+.@{fa-css-prefix} {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+@font-face {
+  font-family: 'FontAwesome';
+  src: ~"url('@{fa-font-path}/fontawesome-webfont.eot?v=@{fa-version}')";
+  src: ~"url('@{fa-font-path}/fontawesome-webfont.eot?#iefix&v=@{fa-version}') format('embedded-opentype')",
+    ~"url('@{fa-font-path}/fontawesome-webfont.woff?v=@{fa-version}') format('woff')",
+    ~"url('@{fa-font-path}/fontawesome-webfont.ttf?v=@{fa-version}') format('truetype')",
+    ~"url('@{fa-font-path}/fontawesome-webfont.svg?v=@{fa-version}#fontawesomeregular') format('svg')";
+  font-weight: normal;
+  font-style: normal;
 }
 
-a {
-  color: #00B7FF;
+// COMMON STYLING
+html { height: 100%; }
+body {
+  width: 100%;
+  min-width: 780px;
+  height: 100%;
+  background-color: white;
+  color: @fg;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+input, button {
+  border: 1px solid @bg;
+  &:focus {
+    border-color: @hl-dark;
+    outline: none;
+  }
+}
+button::-moz-focus-inner { border: 0; }
+a {
+  color: @hl-dark;
+  text-decoration: none;
+  &:hover {
+    color: @hl;
+  }
+}
+
+.anime {
+  -webkit-transition: all 200ms;
+  -moz-transition: all 200ms;
+  -o-transition: all 200ms;
+  transition: all 200ms;
+  &:hover {
+    outline: none; 
+    -webkit-transition: all 200ms;
+    -moz-transition: all 200ms;
+    -o-transition: all 200ms;
+    transition: all 200ms;
+  }
+}
+.name { text-transform: capitalize; }
+.surname { text-transform: uppercase; }
+.spacer { clear: both; }
