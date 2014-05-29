@@ -73,19 +73,19 @@ app.use(function(err, req, res, next) {
   });
 });
 
-/*var bcrypt = require('bcrypt-nodejs');
-var hash = bcrypt.hashSync("bacon");
-console.log(hash);
+// var bcrypt = require('bcrypt-nodejs');
+// var hash = bcrypt.hashSync("bacon");
+// console.log(hash);
 
-var easymongo = require('easymongo');
-var mongo = new easymongo({dbname: 'db'});
-var accounts = mongo.collection('accounts');
+// var easymongo = require('easymongo');
+// var mongo = new easymongo({dbname: 'db'});
+// var accounts = mongo.collection('accounts');
 
-accounts.save({login: 'cdenis', password: bcrypt.hashSync('cdenis'), dateOfCreation: Date.now(), accessRights: 5});
-accounts.save({login: 'ycribier', password: bcrypt.hashSync('ycribier'), dateOfCreation: Date.now(), accessRights: 5});
-accounts.find({}, function(error, results) {
-  console.log(results);
-});*/
+// accounts.save({login: 'cdenis', password: bcrypt.hashSync('tasenilo'), dateOfCreation: Date.now(), accessRights: 5});
+// accounts.save({login: 'ycribier', password: bcrypt.hashSync('ycribier'), dateOfCreation: Date.now(), accessRights: 5});
+// accounts.find({}, function(error, results) {
+//   console.log(results);
+// });
 
 /* end */
 module.exports = app;
