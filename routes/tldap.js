@@ -1,14 +1,3 @@
-// ************************************************************************** //
-//                                                                            //
-//                                                        :::      ::::::::   //
-//   tldap.js                                           :+:      :+:    :+:   //
-//                                                    +:+ +:+         +:+     //
-//   By: adjivas <adjivas@student.42.fr>            +#+  +:+       +#+        //
-//                                                +#+#+#+#+#+   +#+           //
-//   Created: 2014/05/29 19:23:52 by adjivas           #+#    #+#             //
-//   Updated: 2014/05/29 19:23:54 by adjivas          ###   ########.fr       //
-//                                                                            //
-// ************************************************************************** //
 
 'use strict';
 
@@ -31,7 +20,7 @@ argument['password'], function(err) {
     return ;
   });
   client.search('uid=' + argument['uid'] + ',ou=2013,ou=people,dc=42,dc=fr',
-opts, function(err, res) {
+    opts, function(err, res) {
     res.on('searchEntry', function(entry) {
       console.log(entry.object);
 //      argument['res'].end(entry.object);

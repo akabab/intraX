@@ -1,15 +1,3 @@
-// ************************************************************************** //
-//                                                                            //
-//                                                        :::      ::::::::   //
-//   dltnt.js                                           :+:      :+:    :+:   //
-//                                                    +:+ +:+         +:+     //
-//   By: adjivas <adjivas@student.42.fr>            +#+  +:+       +#+        //
-//                                                +#+#+#+#+#+   +#+           //
-//   Created: 2014/05/24 21:52:28 by adjivas           #+#    #+#             //
-//   Updated: 2014/05/24 21:52:29 by adjivas          ###   ########.fr       //
-//                                                                            //
-// ************************************************************************** //
-
 'use strict';
 
 var express = require('express');
@@ -20,20 +8,6 @@ var bcrypt = require('bcrypt-nodejs');
 var easymongo = require('easymongo');
 var mongo = new easymongo({dbname: 'db'});
 var accounts = mongo.collection('accounts');
-
-Array.prototype.pst_next = function() {
-  return (this[++this.current]);
-};
-Array.prototype.pst_prev = function() {
-  return (this[--this.current]);
-};
-Array.prototype.pre_next = function() {
-  return (this[this.current++]);
-};
-Array.prototype.pre_prev = function() {
-  return (this[this.current--]);
-};
-Array.prototype.current = 0;
 
 /* 00.
 ** All variables.
