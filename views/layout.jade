@@ -3,14 +3,13 @@ html(ng-app="intraX")
   head
     title= title
     link(rel='stylesheet' href='/stylesheets/style.css')
-    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js")
-    script(src="https://code.angularjs.org/1.2.9/angular-route.js")
-    script(src="/scripts/app.js")
   body
+    - if (account) {
     #sidebar.sidewidth
     include ui/sidebar
     #topmenu
       include ui/topmenu
+    - }
     table#view(border="0" cellspacing="0" cellpadding="0")
       tbody
         tr
@@ -19,4 +18,5 @@ html(ng-app="intraX")
             #content
               block content
     #scripts
+      include scripts
 

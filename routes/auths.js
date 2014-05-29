@@ -62,19 +62,28 @@ Object.defineProperty(this, 'D_ERR_AUTHS_TIMEFORCE',
 
 //! The work is not finish.
 
+function initSession(session, account) {
+  session['account'] = account;
+  session['logged'] = true;
+}
+
 function auths_connect(argument, req, res) {
   'use strict';
-
+  console.log(argument);
   accounts.find({login: argument['login']}, function(error, results) {
     'use strict';
     var account;
 
     while ((account = results.pre_next()))
-      if (bcrypt.compareSync(argument.password, account['password']))
-        res.end('true');
+      if (bcrypt.compareSync(argument.password, account['password'])) {
+        initSession(req.session, account);
+        res.redirect('index', {"account": account});
+        return;
+      }
     res.end('false');
+    return;
   });
-  return ;
+  return;
 }
 
 /* 02.

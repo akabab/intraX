@@ -5,12 +5,12 @@
       i.fa.fa-search
   #user-name
     a(href="#")
-      span.name name 
-      span.surname surname 
+      span.name #{account.login} 
+      span.surname #{account.accessRights} 
 #icons-wrapper
-  a.fa.fa-envelope-o(href="/#/inbox" alt="inbox")
-  a.fa.fa-cog(href="/#/settings" alt="settings")
-  a.avatar(href="/#/profile" alt="avatar")
+  a.fa.fa-envelope-o(href="#/inbox" alt="inbox")
+  a.fa.fa-cog(href="#/settings" alt="settings")
+  a.avatar(href="#/profile" alt="avatar")
   .spacer
 #profile
   include profile

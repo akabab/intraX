@@ -51,7 +51,7 @@ function dltnt_putmember(argument)
 
 
   accounts.find({}, function(error, results) {
-  	'use strict';
+    'use strict';
 
     if (argument['method'] == 'get')
       argument['res'].render('dltnt', {results: results});

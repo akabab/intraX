@@ -3,6 +3,7 @@ var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
@@ -26,9 +27,15 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+app.use(cookieParser('tu devinera jamais sale hacker de merde'));
+app.use(session());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+
+/*
+** routes
+ */
+
 app.use('/', routes);
 app.use('/users', users);
 app.use('/auths', auths);
@@ -68,5 +75,21 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// Uncomment this to init dummy accounts
+/*
+var bcrypt = require('bcrypt-nodejs');
+var hash = bcrypt.hashSync("bacon");
+console.log(hash);
+
+var easymongo = require('easymongo');
+var mongo = new easymongo({dbname: 'db'});
+var accounts = mongo.collection('accounts');
+
+accounts.save({login: 'cdenis', password: bcrypt.hashSync('cdenis'), dateOfCreation: Date.now(), accessRights: 5});
+accounts.save({login: 'ycribier', password: bcrypt.hashSync('ycribier'), dateOfCreation: Date.now(), accessRights: 5});
+accounts.find({}, function(error, results) {
+  console.log(results);
+});
+*/
 /* end */
 module.exports = app;
