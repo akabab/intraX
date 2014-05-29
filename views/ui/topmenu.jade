@@ -4,13 +4,13 @@
     button#search-btn
       i.fa.fa-search
   #user-name
-    a(href="#")
-      span.name #{account.login} 
-      span.surname #{account.accessRights} 
+    a(ui-sref="index")
+      span.name name 
+      span.surname surname 
 #icons-wrapper
-  a.fa.fa-envelope-o(href="#/inbox" alt="inbox")
-  a.fa.fa-cog(href="#/settings" alt="settings")
-  a.avatar(href="#/profile" alt="avatar")
+  a.fa.fa-envelope-o(ui-sref="inbox" alt="inbox")
+  a.fa.fa-cog(ui-sref="index" alt="settings")
+  a.avatar(ui-sref="profile" alt="avatar")
   .spacer
 #profile
   include profile

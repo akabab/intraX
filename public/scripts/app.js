@@ -1,19 +1,16 @@
-'use strict';
+var app = angular.module('intraX', ['ui.router']);
 
-var app = angular.module('app', [
-    'ui.router'
-  ])
-  .config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
-    $urlRouterProvider.otherwise('/');
-    $stateProvider
-      .state('index',       {url: '/',            templateUrl: '/template/index',       controller: 'IndexCtrl'})
-      .state('inbox',       {url: '/inbox',       templateUrl: '/template/inbox',       controller: 'InboxCtrl'})
-      .state('module',      {url: '/module',      templateUrl: '/template/module',      controller: 'ModuleCtrl'})
-      .state('calendar',    {url: '/calendar',    templateUrl: '/template/calendar',    controller: 'CalendarCtrl'})
-      .state('conferences', {url: '/conferences', templateUrl: '/template/conferences', controller: 'ConferencesCtrl'})
-      .state('elearning',   {url: '/elearning',   templateUrl: '/template/elearning',   controller: 'ElearningCtrl'})
-      .state('forum',       {url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl'});
-  }]);
+app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
+  $urlRouterProvider.otherwise('/');
+  $stateProvider
+    .state('index', {       url: '/',            templateUrl: '/template/index',       controller: 'IndexCtrl' })
+    .state('inbox', {       url: '/inbox',       templateUrl: '/template/inbox',       controller: 'InboxCtrl' })
+    .state('module', {      url: '/module',      templateUrl: '/template/module',      controller: 'ModuleCtrl' })
+    .state('calendar', {    url: '/calendar',    templateUrl: '/template/calendar',    controller: 'CalendarCtrl' })
+    .state('conferences', { url: '/conferences', templateUrl: '/template/conferences', controller: 'ConferencesCtrl' })
+    .state('elearning', {   url: '/elearning',   templateUrl: '/template/elearning',   controller: 'ElearningCtrl' })
+    .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' });
+}]);
 
 app.controller('IndexCtrl', ['$scope', function ($scope) {
     $scope.title = "Index";
@@ -34,7 +31,6 @@ app.controller('ModuleCtrl', ['$scope', function ($scope) {
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#module-link')).addClass('current');
   }]);
-
 
 app.controller('CalendarCtrl', ['$scope', function ($scope) {
     $scope.title = "Calendar";
@@ -63,9 +59,7 @@ app.controller('ForumCtrl', ['$scope', function ($scope) {
     angular.element(document.querySelector('#forum-link')).addClass('current');
   }]);
 
-
-
-app.controller('AuthController', ['$scope', '$http', function ($scope, $http) {
+app.controller('AuthCtrl', ['$scope', '$http', function ($scope, $http) {
 
   $scope.getForm = function () {
     console.log($scope.AuthForm);
@@ -93,8 +87,3 @@ app.controller('AuthController', ['$scope', '$http', function ($scope, $http) {
     });
   };
 }]);
-//
-//app.controller('ProfileController', ['$scope', '$http', function ($scope, $http) {
-//  $http.get('/logout');
-//  console.log ("logout");
-//}]);

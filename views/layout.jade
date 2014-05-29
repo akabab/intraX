@@ -3,6 +3,9 @@ html(ng-app="intraX")
   head
     title= title
     link(rel='stylesheet' href='/stylesheets/style.css')
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js")
+    script(type="text/javascript" src="http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js")
+    script(src="/scripts/app.js")
   body
     - if (account) {
     #sidebar.sidewidth
@@ -15,8 +18,5 @@ html(ng-app="intraX")
         tr
           td.sidewidth.fakemenu
           td
-            #content
-              block content
-    #scripts
-      include scripts
-
+            #content(ui-view)
+     #scripts
