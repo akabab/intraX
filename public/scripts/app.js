@@ -20,7 +20,7 @@ app.config(function ($routeProvider, $locationProvider) {
       template: "<b>start</b>",       // HERE DEFINE ROOT TEMPLATE
       controller: function() { console.log ("root"); }
     })
-    .when('/123', {
+    .when('/users', {
       templateUrl: '/template/user',  // DEFINE PARTICULIAR ROOT
       controller: function() { console.log ("template"); }
     })
@@ -51,12 +51,15 @@ app.controller('AuthController', ['$scope', '$http', function ($scope, $http) {
       return ;
     }
 
-    $http.post('/auths', {
+    $http.post('/auths/signin', {
       'login': $scope.login,
       'password': $scope.password
     }).success(function (data, status) {
       $scope.errorMessage = status + ": " + data;
     });
   };
+}]);
+
+app.controller('ProfileController', ['$scope', '$http', function ($scope, $http) {
 
 }]);
