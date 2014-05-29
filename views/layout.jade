@@ -7,12 +7,16 @@ html(ng-app="intraX")
     script(src="https://code.angularjs.org/1.2.9/angular-route.js")
     script(src="/scripts/app.js")
   body
+    #sidebar.sidewidth
+    include ui/sidebar
     #topmenu
       include ui/topmenu
-    #sidebar
-      include ui/sidebar
-    #view
-      #content
-        block content
+    table#view(border="0" cellspacing="0" cellpadding="0")
+      tbody
+        tr
+          td.sidewidth.fakemenu
+          td
+            #content
+              block content
     #scripts
 
