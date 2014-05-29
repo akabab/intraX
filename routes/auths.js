@@ -87,7 +87,7 @@ function  ft_model_auths(argument) {
 */
 
 router.get('/', function (req, res) {
-  res.render('auths', {title: 'authentification'});
+  res.render('auths', {title: 'Authentication'});
 });
 
 
@@ -97,7 +97,7 @@ router.get('/', function (req, res) {
 
 //!! Warning, this code is not protected with the brute force.
 
-router.post('/', function (req, res) {
+router.post('/signin', function (req, res) {
   if (!req.body.password || !req.body.login) {
     console.log('here');
     return (res.send(D_ERR_AUTHS_EMPTY));
