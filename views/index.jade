@@ -1,1 +1,13 @@
 extends layout
+
+block content
+  #sidebar.sidewidth
+  include ui/sidebar
+  #topmenu
+    include ui/topmenu
+  table#view(border="0" cellspacing="0" cellpadding="0")
+    tbody
+      tr
+        td.sidewidth.fakemenu
+        td
+          #content(ui-view)
