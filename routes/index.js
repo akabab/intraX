@@ -10,7 +10,7 @@ function checkOrInit(session) {
 }
 
 /* GET home page. */
-router.get('/', function(req, res) {
+router.get(['/', '/index'], function (req, res) {
   checkOrInit(req.session);
   if (req.session['logged'] === true)
     res.render('index', { account: req.session['account'] });
@@ -18,8 +18,12 @@ router.get('/', function(req, res) {
     res.render('auths');
 });
 
+router.get('/logout', function (req, res) {
+  req.session = null;
+  res.render('auths');
+})
 
-router.get('/template/:name', function(req, res) {
+router.get('/template/:name', function (req, res) {
   var name = req.params.name;
   res.render('template/' + name);
 });
