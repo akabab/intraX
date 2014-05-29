@@ -1,29 +1,27 @@
 #topmenu {
+  z-index: 1;
+  min-width: 780px;
+  position: fixed;
+  height: 50px;
   width: 100%;
-  display: table-row;
+  background-image: url('/images/ui/42logo.png');
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+  border-bottom: 1px solid @bg;
   a {
     color:@fg-light;
     &:hover, &:focus {
       color: @hl-dark;
     }
   }
-  #logo {
-    display: table-cell;
-    background-image: url('/images/ui/42logo.png');
-    background-repeat: no-repeat;
-    background-position: 5px 5px;
-  }
   background-color: @bg-lighter;
-  #topmenu-wrapper {
-    display: table-cell;
-  }
   #search-wrapper {
     height: 26px;
     overflow: hidden;
-    margin: 12px 0;
+    margin: 12px 0 12px 68px;
     border: 0;
     float: left;
-    width: calc(~'100% - 100px');
+    width: calc(~'100% - 172px');
     #search {
       width: 60%;
       float: left;
