@@ -18,5 +18,9 @@ html(ng-app="intraX")
         tr
           td.sidewidth.fakemenu
           td
+          - if (account) {
             #content(ui-view)
+          - } else {
+            block content
+          - }
      #scripts
