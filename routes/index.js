@@ -15,7 +15,7 @@ router.get('/', function(req, res) {
   if (req.session['logged'] === true)
     res.render('index', { account: req.session['account'] });
   else
-    res.render('index');
+    res.render('auths');
 });
 
 

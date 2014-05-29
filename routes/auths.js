@@ -70,14 +70,20 @@ function auths_connect(argument, req, res) {
 
   accounts.find({login: argument['login']}, function(error, results) {
     'use strict';
-    var account;
+    console.log(results)
+    if (!results.length) {
+      res.end('Impossible to find account');
+      return;
+    }
 
+    var account;
     while ((account = results.pre_next()))
       if (bcrypt.compareSync(argument.password, account['password'])) {
-        res.render('index', {"account": account});
+        initSession(req.session, account);
+        res.end('true');
         return;
       }
-    res.end('false');
+    res.end('Impossible to match password and account');
     return;
   });
   return ;

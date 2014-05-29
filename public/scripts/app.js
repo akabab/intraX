@@ -1,4 +1,4 @@
-var app = angular.module('intraX', ['ui.router']);
+var app = angular.module('intraX', ['ui.router', 'auths']);
 
 app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
   $urlRouterProvider.otherwise('/');
@@ -61,33 +61,4 @@ app.controller('ForumCtrl', ['$scope', function ($scope) {
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#forum-link')).addClass('current');
   }]);
-
-app.controller('AuthCtrl', ['$scope', '$http', function ($scope, $http) {
-
-  $scope.getForm = function () {
-    console.log($scope.AuthForm);
-  };
-
-  var rgxLogin = /^[A-Za-z0-9 ]{6,20}$/;
-  var rgxPassword = /^[A-Za-z0-9!@#$%^&*()_]{6,32}$/;
-
-  $scope.errorMessage = '';
-
-  $scope.signin = function() {
-    var authForm = $scope.AuthForm;
-    $scope.errorMessage = '';
-
-    if (!rgxLogin.test($scope.login) || !rgxPassword.test($scope.password)) {
-      $scope.errorMessage = "Invalid data";
-      return ;
-    }
-
-    $http.post('/auths/signin', {
-      'login': $scope.login,
-      'password': $scope.password
-    }).success(function (data, status) {
-      $scope.errorMessage = status + ": " + data;
-    });
-  };
-}]);
 
