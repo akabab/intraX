@@ -13,3 +13,6 @@ Reload nginx `nginx -s reload`
 ## **/!\ WORK IN PROGRESS** APIARY API
 
 http://docs.intrax.apiary.io/
+
+##Git
+push current branch with `git push` --> `git config --global push.default simple`
