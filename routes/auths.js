@@ -2,9 +2,7 @@
 'use strict';
 
 var express = require('express');
-//var model = require('../model/model_auths');
 var router = express.Router();
-
 var bcrypt = require('bcrypt-nodejs');
 
 var easymongo = require('easymongo');
@@ -24,7 +22,6 @@ router.get('/', function (req, res) {
     "req": req,
     "res": res 
   };
-  tldap_putuser(infos);
 });
 
 module.exports = router;
