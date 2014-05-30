@@ -84,8 +84,9 @@ app.use(function(err, req, res, next) {
 
 // accounts.save({login: 'cdenis', password: bcrypt.hashSync('tasenilo'), dateOfCreation: Date.now(), accessRights: 5});
 // accounts.save({login: 'ycribier', password: bcrypt.hashSync('$wY{KMCI'), dateOfCreation: Date.now(), accessRights: 5});
+// accounts.save({login: 'grebett', password: bcrypt.hashSync('okCPd[ez'), dateOfCreation: Date.now(), accessRights: 5});
 // accounts.find({}, function(error, results) {
-//   console.log(results);
+// console.log(results);
 // });
 
 /* end */
