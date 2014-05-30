@@ -1,4 +1,3 @@
-
 'use strict';
 
 var express = require('express');
@@ -7,113 +6,82 @@ var bcrypt = require('bcrypt-nodejs');
 
 var easymongo = require('easymongo');
 var mongo = new easymongo({dbname: 'db'});
-var accounts = mongo.collection('accounts');
+var accountsDB = mongo.collection('accounts');
 var ldap = require('ldapjs');
-var clients = {};
+var ldapClients = {};
 
-router.get('/', function (req, res) {
-  var uid = 'cdenis';
-  var login = 'adjivas';
-  var password = 'fccjnw';
-  var infos = {
-    "uid": uid,
-    "login": login,
-    "password": password,
-    "req": req,
-    "res": res 
-  };
-});
 
-module.exports = router;
-
-/* 00.
-** All object is the error message according to context.
-*/
-
-var D_ERR_AUTHS_EMPTY = 'please, enter a authentication.';
-var D_ERR_AUTHS_FINDNO = 'please, enter a correct login or password.';
-var D_ERR_AUTHS_TIMEFORCE = 'sorry, try to see this page more later.';
-
-/* 01.
-** The function returns void and runs a action according to
-** the success to authentication.
-*/
 
 function getLdap(account) {
-  if (account && clients.hasOwnProperty(account._id))
-    return (clients[account._id]);
-  var client;
-  client = ldap.createClient({url: 'ldaps://ldap.42.fr:636'});
-  client.bind(account.ldapAccess.login, account.ldapAccess.password, function (err) { if (err) console.log(err); });
-  clients[account._id] = client;
+  if (account && ldapClients.hasOwnProperty(account._id))
+    return (ldapClients[account._id]);
+  var client = ldap.createClient( {url: 'ldaps://ldap.42.fr:636'} );
+  client.bind(account.ldapAccess.dn, account.ldapAccess.password, function (err) {
+    if (err)
+      console.log(err);
+  });
+  ldapClients[account._id] = client;
   return (client);
 }
 
-function initSession(session, account, password, dn) {
-  account['ldapAccess'] = {"login":dn, "password": password};
-  session['account'] = account;
-  session['logged'] = true;
-  return account;
-}
-
-function auths_connect(req, res) {
-  var login = req.body.login.toLowerCase();
-  var password = req.body.password;
-  accounts.find({"login": login}, function(error, results) {
-    var len = results.length;
-    if (!len) {
-      res.end('Impossible to find account');
+function connectToLdap(login, password, session) {
+  var dn = 'uid=' + login + ',ou=2013,ou=people,dc=42,dc=fr';
+  session.account['ldapAccess'] = {"dn": dn, "password": password};
+  var client = getLdap(session.account);
+  var opts = {
+    "attributes": ['uid', 'uidNumber', 'first-name', 'last-name'],
+    "filter":'!(close=non admis)',
+    "scope": 'sub'
+  };
+  client.search(dn, opts, function (err, result) {
+    if (err) {
+      console.log(err);
       return;
     }
-    for (var i = 0; i < len; i++) {
-      if (bcrypt.compareSync(password, results[i]['password'])) {
-        var dn = 'uid=' + login + ',ou=2013,ou=people,dc=42,dc=fr';
-        var client = getLdap(initSession(req.session, results[i], password, dn));
-        var opts = {
-          "attributes": ['uid', 'uidNumber', 'first-name', 'last-name'],
-          "filter":'!(close=non admis)',
-          "scope": 'sub'
-        };
-        client.search(dn, opts, function (err, result) {
-          if (err) { console.log(err); return; }
-          result.on('searchEntry', function(entry) {
-            req.session.account['name'] = entry.object['first-name'];
-            req.session.account['surname'] = entry.object['last-name'];
-            res.end('true');
-          });
-          result.on('searchReference', function(referral) { console.log('referral: ' + referral.uris.join()); });
-          result.on('error', function(err) { console.error('error: ' + err.message); });
-          result.on('end', function(result) { console.log('status: ' + result.status); });
-        });
-        return;
-      }
-    };
-    res.end('Impossible to match password and account');
-    return;
+    result.on('searchEntry', function(entry) {
+      session.account['name'] = entry.object['first-name'];
+      session.account['surname'] = entry.object['last-name'];
+    });
+    result.on('searchReference', function (referral) { console.log('referral: ' + referral.uris.join()); });
+    result.on('error', function (err) { console.error('error: ' + err.message); });
+    result.on('end', function (result) { console.log('status: ' + result.status); });
   });
-  return;
 }
 
-/* 02.
-** The root loads the first page -GET-.
-*/
 
 router.get('/', function (req, res) {
   res.render('auths', {title: 'Authentication'});
 });
 
-/* 03.
-** The root loads all after pages -POST-.
-*/
 
-//!! Warning, this code is not protected of the brute force.
+
+var D_ERR_AUTHS_EMPTY = "Empty informations";
+var D_ERR_AUTHS_FINDNO = "Account doesn't exist";
+var D_ERR_AUTHS_WRONGPWD = "Password doesn't match";
+var D_ERR_AUTHS_TIMEFORCE = "Sorry, try to see this page more later.";
 
 router.post('/signin', function (req, res) {
   if (!req.body.password || !req.body.login) {
     return (res.end(D_ERR_AUTHS_EMPTY));
   }
   else {
-    auths_connect(req, res);
+    var login = req.body.login.toLowerCase();
+    var password = req.body.password;
+    accountsDB.find( {"login": login}, function (err, result) {
+      if (result.length == null)
+        res.json( {err: D_ERR_AUTHS_FINDNO} );
+      for (var i = 0; i < result.length; i++) {
+        var account = result[i];
+        if (bcrypt.compareSync(password, account['password'])) {
+          res.json( {err: null} );
+          req.session['account'] = account;
+          req.session['logged'] = true;
+          //LDAP binding
+          connectToLdap(login, password, req.session);
+        }
+      }
+      res.json( {err: D_ERR_AUTHS_WRONGPWD} );
+    });
   }
 });
 
