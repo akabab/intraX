@@ -5,7 +5,7 @@ angular.module('auths', []).controller('AuthCtrl', ['$scope', '$http', function 
   };
 
   var rgxLogin = /^[A-Za-z0-9 ]{6,20}$/;
-  var rgxPassword = /^[A-Za-z0-9!@#$%^&*(){}_]{6,32}$/;
+  var rgxPassword = /^[A-Za-z0-9!@#$%^&*(){}[]-_<>?]{6,32}$/;
 
   $scope.errorMessage = '';
 
