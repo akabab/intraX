@@ -14,7 +14,6 @@ var users = require('./routes/users');
 var redirect = require('./routes/redirect');
 var auths = require('./routes/auths');
 var dltnt = require('./routes/dltnt');
-var tldap = require('./routes/tldap');
 
 var app = express();
 
@@ -38,7 +37,6 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/auths', auths);
 app.use('/dltnt', dltnt);
-app.use('/tldap', tldap);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -73,6 +71,9 @@ app.use(function(err, req, res, next) {
   });
 });
 
+/*
+ * Set accounts to db
+*/
 // var bcrypt = require('bcrypt-nodejs');
 // var hash = bcrypt.hashSync("bacon");
 // console.log(hash);
@@ -82,7 +83,7 @@ app.use(function(err, req, res, next) {
 // var accounts = mongo.collection('accounts');
 
 // accounts.save({login: 'cdenis', password: bcrypt.hashSync('tasenilo'), dateOfCreation: Date.now(), accessRights: 5});
-// accounts.save({login: 'ycribier', password: bcrypt.hashSync('ycribier'), dateOfCreation: Date.now(), accessRights: 5});
+// accounts.save({login: 'ycribier', password: bcrypt.hashSync('$wY{KMCI'), dateOfCreation: Date.now(), accessRights: 5});
 // accounts.find({}, function(error, results) {
 //   console.log(results);
 // });
