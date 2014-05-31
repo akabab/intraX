@@ -12,6 +12,21 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' });
 }]);
 
+app.controller('SidebarCtrl', ['$scope', function ($scope) {
+  $scope.links = [
+                  {name: 'Inbox', unseen: 5},
+                  {name: 'Forum', unseen: 2},
+                  {name: 'Modules', unseen: 5},
+                  {name: 'Conferences', unseen: 1},
+                  {name: 'Activity', unseen: 0}
+                  ];
+
+  $scope.selectLink = function (index) {
+    $scope.selectedLink = index;
+  }
+
+}]);
+
 app.controller('IndexCtrl', ['$scope', function ($scope) {
     $scope.title = "Index";
 

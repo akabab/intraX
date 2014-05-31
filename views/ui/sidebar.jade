@@ -1,9 +1,14 @@
-#sidebar-menu.sidewidth
-  a(href="#") Inbox
-  a(href="#") Forum
-  a(href="#") Modules
-  a(href="#") Conferences
-  a(href="#") Activity
-  a(href="#")
-  a(href="#")
+#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
+  div.sidebar-link(ng-repeat="link in links" ng-click="selectLink($index)" ng-class="{selected: $index==selectedLink}")
+    table#link-table
+      tr#link
+        td#link-name {{link.name}}
+        td#link-unseen(ng-show="link.unseen") ({{link.unseen}})
+  //- a(href="#") Inbox
+  //- a(href="#") Forum
+  //- a(href="#") Modules
+  //- a(href="#") Conferences
+  //- a(href="#") Activity
+  //- a(href="#")
+  //- a(href="#")
   .spacer
