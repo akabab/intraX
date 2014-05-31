@@ -1,4 +1,4 @@
-var app = angular.module('intraX', ['ui.router']);
+var app = angular.module('intraX', ['ui.router', 'intraX.services']);
 
 app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
   $urlRouterProvider.otherwise('/');
@@ -12,18 +12,21 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' });
 }]);
 
-app.controller('IndexCtrl', ['$scope', function ($scope) {
+app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function ($scope, $rootScope, SessionService) {
     $scope.title = "Index";
 
-    
+    $rootScope.user = angular.fromJson(SessionService.get("user"));
+    console.log($rootScope.user);
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#index-link')).addClass('current');
 }]);
 
-app.controller('InboxCtrl', ['$scope', function ($scope) {
+app.controller('InboxCtrl', ['$scope', 'SessionService', function ($scope, SessionService) {
     $scope.title = "Inbox";
 
     console.log("INBOX");
+
+    $scope.firstName = SessionService.get("firstName");
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#inbox-link')).addClass('current');
 }]);
@@ -62,4 +65,3 @@ app.controller('ForumCtrl', ['$scope', function ($scope) {
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#forum-link')).addClass('current');
 }]);
-

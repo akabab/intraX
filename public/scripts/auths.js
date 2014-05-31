@@ -1,4 +1,4 @@
-angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $http, $window) {
+angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $http, $window, SessionService) {
 
   $scope.getForm = function () {
     console.log($scope.AuthForm);
@@ -23,8 +23,10 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
       'password': $scope.password
     }).success(function (data, status) {
       if (!data.err) {
-        // $rootScope.user.firstName = data.user.firstName;
-        // $rootScope.user.lastName = data.user.lastName;
+        SessionService.set("user", angular.toJson({
+          firstName: data.user.firstName,
+          lastName: data.user.lastName
+        }));
         $window.location = '/';
       }
       else {
@@ -33,5 +35,3 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
     });
   };
 });
-
-
