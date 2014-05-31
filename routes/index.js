@@ -23,6 +23,11 @@ router.get('/logout', function (req, res) {
   res.render('auths');
 })
 
+/*router.get('/userinfo', function (req, res) {
+  res.json( { firstName: req.session.account.firstName,
+              lastName: req.session.account.lastName });
+});*/
+
 router.get('/template/:name', function (req, res) {
   var name = req.params.name;
   res.render('template/' + name);

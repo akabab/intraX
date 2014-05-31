@@ -5,8 +5,8 @@
       i.fa.fa-search
   #user-name
     a(ui-sref="index")
-      span.name name 
-      span.surname surname 
+      span.name {{user.firstName}} 
+      span.surname {{user.lastName}}
 #icons-wrapper
   a.fa.fa-envelope-o(ui-sref="inbox" alt="inbox")
   a.fa.fa-cog(ui-sref="index" alt="settings")
