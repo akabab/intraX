@@ -23,10 +23,10 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
       'password': $scope.password
     }).success(function (data, status) {
       if (!data.err) {
-        SessionService.set("user", angular.toJson({
+        SessionService.set("user", {
           firstName: data.user.firstName,
           lastName: data.user.lastName
-        }));
+        });
         $window.location = '/';
       }
       else {

@@ -15,7 +15,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
 app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function ($scope, $rootScope, SessionService) {
     $scope.title = "Index";
 
-    $rootScope.user = angular.fromJson(SessionService.get("user"));
+    $rootScope.user = SessionService.get("user");
     console.log($rootScope.user);
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#index-link')).addClass('current');
