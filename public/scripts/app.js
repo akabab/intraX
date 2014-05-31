@@ -14,15 +14,20 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
 
 app.controller('SidebarCtrl', ['$scope', function ($scope) {
   $scope.links = [
-                  {name: 'Inbox', unseen: 5},
-                  {name: 'Forum', unseen: 2},
-                  {name: 'Modules', unseen: 5},
-                  {name: 'Conferences', unseen: 1},
-                  {name: 'Activity', unseen: 0}
+                  {name: 'Inbox', unseen: 5, sublinks: [{name: 'Messages', unseen: 2}, {name: 'Tickets', unseen: 0}]},
+                  {name: 'Forum', unseen: 2, sublinks: [{name: 'General', unseen: 2}]},
+                  {name: 'Modules', unseen: 5, sublinks: [{name: 'Algo', unseen: 2}]},
+                  {name: 'Conferences', unseen: 1, sublinks: [{name: 'News', unseen: 2}]},
+                  {name: 'Activity', unseen: 0, sublinks: [{name: 'Past', unseen: 2}]}
                   ];
 
   $scope.selectLink = function (index) {
-    $scope.selectedLink = index;
+      $scope.selectedLink = index;
+      $scope.selectedSublink = -1;
+  }
+
+  $scope.selectSublink = function (index) {
+      $scope.selectedSublink = index;
   }
 
 }]);

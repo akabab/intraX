@@ -1,9 +1,17 @@
-#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
-  div.sidebar-link(ng-repeat="link in links" ng-click="selectLink($index)" ng-class="{selected: $index==selectedLink}")
-    table#link-table
-      tr#link
-        td#link-name {{link.name}}
-        td#link-unseen(ng-show="link.unseen") ({{link.unseen}})
+div#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
+  div#link-family(ng-repeat="link in links")
+    div#link(ng-click="selectLink($index)" ng-class="{selected: $index==selectedLink, unseen: link.unseen}")
+      table
+        tr
+          td {{link.name}}
+          td(ng-show="link.unseen") ({{link.unseen}})
+    div(ng-show="$index==selectedLink")
+      div(ng-repeat="sublink in link.sublinks")
+        div#sublink(ng-click="selectSublink($index)" ng-class="{selected: $index==selectedSublink, unseen: sublink.unseen}")
+          table
+            tr
+              td {{sublink.name}}
+              td(ng-show="sublink.unseen") ({{sublink.unseen}})
   //- a(href="#") Inbox
   //- a(href="#") Forum
   //- a(href="#") Modules
