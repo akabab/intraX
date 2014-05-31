@@ -11,7 +11,6 @@ var ldap = require('ldapjs');
 var ldapClients = {};
 
 
-
 function getLdap(account) {
   if (account && ldapClients.hasOwnProperty(account._id))
     return (ldapClients[account._id]);
@@ -24,10 +23,10 @@ function getLdap(account) {
   return (client);
 }
 
-function connectToLdap(login, password, session) {
+function connectToLdap(login, password, req, res) {
   var dn = 'uid=' + login + ',ou=2013,ou=people,dc=42,dc=fr';
-  session.account['ldapAccess'] = {"dn": dn, "password": password};
-  var client = getLdap(session.account);
+  req.session.account['ldapAccess'] = {"dn": dn, "password": password};
+  var client = getLdap(req.session.account);
   var opts = {
     "attributes": ['uid', 'uidNumber', 'first-name', 'last-name'],
     "filter":'!(close=non admis)',
@@ -38,9 +37,15 @@ function connectToLdap(login, password, session) {
       console.log(err);
       return;
     }
-    result.on('searchEntry', function(entry) {
-      session.account['name'] = entry.object['first-name'];
-      session.account['surname'] = entry.object['last-name'];
+    result.on('searchEntry', function (entry) {
+      //console.log('%j', entry.attributes);
+      //req.session.account['firstName'] = entry.object['first-name'];
+      //req.session.account['lastName'] = entry.object['last-name'];
+      var user = {
+        firstName: entry.object['first-name'],
+        lastName: entry.object['last-name']
+      };
+      res.json( {err: null, user: user} );
     });
     result.on('searchReference', function (referral) { console.log('referral: ' + referral.uris.join()); });
     result.on('error', function (err) { console.error('error: ' + err.message); });
@@ -52,8 +57,6 @@ function connectToLdap(login, password, session) {
 router.get('/', function (req, res) {
   res.render('auths', {title: 'Authentication'});
 });
-
-
 
 var D_ERR_AUTHS_EMPTY = "Empty informations";
 var D_ERR_AUTHS_FINDNO = "Account doesn't exist";
@@ -73,11 +76,14 @@ router.post('/signin', function (req, res) {
       for (var i = 0; i < result.length; i++) {
         var account = result[i];
         if (bcrypt.compareSync(password, account['password'])) {
-          res.json( {err: null} );
           req.session['account'] = account;
           req.session['logged'] = true;
+          //TEST
+          //req.session.account['firstName'] = "John";
+          //req.session.account['lastName']  = "Doe";
           //LDAP binding
-          connectToLdap(login, password, req.session);
+          connectToLdap(login, password, req, res);
+          return;
         }
       }
       res.json( {err: D_ERR_AUTHS_WRONGPWD} );

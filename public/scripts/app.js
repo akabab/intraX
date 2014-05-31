@@ -1,4 +1,4 @@
-var app = angular.module('intraX', ['ui.router', 'auths']);
+var app = angular.module('intraX', ['ui.router']);
 
 app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
   $urlRouterProvider.otherwise('/');
@@ -14,10 +14,11 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
 
 app.controller('IndexCtrl', ['$scope', function ($scope) {
     $scope.title = "Index";
+
+    
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#index-link')).addClass('current');
-  }]);
-
+}]);
 
 app.controller('InboxCtrl', ['$scope', function ($scope) {
     $scope.title = "Inbox";
@@ -25,40 +26,40 @@ app.controller('InboxCtrl', ['$scope', function ($scope) {
     console.log("INBOX");
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#inbox-link')).addClass('current');
-  }]);
+}]);
 
 
 app.controller('ModuleCtrl', ['$scope', function ($scope) {
     $scope.title = "Module";
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#module-link')).addClass('current');
-  }]);
+}]);
 
 
 app.controller('CalendarCtrl', ['$scope', function ($scope) {
     $scope.title = "Calendar";
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#calendar-link')).addClass('current');
-  }]);
+}]);
 
 
 app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#conferences-link')).addClass('current');
-  }]);
+}]);
 
 
 app.controller('ElearningCtrl', ['$scope', function ($scope) {
     $scope.title = "Elearning";
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#elearning-link')).addClass('current');
-  }]);
+}]);
 
 
 app.controller('ForumCtrl', ['$scope', function ($scope) {
     $scope.title = "Forum";
     angular.element(document.querySelector('.current')).removeClass('current');
     angular.element(document.querySelector('#forum-link')).addClass('current');
-  }]);
+}]);
 

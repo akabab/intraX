@@ -1,4 +1,4 @@
-angular.module('auths', []).controller('AuthCtrl', ['$scope', '$http', function ($scope, $http) {
+angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $http, $window) {
 
   $scope.getForm = function () {
     console.log($scope.AuthForm);
@@ -23,12 +23,15 @@ angular.module('auths', []).controller('AuthCtrl', ['$scope', '$http', function 
       'password': $scope.password
     }).success(function (data, status) {
       if (!data.err) {
-        window.location = '/';
+        // $rootScope.user.firstName = data.user.firstName;
+        // $rootScope.user.lastName = data.user.lastName;
+        $window.location = '/';
       }
       else {
         $scope.errorMessage = status + ": " + data.err;
       }
     });
   };
-}]);
+});
+
 
