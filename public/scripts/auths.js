@@ -31,10 +31,10 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
         $scope.isSigned = true;
         $scope.errorMessage = '';
         $scope.message = 'OK !';
-        SessionService.set("user", {
+/*        SessionService.set("user", {
           firstName: data.user.firstName,
           lastName: data.user.lastName
-        });
+        });*/
         $window.location = '/';
       }
       else {

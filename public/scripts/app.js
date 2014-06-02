@@ -42,14 +42,10 @@ app.controller('TopmenuCtrl', ['$scope', function ($scope) {
 
 app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function ($scope, $rootScope, SessionService) {
     $scope.title = "Index";
-
-    $rootScope.user = SessionService.get("user");
 }]);
 
 app.controller('InboxCtrl', ['$scope', 'SessionService', function ($scope, SessionService) {
     $scope.title = "Inbox";
-
-    $scope.firstName = SessionService.get("firstName");
 }]);
 
 
