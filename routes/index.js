@@ -9,11 +9,6 @@ router.get(['/', '/index'], function (req, res) {
     res.redirect('auths');
 });
 
-router.get('/logout', function (req, res) {
-  req.session.destroy();
-  res.redirect('auths');
-})
-
 router.get('/template/:name', function (req, res) {
   var name = req.params.name;
   res.render('template/' + name);

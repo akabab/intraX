@@ -32,7 +32,15 @@ app.use(session());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 //routes
+/*app.all("*", function(req, res, next) {
+  if (req.session && req.session['logged'])
+    res.render('index', { account: req.session['account'] });
+  else
+    res.redirect('auths');
+});*/
+
 app.use('/', index);
 app.use('/users', users);
 app.use('/auths', auths);

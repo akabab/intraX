@@ -4,6 +4,7 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
   var rgxPassword = /^[A-Za-z0-9!@#$%^&*\(\)\{\}\[\]\?]{3,32}$/;
 
   $scope.isRequesting = false;
+  $scope.isSigned = false;
   $scope.errorMessage = '';
   $scope.message = 'Sign in';
 
@@ -25,10 +26,12 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
       'password': $scope.password
     })
     .success(function (data, status) {
-      $scope.isRequesting = false;
+      // $scope.isRequesting = false;
 
-        if (!data.err) {
+      if (!data.err) {
+        $scope.isSigned = true;
         $scope.errorMessage = '';
+        $scope.message = 'OK !';
         SessionService.set("user", {
           firstName: data.user.firstName,
           lastName: data.user.lastName
@@ -39,6 +42,9 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
         $scope.errorMessage = data.err;
         $scope.message = 'Sign in';
       }
+    })
+    .error(function (data, status) {
+      console.log(status + " : " + data);
     });
   };
 });
