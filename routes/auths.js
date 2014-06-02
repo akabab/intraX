@@ -14,15 +14,11 @@ var ldapClients = {};
 function ldapGetClient(account) {
   var client = {};
 
-  console.log("here");
   if (account && ldapClients.hasOwnProperty(account._id)) {
-    console.log("Already exists");
     client = ldapClients[account._id];
   }
   else {
-    console.log("Create client");
     client = ldap.createClient( {url: 'ldaps://ldap.42.fr:636', maxConnections: 2000} );
-    console.log(client);
     ldapClients[account._id] = client;
   }
   return (client);
