@@ -1,4 +1,4 @@
-var app = angular.module('intraX', ['ui.router', 'intraX.services']);
+var app = angular.module('intraX', ['ui.router', 'intraX.services']); // 'ui.bootstrap'
 
 app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
   $urlRouterProvider.otherwise('/');
@@ -30,6 +30,14 @@ app.controller('SidebarCtrl', ['$scope', function ($scope) {
       $scope.selectedSublink = index;
   }
 
+}]);
+
+app.controller('TopmenuCtrl', ['$scope', function ($scope) {
+  $scope.isDropdown = false;
+
+  $scope.dropdown = function () {
+    $scope.isDropdown = !$scope.isDropdown;
+  }
 }]);
 
 app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function ($scope, $rootScope, SessionService) {
