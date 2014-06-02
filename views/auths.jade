@@ -3,11 +3,11 @@ extends layout
 block content
   div#auth-panel(ng-controller="AuthCtrl")
     form(name="AuthForm" novalidate ng-submit="signin()")
-      input(type="text"     name="login"    ng-model="login"    ng-init="login='test'"    placeholder="login..."    ng-minlength="3" ng-maxlength="20" ng-required="true" autofocus)
-      input(type="password" name="password" ng-model="password" ng-init="password='test'" placeholder="password..." ng-minlength="3" ng-maxlength="32" ng-required="true")
+      input(type="text"     name="login"    ng-model="login"     placeholder="login..."    ng-required="true" autofocus)
+      input(type="password" name="password" ng-model="password"  placeholder="password..." ng-required="true")
       div.error(ng-show="errorMessage") {{errorMessage}}
-      button(type='submit'  name="signin") Sign in
-      img#logo-42(ng-src="/images/ui/42logo.png")
+      button(type='submit'  name="signin" ng-disabled="isRequesting" ng-class="{disabled: isRequesting}") {{message}}
+      a#logo-42(href="http://www.42.fr")
       //- button(type='submit'  name="signin"   ng-disabled="AuthForm.$pristine || AuthForm.$invalid") SignIn
       //-toggle(ng-show="AuthForm.login.$dirty && AuthForm.login.$valid && AuthForm.password.$dirty && AuthForm.password.$valid") OK
       //-button(ng-click="getForm()") getForm()
