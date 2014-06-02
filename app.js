@@ -1,4 +1,3 @@
-
 var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
@@ -14,6 +13,7 @@ var users = require('./routes/users');
 var redirect = require('./routes/redirect');
 var auths = require('./routes/auths');
 var dltnt = require('./routes/dltnt');
+var userCategory = require('./routes/category');
 
 var app = express();
 
@@ -27,7 +27,7 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cookieParser("suce mes bools"));
+app.use(cookieParser("cookie"));
 app.use(session());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -37,6 +37,10 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/auths', auths);
 app.use('/dltnt', dltnt);
+app.get('/category', userCategory.get);
+app.post('/category', userCategory.post);
+app.get('/category/:action', userCategory.get);
+app.post('/category/:action', userCategory.post);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
