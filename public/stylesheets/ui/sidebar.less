@@ -21,21 +21,30 @@
   }
 
   .selected {
-    background-color: #39c7f3;
+    background-color: @lb;
     color: white;
-    border-top: 1px solid #288baa;
-    border-bottom: 1px solid #288baa;
+    border-top: 1px solid @db;
+    border-bottom: 1px solid @db;
   }
   
   .unseen {
     font-weight: bold;
   }
+
+  .first {
+    border-top: 0px;
+  }
 }
 
 #link, #sublink {
   padding-left: 10px;
+  cursor: pointer;
 }
 
 #sublink {
   margin-left: 10px;
+}
+
+#sublink.selected {
+    border-left: 1px solid @db;
 }
