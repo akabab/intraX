@@ -29,15 +29,16 @@ function connectToLdap(login, password, req, res) {
   var account = req.session.account;
   account['ldap'] = {"dn": dn, "password": password};
   var client = ldapGetClient(account);
-  console.log("got client");
 
   //BIND
   client.bind(account.ldap.dn, account.ldap.password, function (err) {
     if (err) {
       console.log("ldap bind err: " + err);
       //CONNECT WITHOUT LDAP
+      account['firstName'] = login;
+      account['lastName']  = "[noLdap]";
       req.session['logged'] = true;
-      res.json( {err: null, user: {firstName: login, lastName: "[noLdap]"}} );
+      res.json( {err: null} );
       return;
     }
 
@@ -53,13 +54,11 @@ function connectToLdap(login, password, req, res) {
       }
 
       result.on('searchEntry', function (entry) {
-        var user = {
-          firstName: entry.object['first-name'],
-          lastName: entry.object['last-name']
-        };
+        account['firstName'] = entry.object['first-name'];
+        account['lastName']  = entry.object['last-name'];
         //ABLE TO CONNECT
         req.session['logged'] = true;
-        res.json( {err: null, user: user} );
+        res.json( {err: null} );
       });
 
       result.on('searchReference', function (referral) {

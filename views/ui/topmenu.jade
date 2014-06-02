@@ -6,8 +6,8 @@ div(ng-controller="TopmenuCtrl")
         i.fa.fa-search
     #user-name
       a(ui-sref="index")
-        span.name {{user.firstName}} 
-        span.surname {{user.lastName}}
+        span.firstName #{account.firstName} 
+        span.lastName #{account.lastName}
   #icons-wrapper
     a.fa.fa-envelope-o(ui-sref="inbox" alt="inbox")
     a.fa.fa-cog(ui-sref="index" alt="settings")
