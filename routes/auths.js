@@ -63,19 +63,22 @@ router.get('/', function (req, res) {
 
 var D_ERR_AUTHS_EMPTY = "Empty informations";
 var D_ERR_AUTHS_FINDNO = "Account doesn't exist";
-var D_ERR_AUTHS_WRONGPWD = "Password doesn't match";
+var D_ERR_AUTHS_WRONGPWD = "Invalid password";
 var D_ERR_AUTHS_TIMEFORCE = "Sorry, try to see this page more later.";
 
 router.post('/signin', function (req, res) {
+  console.log(req.body);
   if (!req.body.password || !req.body.login) {
-    return (res.end(D_ERR_AUTHS_EMPTY));
+    return (res.json( {err: D_ERR_AUTHS_EMPTY} ));
   }
   else {
     var login = req.body.login.toLowerCase();
     var password = req.body.password;
     accountsDB.find( {"login": login}, function (err, result) {
-      if (result.length == null)
+      if (!result.length) {
         res.json( {err: D_ERR_AUTHS_FINDNO} );
+        return;
+      }
       for (var i = 0; i < result.length; i++) {
         var account = result[i];
         if (bcrypt.compareSync(password, account['password'])) {
