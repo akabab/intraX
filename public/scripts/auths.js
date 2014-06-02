@@ -26,7 +26,6 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
       'password': $scope.password
     })
     .success(function (data, status) {
-      // $scope.isRequesting = false;
 
       if (!data.err) {
         $scope.isSigned = true;
@@ -39,6 +38,7 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
         $window.location = '/';
       }
       else {
+        $scope.isRequesting = false;
         $scope.errorMessage = data.err;
         $scope.message = 'Sign in';
       }
