@@ -17,7 +17,7 @@ function getLdap(account) {
   var client = ldap.createClient( {url: 'ldaps://ldap.42.fr:636'} );
   client.bind(account.ldapAccess.dn, account.ldapAccess.password, function (err) {
     if (err)
-      console.log(err);
+      console.log("getLdap " + err);
   });
   ldapClients[account._id] = client;
   return (client);
@@ -34,7 +34,7 @@ function connectToLdap(login, password, req, res) {
   };
   client.search(dn, opts, function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("connectToLdap " + err);
       return;
     }
     result.on('searchEntry', function (entry) {
@@ -48,7 +48,10 @@ function connectToLdap(login, password, req, res) {
       res.json( {err: null, user: user} );
     });
     result.on('searchReference', function (referral) { console.log('referral: ' + referral.uris.join()); });
-    result.on('error', function (err) { console.error('error: ' + err.message); });
+    result.on('error', function (err) {
+      console.error('error: ' + err.message);
+      res.json( {err: null, user: {firstName: login, lastName: "[noLdap]"}} );
+    });
     result.on('end', function (result) { console.log('status: ' + result.status); });
   });
 }

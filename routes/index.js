@@ -1,32 +1,18 @@
 var express = require('express');
 var router = express.Router();
 
-function checkOrInit(session) {
-  if (session['init'] === true)
-    return;
-  session['init'] = true;
-  session['lang'] = 'fr';
-  session['logged'] =  false;
-}
-
 /* GET home page. */
 router.get(['/', '/index'], function (req, res) {
-  checkOrInit(req.session);
-  if (req.session['logged'] === true)
+  if (req.session && req.session['logged'])
     res.render('index', { account: req.session['account'] });
   else
-    res.render('auths');
+    res.redirect('auths');
 });
 
 router.get('/logout', function (req, res) {
-  req.session = null;
-  res.render('auths');
+  req.session.destroy();
+  res.redirect('auths');
 })
-
-/*router.get('/userinfo', function (req, res) {
-  res.json( { firstName: req.session.account.firstName,
-              lastName: req.session.account.lastName });
-});*/
 
 router.get('/template/:name', function (req, res) {
   var name = req.params.name;

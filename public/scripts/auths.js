@@ -1,16 +1,11 @@
 angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $http, $window, SessionService) {
 
-  $scope.getForm = function () {
-    console.log($scope.AuthForm);
-  };
-
-  var rgxLogin = /^[A-Za-z0-9 ]{5,20}$/;
-  var rgxPassword = /^[A-Za-z0-9!@#$%^&*\(\)\{\}\[\]\?]{5,32}$/;
+  var rgxLogin = /^[A-Za-z0-9 ]{3,20}$/;
+  var rgxPassword = /^[A-Za-z0-9!@#$%^&*\(\)\{\}\[\]\?]{3,32}$/;
 
   $scope.errorMessage = '';
 
   $scope.signin = function() {
-    var authForm = $scope.AuthForm;
     $scope.errorMessage = '';
 
     if (!rgxLogin.test($scope.login) || !rgxPassword.test($scope.password)) {
@@ -30,7 +25,7 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
         $window.location = '/';
       }
       else {
-        $scope.errorMessage = status + ": " + data.err;
+        $scope.errorMessage = data.err;
       }
     });
   };
