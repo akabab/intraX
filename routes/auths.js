@@ -88,7 +88,6 @@ var D_ERR_AUTHS_WRONGPWD = "Invalid password";
 var D_ERR_AUTHS_TIMEFORCE = "Sorry, try to see this page more later.";
 
 router.post('/signin', function (req, res) {
-  console.log(req.body);
   if (!req.body.password || !req.body.login) {
     res.json( {err: D_ERR_AUTHS_EMPTY} );
     return;
@@ -108,7 +107,6 @@ router.post('/signin', function (req, res) {
             req.session['account'] = account;
           }
           //LDAP binding
-          //res.json( {err: null, user: {firstName: login, lastName: "[noLdap]"}} );
           connectToLdap(login, password, req, res);
           return;
         }
