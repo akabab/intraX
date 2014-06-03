@@ -11,18 +11,19 @@ div(ng-controller="TopmenuCtrl")
   #icons-wrapper
     a.fa.fa-envelope-o(ui-sref="inbox" alt="inbox")
     a.fa.fa-cog(ui-sref="index" alt="settings")
-    button.avatar(ng-click="dropdown()")
+    button.avatar(ng-click="dropdown(); $event.stopPropagation();")
       #dropdown-menu(ng-show="isDropdown")
         ul
           li
             a(href='#') Profile
+              i.fa.fa-user
           li
             a(href='#') Marks
-          li
-            a(href='#') X
+              i.fa.fa-graduation-cap
           .divider
           li
-            a(href='/auths/logout') Logout
+            a(href='/auths/logout')  Logout
+              i.fa.fa-power-off
     .spacer
   #profile
     include profile
