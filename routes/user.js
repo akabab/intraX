@@ -59,7 +59,7 @@ router.get('/:name', function (req, res) {
         res.json('error: ' + err.message);
       });
       result.on('end', function (result) {
-        console.log('status: ' + result);
+        //console.log('status: ' + result.status);
         client.unbind(function (err) {
           console.log("unbind ok");
         });
