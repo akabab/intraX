@@ -1,4 +1,4 @@
-angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $http, $window, SessionService) {
+angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $http, $window, SessionService, $timeout) {
 
   var rgxLogin = /^[A-Za-z0-9 ]{3,20}$/;
   var rgxPassword = /^[A-Za-z0-9!@#$%^&*\(\)\{\}\[\]\?]{3,32}$/;
@@ -10,6 +10,10 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
 
   $scope.signin = function() {
     $scope.errorMessage = '';
+
+    $timeout(function() {
+      $scope.errorMessage = '';
+    }, 2000);
 
     if (!$scope.login || !$scope.password || !rgxLogin.test($scope.login) || !rgxPassword.test($scope.password)) {
       $scope.errorMessage = "Invalid data";

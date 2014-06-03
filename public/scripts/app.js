@@ -15,10 +15,12 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
 
 app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
   name = $stateParams.name;
+
   $http.get('/user/' + name).success(function (data) {
     $scope.user = data;
     $scope.user.birthDate = data.birthDate.substring(6, 8) + '/' + data.birthDate.substring(4, 6) + '/' +data.birthDate.substring(0, 4);
   });
+
 }]);
 
 app.controller('SidebarCtrl', ['$scope', function ($scope) {
