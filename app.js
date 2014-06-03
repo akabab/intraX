@@ -12,8 +12,6 @@ var lessMiddleware = require('less-middleware');
 var index = require('./routes/index');
 var user = require('./routes/user');
 var auths = require('./routes/auths');
-
-var redirect = require('./routes/redirect');
 var dltnt = require('./routes/dltnt');
 
 var app = express();
@@ -35,17 +33,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //routes
-/*app.all("*", function(req, res, next) {
+app.use('/auths', auths);
+
+//Redirect to auth if not authenticed
+app.all("*", function(req, res, next) {
   if (req.session && req.session['logged'])
-    res.render('index', { account: req.session['account'] });
+    next();
   else
     res.redirect('auths');
-});*/
+});
 
 app.use('/', index);
-app.use('/auths', auths);
 app.use('/user', user);
-
 app.use('/dltnt', dltnt);
 
 // catch 404 and forward to error handler

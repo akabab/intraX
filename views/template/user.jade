@@ -1,7 +1,7 @@
-h1 User
+div#user-card
+  img(ng-src="data:image/jpeg;base64," + "{{user.picture}}")
   div Firstname: {{user.firstName}}
   div Lastname: {{user.lastName}}
   div Uid: {{user.uid}}
-  div City: {{user.birthDate}}
   div Phone: {{user.mobilePhone}}
-  img(src="data:image/jpeg;base64," + "{{user.picture}}")
+  div Birth Date: {{user.birthDate}}

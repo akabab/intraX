@@ -11,7 +11,6 @@ var ldap = require('ldapjs');
 
 router.get('/:name', function (req, res) {
   var name = req.params.name;
-  console.log("HERE");
   var account = req.session.account;
 
   var client = ldap.createClient({
@@ -45,7 +44,7 @@ router.get('/:name', function (req, res) {
           birthDate: entry.object['birth-date'],
           firstName: entry.object['first-name'],
           lastName: entry.object['last-name'],
-          mobilePhone: entry.object['mobile-phone'],
+          mobilePhone: entry.object['mobile-phone'].replace(/ /g, ""),
           mail: entry.object['mail'],
           alias: entry.object['alias'],
           picture: entry.raw['picture'].toString("base64")
@@ -60,9 +59,7 @@ router.get('/:name', function (req, res) {
       });
       result.on('end', function (result) {
         //console.log('status: ' + result.status);
-        client.unbind(function (err) {
-          console.log("unbind ok");
-        });
+        client.unbind(function (err) {});
       });
     });
   });
@@ -72,13 +69,5 @@ router.get('/:name', function (req, res) {
 router.post('/:name', function (req, res) {
     //req.params
 });
-
-var user = {
-  name: "John",
-  lastname: "Doe",
-  uid: "41244",
-  city: "Paris",
-  age: 12
-};
 
 module.exports = router;
