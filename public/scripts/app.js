@@ -32,11 +32,19 @@ app.controller('SidebarCtrl', ['$scope', function ($scope) {
 
 }]);
 
-app.controller('TopmenuCtrl', ['$scope', function ($scope) {
+app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
   $scope.isDropdown = false;
 
   $scope.dropdown = function () {
+    $window.onclick = null;
     $scope.isDropdown = !$scope.isDropdown;
+
+    if ($scope.isDropdown) {
+      $window.onclick = function (event) {
+          $scope.isDropdown = false;
+          $scope.$apply();
+      };
+    }
   }
 }]);
 

@@ -9,8 +9,6 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
   $scope.message = 'Sign in';
 
   $scope.signin = function() {
-    // console.log($scope.login, $scope.password);
-
     $scope.errorMessage = '';
 
     if (!$scope.login || !$scope.password || !rgxLogin.test($scope.login) || !rgxPassword.test($scope.password)) {
