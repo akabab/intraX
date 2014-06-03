@@ -10,6 +10,7 @@ router.get(['/', '/index'], function (req, res) {
 });
 
 router.get('/template/:name', function (req, res) {
+  console.log("there");
   var name = req.params.name;
   res.render('template/' + name);
 });

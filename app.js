@@ -10,9 +10,10 @@ var lessMiddleware = require('less-middleware');
 
 // here should be the required route files
 var index = require('./routes/index');
-var users = require('./routes/users');
-var redirect = require('./routes/redirect');
+var user = require('./routes/user');
 var auths = require('./routes/auths');
+
+var redirect = require('./routes/redirect');
 var dltnt = require('./routes/dltnt');
 
 var app = express();
@@ -42,8 +43,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 });*/
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/auths', auths);
+app.use('/user', user);
+
 app.use('/dltnt', dltnt);
 
 // catch 404 and forward to error handler

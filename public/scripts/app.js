@@ -4,12 +4,20 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
   $urlRouterProvider.otherwise('/');
   $stateProvider
     .state('index', {       url: '/',            templateUrl: '/template/index',       controller: 'IndexCtrl' })
+    .state('user', {        url: '/user/:name',  templateUrl: '/template/user',        controller: 'UserCtrl' })
     .state('inbox', {       url: '/inbox',       templateUrl: '/template/inbox',       controller: 'InboxCtrl' })
     .state('module', {      url: '/module',      templateUrl: '/template/module',      controller: 'ModuleCtrl' })
     .state('calendar', {    url: '/calendar',    templateUrl: '/template/calendar',    controller: 'CalendarCtrl' })
     .state('conferences', { url: '/conferences', templateUrl: '/template/conferences', controller: 'ConferencesCtrl' })
     .state('elearning', {   url: '/elearning',   templateUrl: '/template/elearning',   controller: 'ElearningCtrl' })
     .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' });
+}]);
+
+app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
+  name = $stateParams.name;
+  $http.get('/user/' + name).success(function (data) {
+    $scope.user = data;
+  });
 }]);
 
 app.controller('SidebarCtrl', ['$scope', function ($scope) {
@@ -51,6 +59,8 @@ app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
 app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function ($scope, $rootScope, SessionService) {
     $scope.title = "Index";
 }]);
+
+
 
 app.controller('InboxCtrl', ['$scope', 'SessionService', function ($scope, SessionService) {
     $scope.title = "Inbox";
