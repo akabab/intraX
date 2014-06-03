@@ -116,11 +116,5 @@ router.post('/signin', function (req, res) {
   }
 });
 
-router.get('/logout', function (req, res) {
-  // req.session.destroy();
-  req.session['logged'] = false;
-  // client.unbind();
-  res.redirect('/');
-});
 
 module.exports = router;

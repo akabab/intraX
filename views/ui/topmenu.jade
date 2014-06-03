@@ -1,9 +1,10 @@
 div(ng-controller="TopmenuCtrl")
   #search-wrapper
     #search
-      input.text-input(type="text" placeholder="Search...")
-      button#search-btn
-        i.fa.fa-search
+      form(name="SearchForm" novalidate ng-submit="search()")
+        input.text-input(type="text" ng-model="searchValue" placeholder="Search...")
+        button(type="submit")#search-btn
+          i.fa.fa-search
     #user-name
       a(ui-sref="index")
         span.firstName #{account.firstName} 
@@ -22,7 +23,7 @@ div(ng-controller="TopmenuCtrl")
               i.fa.fa-graduation-cap
           .divider
           li
-            a(href='/auths/logout')  Logout
+            a(href='/logout')  Logout
               i.fa.fa-power-off
     .spacer
   #profile

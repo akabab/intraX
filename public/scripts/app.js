@@ -17,6 +17,7 @@ app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope,
   name = $stateParams.name;
   $http.get('/user/' + name).success(function (data) {
     $scope.user = data;
+    $scope.user.birthDate = data.birthDate.substring(6, 8) + '/' + data.birthDate.substring(4, 6) + '/' +data.birthDate.substring(0, 4);
   });
 }]);
 
@@ -53,6 +54,13 @@ app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
           $scope.$apply();
       };
     }
+  }
+
+  $scope.search = function () {
+    if ($scope.searchValue.charAt(0) == '/')
+      $window.location = $scope.searchValue;
+    else
+      $window.location = '/#/' + $scope.searchValue;
   }
 }]);
 
