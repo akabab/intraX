@@ -39,8 +39,10 @@ app.use('/auths', auths);
 app.all("*", function(req, res, next) {
   if (req.session && req.session['logged'])
     next();
-  else
+  else {
+    console.log(req.url);
     res.redirect('auths');
+  }
 });
 
 app.use('/', index);
