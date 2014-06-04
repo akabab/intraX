@@ -10,12 +10,11 @@ function ($scope, $rootScope, SessionService, $http) {
   //dynamic scope variables
   $http({
     method: "get",
-    url: "category",
+    url: "/forum/category",
     headers: {'Content-Type': 'application/json'}
   })
   .success(function (data) {
     $scope.data = data.tree;
-    console.log(data.tree);
   })
   .error(function (data, status, headers, config, statusText) {
     console.log(statusText + " : " + status);
