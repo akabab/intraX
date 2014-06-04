@@ -1,9 +1,15 @@
-#sidebar-menu.sidewidth
-  a(href="#") Inbox
-  a(href="#") Forum
-  a(href="#") Modules
-  a(href="#") Conferences
-  a(href="#") Activity
-  a(href="#")
-  a(href="#")
+div#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
+  div#link-family(ng-repeat="link in links")
+    div#link(ng-click="selectLink($index)" ng-class="{selected: $index==selectedLink, unseen: link.unseen, first: $first}")
+      table
+        tr
+          td {{link.name}}
+          td(ng-show="link.unseen") ({{link.unseen}})
+    div(ng-show="$index==selectedLink")
+      div(ng-repeat="sublink in link.sublinks")
+        div#sublink(ng-click="selectSublink($index)" ng-class="{selected: $index==selectedSublink, unseen: sublink.unseen, first: $first}")
+          table
+            tr
+              td {{sublink.name}}
+              td(ng-show="sublink.unseen") ({{sublink.unseen}})
   .spacer

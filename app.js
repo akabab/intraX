@@ -9,8 +9,7 @@ var lessMiddleware = require('less-middleware');
 
 // here should be the required route files
 var index = require('./routes/index');
-var users = require('./routes/users');
-var redirect = require('./routes/redirect');
+var user = require('./routes/user');
 var auths = require('./routes/auths');
 var dltnt = require('./routes/dltnt');
 var userCategory = require('./routes/category');
@@ -34,10 +33,22 @@ app.use(session());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 //routes
-app.use('/', index);
-app.use('/users', users);
 app.use('/auths', auths);
+
+//Redirect to auth if not authenticed
+app.all("*", function(req, res, next) {
+  if (req.session && req.session['logged'])
+    next();
+  else {
+    console.log(req.url);
+    res.redirect('/auths');
+  }
+});
+
+app.use('/', index);
+app.use('/user', user);
 app.use('/dltnt', dltnt);
 app.get('/category', userCategory.get);
 app.post('/category', userCategory.post);
@@ -96,10 +107,8 @@ app.use(function(err, req, res, next) {
 // var mongo = new easymongo({dbname: 'db'});
 // var accounts = mongo.collection('accounts');
 
+// accounts.save({login: 'test', password: bcrypt.hashSync('test'), dateOfCreation: Date.now(), accessRights: 5});
 // accounts.save({login: 'admin', password: bcrypt.hashSync('admin'), dateOfCreation: Date.now(), accessRights: 5});
-// accounts.save({login: 'cdenis', password: bcrypt.hashSync('tasenilo'), dateOfCreation: Date.now(), accessRights: 5});
-// accounts.save({login: 'ycribier', password: bcrypt.hashSync('$wY{KMCI'), dateOfCreation: Date.now(), accessRights: 5});
-// accounts.save({login: 'grebett', password: bcrypt.hashSync('okCPd[ez'), dateOfCreation: Date.now(), accessRights: 5});
 // accounts.find({}, function(error, results) {
 // console.log(results);
 // });
