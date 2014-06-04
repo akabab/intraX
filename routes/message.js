@@ -1,61 +1,67 @@
 var q = require("q");
 var fs = require("fs");
-var category_get = require('./category').category_get;
+var topic_get = require('./topic').topic_get;
 var easymongo = require("easymongo");
 var mongo = new easymongo({dbname: "db"});
-var category = mongo.collection("category");
+var topic = mongo.collection("topic");
 
-/*
-** The anonyme function returns void and adds or dels a category to
-** category' collection.
+/* http://127.0.0.1:3000/message/
+** The anonyme function returns void.
 */
 
 exports.get = function (req, res) {
-  var tree;
 
-  message_get().then(function(result) {
-    tree = message_tree({'list': result[0], 'root': ''});
-      res.xml('category', {'parents': result, 'tree': tree});
-  });
 }
+
+
+/* http://127.0.0.1:3000/message/
+** The anonyme function returns void and adds, gets or dels a topic to
+** topic' collection.
+*/
 
 exports.post = function (req, res) {
   var idMessageParent = req.body.idMessageParent;
   var idTopic = req.body.idTopic;
+  var idMessage = req.body.idMessage;
   var idAccounts = req.body.idAccounts;
   var contenue = req.body.contenue;
-  var categoryId = req.body.categoryID;
-  var currentId = req.body.currentId;
 
-  if (req.params.action === 'add')
-    if (currentId.length == 24 && categoryId.length == 24)
-      message_add({
-        'idMessageParent': idMessageParent,
-        'idTopic': idTopic,
-        'idAccounts': idAccounts,
-        'contenue': contenue,
-        'categoryId': contenue,
-      });
-  else if (req.params.action === 'del')
-    if (currentId.length == 24 && categoryId.length == 24)
-      message_del({'currentId': currentId, 'categoryId': categoryId});
+  if (idTopic.length == 24) {
+    if (req.params.action === 'add') {
+      if (idAccounts.length == 24 && contenue)
+        if (idMessageParent.length == 0 || idMessageParent.length == 24)
+          message_add({
+            'idTopic': idTopic,
+            'idMessageParent': idMessageParent,
+            'idAccounts': idAccounts,
+            'contenue': contenue
+          });
+    }
+    else if (req.params.action === 'get') {
+        message_get({'idTopic': idTopic}).then(function(result) {
+          res.json('message', (message_tree({'list': result, 'root': ''})));
+        });
+    }
+    else if (req.params.action === 'del') {
+      if (idMessage.length == 24)
+        message_del({'idTopic': idTopic, 'idMessage': idMessage});
+    }
+  }
 }
 
-/* http://127.0.0.1:3000/message/538cada300107c05a8547fa4
-** The function returns all message from (message + idCategory)'s collection
+/* http://127.0.0.1:3000/message/get
+** The function returns all message from (message + idtopic)'s collection
 ** according to the id from topic' collection.
 */
 
-// categoryId: category.id
-// topicId: topic.id
+// idTopic: topic.id
 
 function message_get(argument) {
-  var topicId = argument.topicId;
-  var categoryId = argument.categoryId;
-  var message = mongo.collection(('message' + categoryId));
+  var idTopic = argument.idTopic;
+  var message = mongo.collection(('message' + idTopic));
   var deferred = q.defer();
 
-  message.find({'_idTopic': topicId}, function(error, result) {
+  message.find({}, function(error, result) {
     if (error)
       deferred.reject(error);
     if (result)
@@ -64,10 +70,13 @@ function message_get(argument) {
   return (deferred.promise);
 }
 
-/*
-** The function returns a (message + idCategory)'s tree according to
+/* http://127.0.0.1:3000/message/get
+** The function returns a (message + idtopic)'s tree according to
 ** message's list.
 */
+
+// idTopic: topic.id
+// root: empty
 
 function message_tree(argument) {
   var list = argument.list;
@@ -88,22 +97,25 @@ function message_tree(argument) {
   return (node);
 }
 
-/*
+/* http://127.0.0.1:3000/message/add
 ** The function returns void and saves the new message to
-** (message + idCategory)'s collection.
+** (message + idtopic)'s collection.
 */
+
+// idTopic: topic.id
+// idMessageParent: message.id
+// contenue: message.contenue
+// idAccounts: account.id
 
 function message_add(argument) {
   var idMessageParent = argument.idMessageParent;
   var idTopic = argument.idTopic;
   var idAccounts = argument.idAccounts;
   var contenue = argument.contenue;
-  var categoryId = argument.contenue;
-  var message = mongo.collection(('message' + categoryId));
+  var message = mongo.collection(('message' + idTopic));
   var date = new Date();
   var data = {
     '_idMessage': idMessageParent,
-    '_idTopic': idTopic,
     '_idAccounts': idAccounts,
     'dateOfCreation': date,
     'contenue': contenue
@@ -113,16 +125,20 @@ function message_add(argument) {
   });
 }
 
-/*
+/* http://127.0.0.1:3000/message/del
 ** The function returns void and erases the message's id to
-** category' collection.
+** topic' collection.
 */
 
-function message_del(argument) {
-  var currentId = argument.currentId;
-  var categoryId = argument.contenue;
-  var message = mongo.collection(('message' + categoryId));
+// idTopic: topic.id
+// idMessage: message.id
 
-  message.removeById(currentId, function(error, results) {
+function message_del(argument) {
+  var idMessage = argument.idMessage;
+  var idTopic = argument.idTopic;
+  var message = mongo.collection(('message' + idTopic));
+
+  console.log(('message' + idTopic), idMessage);
+  message.removeById(idMessage, function(error, results) {
   });
 }
