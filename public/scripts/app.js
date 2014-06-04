@@ -3,15 +3,15 @@ var app = angular.module('intraX', ['ui.router', 'intraX.services']); // 'ui.boo
 app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
   $urlRouterProvider.otherwise('/');
   $stateProvider
-    .state('index', {       url: '/',            templateUrl: '/template/index',       controller: 'IndexCtrl' })
-    .state('user', {        url: '/user/:uid',  templateUrl: '/template/user',        controller: 'UserCtrl' })
-    .state('inbox', {       url: '/inbox',       templateUrl: '/template/inbox',       controller: 'InboxCtrl' })
-    .state('module', {      url: '/module',      templateUrl: '/template/module',      controller: 'ModuleCtrl' })
-    .state('calendar', {    url: '/calendar',    templateUrl: '/template/calendar',    controller: 'CalendarCtrl' })
-    .state('conferences', { url: '/conferences', templateUrl: '/template/conferences', controller: 'ConferencesCtrl' })
-    .state('elearning', {   url: '/elearning',   templateUrl: '/template/elearning',   controller: 'ElearningCtrl' })
-    .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' })
-    .state('category', {    url: '/category/:cat/:sub', templateUrl: '/template/category', controller: 'CategoryCtrl' });
+    .state('index', {       url: '/',                   templateUrl: '/template/index',       controller: 'IndexCtrl' })
+    .state('user', {        url: '/user/:uid',          templateUrl: '/template/user',        controller: 'UserCtrl' })
+    .state('inbox', {       url: '/inbox',              templateUrl: '/template/inbox',       controller: 'InboxCtrl' })
+    .state('module', {      url: '/module',             templateUrl: '/template/module',      controller: 'ModuleCtrl' })
+    .state('calendar', {    url: '/calendar',           templateUrl: '/template/calendar',    controller: 'CalendarCtrl' })
+    .state('conferences', { url: '/conferences',        templateUrl: '/template/conferences', controller: 'ConferencesCtrl' })
+    .state('elearning', {   url: '/elearning',          templateUrl: '/template/elearning',   controller: 'ElearningCtrl' })
+    .state('forum', {       url: '/forum',              templateUrl: '/template/forum',       controller: 'ForumCtrl' })
+    .state('category', {    url: '/category/:cat/:sub', templateUrl: '/template/category',    controller: 'CategoryCtrl' });
 }]);
 
 app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
@@ -41,11 +41,8 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
                   {name: 'Conferences', unseen: 1, sublinks: [{name: 'News', unseen: 2}]},
                   {name: 'Activity', unseen: 0, sublinks: [{name: 'Past', unseen: 2}]}
                   ];
-  $http({
-    method: "get",
-    url: "category",
-    headers: {'Content-Type': 'application/json'}
-  })
+
+  $http.get('/forum/category')
   .success(function (data) {
     // here are my modifications
     for (var i in data.tree) {
