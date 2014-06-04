@@ -11,9 +11,10 @@ var category = mongo.collection("category");
 
 exports.get = function (req, res) {
   var tree;
+
   category_get().then(function(result) {
     tree = category_tree({'list': result, 'root': ''});
-      res.render('category', {'parents': result, 'tree': tree});
+    res.json({'parents': result, 'tree': tree});
   });
 };
 
@@ -30,10 +31,10 @@ exports.post = function (req, res) {
   if (req.params.action === 'add' && addName)
     if (addIdParent.length === 0 || addIdParent.length === 24)
       category_add({'parent': addIdParent, 'name': addName});
-  if (req.params.action === 'del' && delIdChild.length === 24)
+  else if (req.params.action === 'del' && delIdChild.length === 24)
     category_del({'id': delIdChild});
   category_get().then(function(parents) {
-    res.render('category', {'parents': parents});
+    res.json({'parents': parents});
   });
 }
 
@@ -50,11 +51,9 @@ function category_tree(argument) {
   for (var count = 0; count < list.length; count += 1)
     if (root == list[count]._idCategory)
       node.push({
-        'parent': {
-           'id': list[count]._id,
-           'name': list[count].name
-         },
-         'child': category_lst({'list': list, 'root': list[count]._id})
+        'id': list[count]._id,
+        'name': list[count].name,
+        'children': category_tree({'list': list, 'root': list[count]._id})
       });
   return (node);
 }
@@ -64,7 +63,7 @@ function category_tree(argument) {
 ** category' collection.
 */
 
-function category_get(argument) {
+var category_get = function (argument) {
   var deferred = q.defer();
 
   category.find(argument, function(error, result) {
@@ -101,3 +100,5 @@ function category_del(argument) {
   category.removeById(id, function(error, results) {
   });
 }
+
+exports.category_get = category_get;
