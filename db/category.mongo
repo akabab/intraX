@@ -1,0 +1,6 @@
+db.category.insert({ "_id" : ObjectId("538c6e2426c46015811691e5"), "_idCategory" : "", "name" : "admin" })
+18:20 db.category.insert({ "_id" : ObjectId("538c6e2926c46015811691e6"), "_idCategory" : "", "name" : "general" })
+18:21 db.category.insert({ "_id" : ObjectId("538c6e3826c46015811691e8"), "_idCategory" : "", "name" : "subject" })
+18:21 db.category.insert({ "_id" : ObjectId("538c72bbb68c5ebb8457b437"), "_idCategory" : "538c6e2426c46015811691e5", "name" : "ban" })
+18:21 db.category.insert({ "_id" : ObjectId("538c72c8b68c5ebb8457b438"), "_idCategory" : "538c6e2426c46015811691e5", "name" : "proposition" })
+18:21 db.category.insert({ "_id" : ObjectId("538c72ceb68c5ebb8457b439"), "_idCategory" : "538c6e3826c46015811691e8", "name" : "libft" })
