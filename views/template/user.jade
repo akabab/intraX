@@ -1,9 +1,20 @@
-div#user-card(ng-if="user.firstName")
-  //-img(ng-src="data:image/jpeg;base64," + "{{user.picture}}")
-  img(ng-src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg")
-  div Firstname: {{user.firstName}}
-  div Lastname: {{user.lastName}}
-  div Uid: {{user.uid}}
-  div Phone: {{user.mobilePhone}}
-  div Birth Date: {{user.birthDate}}
-  div Mail: {{user.mail}}
+#user-panel
+  div#user-card(ng-if="user.found")
+    table
+      tr
+        td
+          img(ng-src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg")
+          //-img(ng-src="data:image/jpeg;base64," + "{{user.picture}}")
+        td
+          h1 {{user.lastName}} {{user.firstName}}
+          .user-info Uid: 
+            span.user-value {{user.uid}}
+          .user-info Phone: 
+            span.user-value {{user.mobilePhone}}
+          .user-info Birth Date: 
+            span.user-value {{user.birthDate}}
+          .user-info Mail: 
+            span.user-value {{user.mail}}
+          button Edit
+  div#user-notfound(ng-if="!user.found")
+    h1 User '{{user.uid}}' not found
