@@ -41,7 +41,7 @@ app.all("*", function(req, res, next) {
     next();
   else {
     console.log(req.url);
-    res.redirect('auths');
+    res.redirect('/auths');
   }
 });
 
