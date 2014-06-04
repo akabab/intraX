@@ -4,7 +4,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
   $urlRouterProvider.otherwise('/');
   $stateProvider
     .state('index', {       url: '/',            templateUrl: '/template/index',       controller: 'IndexCtrl' })
-    .state('user', {        url: '/user/:name',  templateUrl: '/template/user',        controller: 'UserCtrl' })
+    .state('user', {        url: '/user/:uid',  templateUrl: '/template/user',        controller: 'UserCtrl' })
     .state('inbox', {       url: '/inbox',       templateUrl: '/template/inbox',       controller: 'InboxCtrl' })
     .state('module', {      url: '/module',      templateUrl: '/template/module',      controller: 'ModuleCtrl' })
     .state('calendar', {    url: '/calendar',    templateUrl: '/template/calendar',    controller: 'CalendarCtrl' })
@@ -14,11 +14,20 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
 }]);
 
 app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
-  name = $stateParams.name;
+  $scope.user = {};
+  $scope.user.uid = $stateParams.uid;
 
-  $http.get('/user/' + name).success(function (data) {
-    $scope.user = data;
-    $scope.user.birthDate = data.birthDate.substring(6, 8) + '/' + data.birthDate.substring(4, 6) + '/' +data.birthDate.substring(0, 4);
+  $http.get('/user/' + $stateParams.uid).success(function (data) {
+    if (!data.error) {
+      $scope.user = data;
+      $scope.user.birthDate = data.birthDate.substring(6, 8) + '/' + data.birthDate.substring(4, 6) + '/' +data.birthDate.substring(0, 4);
+      $scope.user.mail = data.uid + '@student.42.fr';
+      $scope.user.found = true;
+    }
+    else {
+      $scope.user.found = false;
+      console.log(data);
+    }
   });
 
 }]);
