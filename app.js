@@ -9,7 +9,7 @@ var lessMiddleware = require('less-middleware');
 
 // here should be the required route files
 var index = require('./routes/index');
-var user  = require('./routes/user');
+var user  = require('./routes/user' );
 var auths = require('./routes/auths');
 var dltnt = require('./routes/dltnt');
 var forum = require('./routes/forum');
