@@ -1,7 +1,9 @@
-div#user-card
-  img(ng-src="data:image/jpeg;base64," + "{{user.picture}}")
+div#user-card(ng-if="user.firstName")
+  //-img(ng-src="data:image/jpeg;base64," + "{{user.picture}}")
+  img(ng-src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg")
   div Firstname: {{user.firstName}}
   div Lastname: {{user.lastName}}
   div Uid: {{user.uid}}
   div Phone: {{user.mobilePhone}}
   div Birth Date: {{user.birthDate}}
+  div Mail: {{user.mail}}
