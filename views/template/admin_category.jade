@@ -1,0 +1,20 @@
+p {{welcome}}
+
+p Click to select a category :
+ul
+  li(ng-repeat="item in data")
+    div(ng-click="father($index, item.id)", ng-blur="blured(item.id)", contentEditable="{{(modifyCategory === item.id)}}") {{item.name}} --- {{item.id}}
+    ul(ng-show="fatherIndex === $index")
+      li(ng-repeat="child in item.children")
+        div(ng-click="son($index, child.id)" ng-blur="blured(child.id)", contentEditable="{{modifyCategory === child.id}}") {{child.name}} --- {{child.id}}
+p(ng-show="selectedCategory") You have selected {{selectedCategory}}.
+  br  
+  button(ng-click="delete(selectedCategory)") Delete
+  button(ng-click="modify(selectedCategory)") Modify
+  button(ng-show="modifying", ng-click="valid(modifyCategory)") Valid
+p
+  input(ng-model="name")
+  button(ng-click="add(name)") Add
+
+p {{flash}}
+  button(ng-show="flash", ng-click="clear()") Clear
