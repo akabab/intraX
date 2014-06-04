@@ -1,16 +1,30 @@
-#search-wrapper
-  #search
-    input.text-input(type="text" placeholder="Search...")
-    button#search-btn
-      i.fa.fa-search
-  #user-name
-    a(ui-sref="index")
-      span.name {{user.firstName}} 
-      span.surname {{user.lastName}}
-#icons-wrapper
-  a.fa.fa-envelope-o(ui-sref="inbox" alt="inbox")
-  a.fa.fa-cog(ui-sref="index" alt="settings")
-  a.avatar(ui-sref="profile" alt="avatar")
-  .spacer
-#profile
-  include profile
+div(ng-controller="TopmenuCtrl")
+  #search-wrapper
+    #search
+      form(name="SearchForm" novalidate ng-submit="search()")
+        input.text-input(type="text" ng-model="searchValue" placeholder="Search...")
+        button(type="submit")#search-btn
+          i.fa.fa-search
+    #user-name
+      a(ui-sref="index")
+        span.firstName #{account.firstName} 
+        span.lastName #{account.lastName}
+  #icons-wrapper
+    a.fa.fa-envelope-o(ui-sref="inbox" alt="inbox")
+    a.fa.fa-cog(ui-sref="index" alt="settings")
+    button.avatar(ng-click="dropdown(); $event.stopPropagation();")
+      #dropdown-menu(ng-show="isDropdown")
+        ul
+          li
+            a(href='#') Profile
+              i.fa.fa-user
+          li
+            a(href='#') Marks
+              i.fa.fa-graduation-cap
+          .divider
+          li
+            a(href='/logout')  Logout
+              i.fa.fa-power-off
+    .spacer
+  #profile
+    include profile

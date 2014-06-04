@@ -2,11 +2,15 @@
 @import 'content.less';
 @import 'ui/topmenu.less';
 @import 'ui/sidebar.less';
+@import 'auth.less';
+@import 'user.less';
 
 // COLOR VARIABLES
 @bg: #cbcbcb; // Background Light Grey
 @fg: #404040; // Foreground Dark Grey
 @hl: #39c7f3; // Highlight Light Blue
+@lb: #39c7f3; // Light Blue
+@db: #288baa; // Dark Blue
 @fg-dark:    mix(#000, @fg, 30%);
 @fg-darker:  mix(#000, @fg, 60%);
 @fg-light:   mix(#fff, @fg, 30%);
@@ -47,7 +51,7 @@ html { height: 100%; }
 body {
   width: 100%;
   min-width: 780px;
-  height: 100%;
+  // height: 100%;
   background-color: white;
   color: @fg;
   padding: 0;
