@@ -1,4 +1,4 @@
-p {{welcome}} {{user.firstName}} !
+p {{welcome}}
 p {{speach}}
 ul
   li(ng-repeat="item in data")
@@ -6,3 +6,4 @@ ul
     ul
       li(ng-repeat="sub in item.sub")
         a(ng-href="#/category/{{item.name}}/{{sub.name}}") {{sub.name}}
+p
