@@ -10,8 +10,8 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('calendar', {    url: '/calendar',    templateUrl: '/template/calendar',    controller: 'CalendarCtrl' })
     .state('conferences', { url: '/conferences', templateUrl: '/template/conferences', controller: 'ConferencesCtrl' })
     .state('elearning', {   url: '/elearning',   templateUrl: '/template/elearning',   controller: 'ElearningCtrl' })
-    .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' });
-    //.state('category', {    url: '/category/:cat/:sub', templateUrl: '/template/category', controller: 'CategoryCtrl' });
+    .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' })
+    .state('category', {    url: '/category/:cat/:sub', templateUrl: '/template/category', controller: 'CategoryCtrl' });
 }]);
 
 app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
@@ -33,22 +33,45 @@ app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope,
 
 }]);
 
-app.controller('SidebarCtrl', ['$scope', function ($scope) {
+app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.links = [
                   {name: 'Inbox', unseen: 5, sublinks: [{name: 'Messages', unseen: 2}, {name: 'Tickets', unseen: 0}]},
-                  {name: 'Forum', unseen: 2, sublinks: [{name: 'General', unseen: 2}]},
+                  {name: 'Forum', unseen: 2, sublinks: []},
                   {name: 'Modules', unseen: 5, sublinks: [{name: 'Algo', unseen: 2}]},
                   {name: 'Conferences', unseen: 1, sublinks: [{name: 'News', unseen: 2}]},
                   {name: 'Activity', unseen: 0, sublinks: [{name: 'Past', unseen: 2}]}
                   ];
+  $http({
+    method: "get",
+    url: "category",
+    headers: {'Content-Type': 'application/json'}
+  })
+  .success(function (data) {
+    // here are my modifications
+    for (var i in data.tree) {
+      $scope.links[1].sublinks.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
+    }    
+    console.log(data.tree);
+  })
+  .error(function (data, status, headers, config, statusText) {
+    console.log(statusText + " : " + status);
+    console.log(headers);
+    console.log(data);
+  });
 
   $scope.selectLink = function (index) {
       $scope.selectedLink = index;
       $scope.selectedSublink = -1;
+      $scope.selectedSubsublink = -1;
   }
 
   $scope.selectSublink = function (index) {
       $scope.selectedSublink = index;
+      $scope.selectedSubsublink = -1;
+  }
+  
+  $scope.selectSubsublink = function (index) {
+      $scope.selectedSubsublink = index;
   }
 
 }]);

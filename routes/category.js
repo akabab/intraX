@@ -51,11 +51,9 @@ function category_tree(argument) {
   for (var count = 0; count < list.length; count += 1)
     if (root == list[count]._idCategory)
       node.push({
-        'node': {
-           'id': list[count]._id,
-           'name': list[count].name
-         },
-         'child': category_tree({'list': list, 'root': list[count]._id})
+        'id': list[count]._id,
+        'name': list[count].name,
+        'children': category_tree({'list': list, 'root': list[count]._id})
       });
   return (node);
 }
