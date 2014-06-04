@@ -23,12 +23,12 @@ router.get('/:name', function (req, res) {
       attributes: [
         "uid",
         "uidNumber",
-        "picture",
-        "birth-date",
+        // "picture",
         "first-name",
         "last-name",
-        "mobile-phone",
-        "alias"
+        "birth-date",
+        "mobile-phone"
+        // "alias"
         ],
       filter:"!(close=non admis)",
       scope: 'sub'
@@ -38,11 +38,11 @@ router.get('/:name', function (req, res) {
         var user = {
           uid: entry.object['uid'],
           uidNumber: entry.object['uidNumber'],
-          birthDate: entry.object['birth-date'],
           firstName: entry.object['first-name'],
           lastName: entry.object['last-name'],
-          mobilePhone: entry.object['mobile-phone'].replace(/ /g, ""),
-          mail: entry.object['alias'][2]
+          birthDate: entry.object['birth-date'],
+          mobilePhone: entry.object['mobile-phone'].replace(/ /g, "")
+          // mail: entry.object['alias'][2]
           // alias: entry.object['alias']
           // picture: entry.raw['picture'].toString("base64")
         };

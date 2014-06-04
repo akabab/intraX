@@ -21,9 +21,11 @@ app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope,
     if (!data.error) {
       $scope.user = data;
       $scope.user.birthDate = data.birthDate.substring(6, 8) + '/' + data.birthDate.substring(4, 6) + '/' +data.birthDate.substring(0, 4);
+      $scope.user.mail = data.uid + '@student.42.fr';
+      $scope.user.found = true;
     }
     else {
-      //no such user
+      $scope.user.found = false;
       console.log(data);
     }
   });
