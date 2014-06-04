@@ -7,6 +7,7 @@ div#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
           td(ng-show="link.unseen") ({{link.unseen}})
     div(ng-show="$index==selectedLink")
       div(ng-repeat="sublink in link.sublinks")
+        div.drop
         div#sublink(ng-click="selectSublink($index)" ng-class="{selected: $index==selectedSublink, unseen: sublink.unseen, first: $first}")
           table
             tr

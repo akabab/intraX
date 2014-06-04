@@ -36,7 +36,7 @@
   }
 }
 
-#link, #sublink {
+#link, #sublink, #subsublink {
   padding-left: 10px;
   cursor: pointer;
 }
@@ -45,6 +45,14 @@
   margin-left: 10px;
 }
 
-#sublink.selected {
-    border-left: 1px solid @db;
+#subsublink {
+  margin-left: 20px;
+}
+
+#sublink, #subsublink {
+  border-left: 1px solid @db;
+}
+
+#sublink.selected, #subsublink.selected {
+  border-left: 1px solid @db;
 }
