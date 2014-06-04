@@ -1,23 +1,21 @@
-div#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
-  div#link-family(ng-repeat="link in links")
-    div#link(ng-click="selectLink($index)" ng-class="{selected: $index==selectedLink, unseen: link.unseen, first: $first}")
-      table
-        tr
-          td {{link.name}}
-          td(ng-show="link.unseen") ({{link.unseen}})
-    div(ng-show="$index==selectedLink")
-      div(ng-repeat="sublink in link.sublinks")
-        div.drop
-        div#sublink(ng-click="selectSublink($index)" ng-class="{selected: $index==selectedSublink, unseen: sublink.unseen, first: $first}")
-          table
-            tr
-              td {{sublink.name}}
-              td(ng-show="sublink.unseen") ({{sublink.unseen}})
-        div(ng-show="$index==selectedSublink")
-          div(ng-repeat="subsublink in sublink.children")
-            div#subsublink(ng-click="selectSubsublink($index)" ng-class="{selected: $index==selectedSubsublink, unseen: subsublink.unseen, first: $first}")
-              table
-                tr
-                  td {{subsublink.name}}
-                  td(ng-show="subsublink.unseen") ({{subsublink.unseen}})
+#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
+  .link(ng-repeat="link in links")
+    .elem.noselect(id="{{link.name | lowercase}}" ng-click="show = !show" tabindex="{{$index + 2}}")
+      button(disabled)
+        i.fa(ng-class='{open:show, active:link.sublinks.length > 0}')
+      a(ui-sref="{{link.name | lowercase}}" tabindex="-1" ng-click="show = False") {{link.name}}
+        span(ng-show="link.unseen")  ({{link.unseen}})
+    .sublinks(ng-show="show")
+      .sublink(ng-repeat="sublink in link.sublinks")
+        .elem.noselect(id="{{link.name | lowercase}}" ng-class="sublink.id === currentViewId" ng-click="subshow = !subshow")
+          button(disabled)
+            i.fa(ng-class='{open:subshow, active:sublink.children.length > 0}')
+          a(ui-sref="{{link.name + '/' + sublink.name | lowercase}}" tabindex="-1" ng-click="subshow = False") {{sublink.name}}
+            span(ng-show="sublink.unseen")  ({{sublink.unseen}})
+        .childlinks(ng-show="subshow")
+          .elem.noselect(ng-repeat="childlink in sublink.children" ng-class="childlink.id === currentViewId" ng-click="subshow = !subshow")
+            button(disabled)
+              i.fa
+            a(ui-sref="{{link.name + '/' + sublink.name + ':' + childlink.name | lowercase}}" tabindex="-1") {{childlink.name}}
+              span(ng-show="childlink.unseen")  ({{childlink.unseen}})
   .spacer
