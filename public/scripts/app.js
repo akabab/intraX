@@ -10,8 +10,8 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('calendar', {    url: '/calendar',    templateUrl: '/template/calendar',    controller: 'CalendarCtrl' })
     .state('conferences', { url: '/conferences', templateUrl: '/template/conferences', controller: 'ConferencesCtrl' })
     .state('elearning', {   url: '/elearning',   templateUrl: '/template/elearning',   controller: 'ElearningCtrl' })
-    .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' })
-    .state('category', {    url: '/category/:cat/:sub', templateUrl: '/template/category', controller: 'CategoryCtrl' });
+    .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' });
+    //.state('category', {    url: '/category/:cat/:sub', templateUrl: '/template/category', controller: 'CategoryCtrl' });
 }]);
 
 app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {

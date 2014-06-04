@@ -8,14 +8,16 @@ function ($scope, $rootScope, SessionService, $http) {
   $scope.speach = "Here are the categories :"
 
   //dynamic scope variables
-  $http.get("/category")
+  $http({
+    method: "get",
+    url: "category",
+    headers: {'Content-Type': 'application/json'}
+  })
   .success(function (data) {
-    $scope.data = data.data;
-    console.log("success");
-    console.log(data);
+    $scope.data = data.tree;
+    console.log(data.tree);
   })
   .error(function (data, status, headers, config, statusText) {
-    console.log("There is an error");
     console.log(statusText + " : " + status);
     console.log(headers);
     console.log(data);
