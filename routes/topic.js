@@ -15,7 +15,6 @@ exports.get = function (req, res) {
     topic_get({'categoryId': req.params.action}).then(function(topics) {
       res.json(topics);
     });
-
 };
 
 exports.post = function (req, res) {

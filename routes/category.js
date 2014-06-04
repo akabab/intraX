@@ -14,7 +14,7 @@ exports.get = function (req, res) {
 
   category_get().then(function(result) {
     tree = category_tree({'list': result, 'root': ''});
-      res.render('category', {'parents': result, 'tree': tree});
+      res.json('category', {'tree': tree});
   });
 };
 

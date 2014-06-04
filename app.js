@@ -14,6 +14,8 @@ var redirect = require('./routes/redirect');
 var auths = require('./routes/auths');
 var dltnt = require('./routes/dltnt');
 var userCategory = require('./routes/category');
+var userTopic = require('./routes/topic');
+var userMessage = require('./routes/message');
 
 var app = express();
 
@@ -39,8 +41,16 @@ app.use('/auths', auths);
 app.use('/dltnt', dltnt);
 app.get('/category', userCategory.get);
 app.post('/category', userCategory.post);
+app.get('/topic', userTopic.get);
+app.post('/topic', userTopic.post);
+app.get('/message', userMessage.get);
+app.post('/message', userMessage.post);
 app.get('/category/:action', userCategory.get);
 app.post('/category/:action', userCategory.post);
+app.get('/topic/:action', userTopic.get);
+app.post('/topic/:action', userTopic.post);
+app.get('/message/:action', userMessage.get);
+app.post('/message/:action', userMessage.post);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
