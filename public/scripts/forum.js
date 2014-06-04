@@ -4,7 +4,7 @@ angular.module('intraX')
 function ($scope, $rootScope, SessionService, $http) {
 
   //static scope variables
-  $scope.welcome = "Welcome to our forum, ";
+  $scope.welcome = "Welcome to our forum !";
   $scope.speach = "Here are the categories :"
 
   //dynamic scope variables
