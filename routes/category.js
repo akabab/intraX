@@ -13,7 +13,7 @@ exports.get = function (req, res) {
   var tree;
   category_get().then(function(result) {
     tree = category_tree({'list': result, 'root': ''});
-      res.render('category', {'parents': result, 'tree': tree});
+    res.json({'parents': result, 'tree': tree});
   });
 };
 
@@ -33,7 +33,7 @@ exports.post = function (req, res) {
   if (req.params.action === 'del' && delIdChild.length === 24)
     category_del({'id': delIdChild});
   category_get().then(function(parents) {
-    res.render('category', {'parents': parents});
+    res.json({'parents': parents});
   });
 }
 
@@ -50,11 +50,11 @@ function category_tree(argument) {
   for (var count = 0; count < list.length; count += 1)
     if (root == list[count]._idCategory)
       node.push({
-        'parent': {
+        'node': {
            'id': list[count]._id,
            'name': list[count].name
          },
-         'child': category_lst({'list': list, 'root': list[count]._id})
+         'child': category_tree({'list': list, 'root': list[count]._id})
       });
   return (node);
 }
