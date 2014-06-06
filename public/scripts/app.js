@@ -57,17 +57,26 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   });
 
   $scope.selectLink = function (index) {
+    if ($scope.selectedLink == index)
+      $scope.selectedLink = -1;
+    else
       $scope.selectedLink = index;
-      $scope.selectedSublink = -1;
-      $scope.selectedSubsublink = -1;
+    $scope.selectedSublink = -1;
+    $scope.selectedSubsublink = -1;
   }
 
   $scope.selectSublink = function (index) {
+    if ($scope.selectedSublink == index)
+      $scope.selectedSublink = -1;
+    else
       $scope.selectedSublink = index;
-      $scope.selectedSubsublink = -1;
+    $scope.selectedSubsublink = -1;
   }
   
   $scope.selectSubsublink = function (index) {
+    if ($scope.selectedSubsublink == index)
+      $scope.selectedSubsublink = -1;
+    else
       $scope.selectedSubsublink = index;
   }
 
