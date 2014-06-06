@@ -1,8 +1,12 @@
 #elearning-container(ng-controller="ElearningCtrl")
   h2 {{video.module}} 
     span {{video.title}}
-  #video-panel
+  #video-panel.panel
     videogular
       //-(vg-width=300 vg-height=300 vg-theme="config.theme.url")
       video.videoPlayer(controls='', preload='metadata')
         source(src="http://ycribier.com/dt/42/elearning42/algo/[algo-1-001]-libft.mp4", type='video/{{video.type}}')
+  #download-link
+    a(href='http://ycribier.com/dt/42/elearning42/algo/[algo-1-001]-libft.mp4' target="_self" download="{{video.file}}")
+      i.fa.fa-cloud-download  download
+

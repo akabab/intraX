@@ -13,12 +13,12 @@ angular.module('intraX')
   $scope.signin = function() {
     $scope.errorMessage = '';
 
-    $timeout(function() {
-      $scope.errorMessage = '';
-    }, 2000);
+
 
     if (!$scope.login || !$scope.password || !rgxLogin.test($scope.login) || !rgxPassword.test($scope.password)) {
+      $timeout(function() { $scope.errorMessage = ''; }, 2000);
       $scope.errorMessage = "Invalid data";
+
       return ;
     }
 
@@ -31,6 +31,8 @@ angular.module('intraX')
     })
     .success(function (data, status) {
 
+      $timeout(function() { $scope.errorMessage = ''; }, 2000);
+
       if (!data.err) {
         $scope.isSigned = true;
         $scope.errorMessage = '';
@@ -42,6 +44,7 @@ angular.module('intraX')
         $scope.errorMessage = data.err;
         $scope.message = 'Sign in';
       }
+
     })
     .error(function (data, status) {
       console.log(status + " : " + data);

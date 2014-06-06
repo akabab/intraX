@@ -5,6 +5,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
   $stateProvider
     .state('index', {         url: '/',                         templateUrl: '/template/index',          controller: 'IndexCtrl' })
     .state('user', {          url: '/user/:uid',                templateUrl: '/template/user',           controller: 'UserCtrl' })
+    .state('ldap', {          url: '/ldap',                     templateUrl: '/template/ldap',           controller: 'LdapCtrl' })
     .state('inbox', {         url: '/inbox',                    templateUrl: '/template/inbox',          controller: 'InboxCtrl' })
     .state('module', {        url: '/module',                   templateUrl: '/template/module',         controller: 'ModuleCtrl' })
     .state('calendar', {      url: '/calendar',                 templateUrl: '/template/calendar',       controller: 'CalendarCtrl' })
@@ -21,6 +22,8 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
                   {name: 'Forum', unseen: 2, sublinks: []},
                   {name: 'Modules', unseen: 5, sublinks: [{name: 'Algo', unseen: 2}]},
                   {name: 'Conferences', unseen: 1, sublinks: [{name: 'News', unseen: 2}]},
+                  {name: 'Ldap', unseen: 0},
+                  {name: 'Elearning', unseen: 1, sublinks: [{name: 'Sem0', unseen: 2}, {name: 'Sem1', unseen: 2}, {name: 'Sem2', unseen: 2}]},
                   {name: 'Activity', unseen: 0, sublinks: [{name: 'Past', unseen: 2}]}
                   ];
 

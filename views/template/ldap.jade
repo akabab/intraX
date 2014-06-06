@@ -1,0 +1,19 @@
+h1 LDAP
+#ldap-panel.panel
+  label Search:
+  input(ng-model="searchValue")
+  table
+    tr
+      th
+      th
+        a(ng-click="predicate='uid'; reverse=!reverse") uid
+      th
+        a(ng-click="predicate='firstName'; reverse=!reverse") firstName
+      th
+        a(ng-click="predicate='lastName'; reverse=!reverse") lastName
+      tr(ng-if="searchValue.length" ng-repeat="user in users | filter: searchValue | orderBy:predicate:reverse | limitTo: 10" ng-click="showUser(user.uid)")
+        td()
+          img(ng-src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg")
+        td {{user.uid}}
+        td {{user.firstName}}
+        td {{user.lastName}}
