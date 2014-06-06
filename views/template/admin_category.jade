@@ -3,10 +3,10 @@ p {{welcome}}
 p Click to select a category :
 ul(style="cursor:pointer")
   li(ng-repeat="item in data")
-    div(ng-click="father($index, item.id)", ng-blur="blured(item.id)", contentEditable="{{(modifyCategory === item.id)}}") {{item.name}} --- {{item.id}}
+    div(ng-dblclick="modify(item.id)", ng-click="father($index, item.id)", ng-blur="blured(item.id)", contentEditable="{{(modifyCategory === item.id)}}") {{item.name}} --- {{item.id}}
     ul(ng-show="fatherIndex === $index")
       li(ng-repeat="child in item.children")
-        div(ng-click="son($index, child.id)" ng-blur="blured(child.id)", contentEditable="{{modifyCategory === child.id}}") {{child.name}} --- {{child.id}}
+        div(ng-dblclick="modify(child.id)", ng-click="son($index, child.id)" ng-blur="blured(child.id)", contentEditable="{{modifyCategory === child.id}}") {{child.name}} --- {{child.id}}
 p(ng-show="selectedCategory") You have selected {{selectedCategory}}.
   br
   button(ng-click="unselect()") Unselect  
