@@ -1,0 +1,9 @@
+h1 Elearning
+
+#elearning-container
+  h2 {{video.title}}
+  #video-panel(ng-controller="ElearningCtrl")
+    videogular
+      //-(vg-width=300 vg-height=300 vg-theme="config.theme.url")
+      video.videoPlayer(controls='', preload='metadata')
+        source(src="{{video.src}}", type='video/{{video.type}}')
