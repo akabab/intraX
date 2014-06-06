@@ -11,8 +11,9 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('conferences', {   url: '/conferences',              templateUrl: '/template/conferences',    controller: 'ConferencesCtrl' })
     .state('elearning', {     url: '/elearning',                templateUrl: '/template/elearning',      controller: 'ElearningCtrl' })
     .state('forum', {         url: '/forum',                    templateUrl: '/template/forum',          controller: 'ForumCtrl' })
-    .state('category', {      url: '/forum/category/:cat/:sub', templateUrl: '/template/category',       controller: 'CategoryCtrl' })
-    .state('adminCategory', { url: '/admin/category',           templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
+    .state('topics', {        url: '/forum/:cat',               templateUrl: '/template/category',       controller: 'CategoryCtrl' })
+    .state('subtopics', {     url: '/forum/:cat/:sub',          templateUrl: '/template/category',       controller: 'CategoryCtrl' })
+    .state('adminCategory', { url: '/admin/forum/category',     templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
 }]);
 
 
@@ -104,7 +105,6 @@ app.controller('ModuleCtrl', ['$scope', function ($scope) {
 app.controller('CalendarCtrl', ['$scope', function ($scope) {
     $scope.title = "Calendar";
 }]);
-
 
 app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";

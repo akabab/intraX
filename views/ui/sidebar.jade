@@ -10,12 +10,12 @@
         .elem.noselect(id="{{link.name | lowercase}}" ng-class="sublink.id === currentViewId" ng-click="subshow = !subshow")
           button(disabled)
             i.fa(ng-class='{open:subshow, active:sublink.children.length > 0}')
-          a(ui-sref="{{link.name + '/' + sublink.name | lowercase}}" tabindex="-1" ng-click="subshow = False") {{sublink.name}}
+          a(ng-href="{{'#/' +link.name + '/' + sublink.name | lowercase}}" tabindex="-1" ng-click="subshow = False") {{sublink.name}}
             span(ng-show="sublink.unseen")  ({{sublink.unseen}})
         .childlinks(ng-show="subshow")
           .elem.noselect(ng-repeat="childlink in sublink.children" ng-class="childlink.id === currentViewId" ng-click="subshow = !subshow")
             button(disabled)
               i.fa
-            a(ui-sref="{{link.name + '/' + sublink.name + ':' + childlink.name | lowercase}}" tabindex="-1") {{childlink.name}}
+            a(ng-href="{{'#/' + link.name + '/' + sublink.name + '/' + childlink.name | lowercase}}" tabindex="-1") {{childlink.name}}
               span(ng-show="childlink.unseen")  ({{childlink.unseen}})
   .spacer

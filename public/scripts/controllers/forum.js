@@ -7,6 +7,14 @@ function ($scope, $rootScope, SessionService, $http) {
   $scope.welcome = "Welcome to our forum !";
   $scope.speach = "Here are the categories :"
 
+  $scope.userTopics = [
+    {title:"The cake is a lie", author:"grebett", date:new Date().toString()}
+  ];
+  $scope.followedTopics = [
+    {title:"Ycribier is awesome", author:"ycribier", date:new Date().toString()},
+    {title:"Please help me !", author:"anonymous", date:new Date().toString()}
+  ];
+
   //dynamic scope variables
   $http({
     method: "get",
@@ -27,6 +35,12 @@ function ($scope, $rootScope, SessionService, $http) {
 function ($scope, $rootScope, SessionService, $http, $stateParams) {
 
   //static scope variables
-  $scope.catName = $stateParams.cat;
+  $scope.catName = $stateParams.cat; 
   $scope.subName = $stateParams.sub;
+  
+  $scope.topics = [
+    {title:"The cake is a lie", author:"grebett", date:new Date().toString()},
+    {title:"Ycribier is awesome", author:"ycribier", date:new Date().toString()},
+    {title:"Please help me !", author:"anonymous", date:new Date().toString()}
+  ];
 }]);
