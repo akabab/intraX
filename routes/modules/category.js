@@ -27,14 +27,18 @@ exports.post = function (req, res) {
   var addIdParent = req.body.addIdParent;
   var addName = req.body.addName;
   var delIdChild = req.body.delIdChild;
-
-  if (req.params.action === 'add' && addName)
+  var tree;
+  
+  if (req.params.action === 'add' && addName) {
     if (addIdParent.length === 0 || addIdParent.length === 24)
       category_add({'parent': addIdParent, 'name': addName});
-  else if (req.params.action === 'del' && delIdChild.length === 24)
+  }
+  else if (req.params.action == 'del') {
     category_del({'id': delIdChild});
+  }
   category_get().then(function(parents) {
-    res.json({'parents': parents});
+    tree = category_tree({'list': parents, 'root': ''});
+    res.json({'parents': parents, 'tree': tree});
   });
 }
 
@@ -98,6 +102,7 @@ function category_del(argument) {
   var id = argument.id;
 
   category.removeById(id, function(error, results) {
+    console.log("removed : ", id);
   });
 }
 
