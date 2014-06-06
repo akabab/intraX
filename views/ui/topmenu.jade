@@ -3,7 +3,7 @@ div(ng-controller="TopmenuCtrl")
   #search-wrapper
     #search
       form(name="SearchForm" novalidate ng-submit="search()")
-        input.text-input(type="text" ng-model="searchValue" placeholder="Search..." tabindex="1")
+        input.text-input(type="text" ng-model="searchValue" placeholder="Search..." tabindex="1" autofocus)
         button(type="submit" tabindex="-1")#search-btn
           i.fa.fa-search
     #user-name
@@ -17,7 +17,7 @@ div(ng-controller="TopmenuCtrl")
       #dropdown-menu(ng-show="isDropdown")
         ul
           li
-            a(href='#') Profile
+            a(href="#/user/#{account.uid}") Profile
               i.fa.fa-user
           li
             a(href='#') Marks

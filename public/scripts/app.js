@@ -15,6 +15,17 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('adminCategory', { url: '/admin/category',           templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
 }]);
 
+app.controller('ElearningCtrl', ['$scope', function ($scope) {
+    $scope.title = "Elearning";
+
+    $scope.video = {
+      title: 'test',
+      src: 'http://ycribier.com/dt/42/elearning42/algo/[algo-1-001]-libft.mp4',
+      type: 'mp4'
+    };
+    
+}]);
+
 
 app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.links = [
@@ -110,6 +121,4 @@ app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";
 }]);
 
-app.controller('ElearningCtrl', ['$scope', function ($scope) {
-    $scope.title = "Elearning";
-}]);
+
