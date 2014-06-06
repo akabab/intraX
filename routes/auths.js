@@ -28,6 +28,7 @@ function connectToLdap(login, password, req, res) {
       //CONNECT WITHOUT LDAP
       req.session.account['firstName'] = login;
       req.session.account['lastName']  = "[noLdap]";
+      req.session.account['uid']       = "uid";
 
       accountsDB.find( {"login": login}, function (err, result) {
         if (!result.length) {
@@ -63,6 +64,7 @@ function connectToLdap(login, password, req, res) {
         //ABLE TO CONNECT
         req.session.account['firstName'] = entry.object['first-name'];
         req.session.account['lastName']  = entry.object['last-name'];
+        req.session.account['uid']       = entry.object['uid'];
         //DB check
         accountsDB.find( {"login": login}, function (err, result) {
           if (!result.length) {

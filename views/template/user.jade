@@ -1,10 +1,9 @@
-#user-panel
-  div#user-card(ng-if="user.found")
+#user-panel(ng-controller="UserCtrl")
+  div#user-card(ng-if="!isRequesting && user.found")
     table
       tr
         td
           img(ng-src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg")
-          //-img(ng-src="data:image/jpeg;base64," + "{{user.picture}}")
         td
           h1 {{user.lastName}} {{user.firstName}}
           .user-info Uid: 
@@ -15,6 +14,6 @@
             span.user-value {{user.birthDate}}
           .user-info Mail: 
             span.user-value {{user.mail}}
-          button Edit
-  div#user-notfound(ng-if="!user.found")
+          button(ng-if="user.isMe") Edit
+  div#user-notfound(ng-if="!isRequesting && !user.found")
     h1 User '{{user.uid}}' not found

@@ -15,24 +15,6 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('adminCategory', { url: '/admin/category',           templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
 }]);
 
-app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
-  $scope.user = {};
-  $scope.user.uid = $stateParams.uid;
-
-  $http.get('/user/' + $stateParams.uid).success(function (data) {
-    if (!data.error) {
-      $scope.user = data;
-      $scope.user.birthDate = data.birthDate.substring(6, 8) + '/' + data.birthDate.substring(4, 6) + '/' +data.birthDate.substring(0, 4);
-      $scope.user.mail = data.uid + '@student.42.fr';
-      $scope.user.found = true;
-    }
-    else {
-      $scope.user.found = false;
-      console.log(data);
-    }
-  });
-
-}]);
 
 app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.links = [
@@ -45,7 +27,6 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
 
   $http.get('/forum/category')
   .success(function (data) {
-    // here are my modifications
     for (var i in data.tree) {
       $scope.links[1].sublinks.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
     }    

@@ -1,4 +1,5 @@
 div(ng-controller="TopmenuCtrl")
+  a#logo-42(ui-sref="index")
   #search-wrapper
     #search
       form(name="SearchForm" novalidate ng-submit="search()")
@@ -6,7 +7,7 @@ div(ng-controller="TopmenuCtrl")
         button(type="submit" tabindex="-1")#search-btn
           i.fa.fa-search
     #user-name
-      a(ui-sref="index")
+      a(href="#/user/#{account.uid}")
         span.firstName #{account.firstName} 
         span.lastName #{account.lastName}
   #icons-wrapper

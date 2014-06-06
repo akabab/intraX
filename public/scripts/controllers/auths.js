@@ -1,4 +1,6 @@
-angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $http, $window, SessionService, $timeout) {
+angular.module('intraX')
+
+.controller('AuthCtrl', function ($scope, $rootScope, $http, $window, SessionService, $timeout) {
 
   var rgxLogin = /^[A-Za-z0-9 ]{3,20}$/;
   var rgxPassword = /^[A-Za-z0-9!@#$%^&*\(\)\{\}\[\]\?]{3,32}$/;
@@ -33,10 +35,6 @@ angular.module('intraX').controller('AuthCtrl', function ($scope, $rootScope, $h
         $scope.isSigned = true;
         $scope.errorMessage = '';
         $scope.message = 'OK !';
-/*        SessionService.set("user", {
-          firstName: data.user.firstName,
-          lastName: data.user.lastName
-        });*/
         $window.location = '/';
       }
       else {
