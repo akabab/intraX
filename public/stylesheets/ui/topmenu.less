@@ -4,17 +4,25 @@
   position: fixed;
   height: 50px;
   width: 100%;
-  background-image: url('/images/ui/42logo.png');
+  // background-image: url('/images/ui/42logo.png');
   background-repeat: no-repeat;
   background-position: 5px 5px;
   border-bottom: 1px solid @bg;
+  background-color: @bg-lighter;
   a {
     color:@fg-light;
     &:hover, &:focus {
       color: @hl-dark;
     }
   }
-  background-color: @bg-lighter;
+  #logo-42 {
+    background-image: url('/images/ui/42logo.png');
+    position: absolute;
+    width: 53px;
+    height: 40px;
+    top : 5px;
+    left: 5px;
+  }
   #search-wrapper {
     height: 26px;
     overflow: hidden;

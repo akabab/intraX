@@ -9,8 +9,8 @@ var ldap = require('ldapjs');
 //   res.end();
 // });
 
-router.get('/:name', function (req, res) {
-  var name = req.params.name;
+router.get('/:uid', function (req, res) {
+  var uid = req.params.uid;
   var account = req.session.account;
   var client = ldap.createClient({
     url: "ldaps://ldap.42.fr:636"
@@ -33,9 +33,10 @@ router.get('/:name', function (req, res) {
       filter:"!(close=non admis)",
       scope: 'sub'
     };
-    client.search('uid=' + name + ',ou=2013,ou=people,dc=42,dc=fr', opts, function (err, result) {
+    client.search('uid=' + uid + ',ou=2013,ou=people,dc=42,dc=fr', opts, function (err, result) {
       result.on('searchEntry', function (entry) {
         var user = {
+          isMe: (account.uid == uid) ? true : false,
           uid: entry.object['uid'],
           uidNumber: entry.object['uidNumber'],
           firstName: entry.object['first-name'],

@@ -3,6 +3,8 @@ angular.module('intraX.services', [])
 	return {
 		get: function(key) {
       var val = sessionStorage.getItem(key);
+      if (!val)
+        return;
       var i = val.indexOf("_serialized:");
       if (i !== -1)
         val = val.substr(12, val.length - 12);
