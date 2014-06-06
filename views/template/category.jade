@@ -1,4 +1,6 @@
-p(ng-hide="subName") welcome to category {{catName}}
-p(ng-show="subName") welcome to category {{subName}}, daughter of {{catName}}
+p(ng-hide="subName") Welcome to category {{catName}}
+p(ng-show="subName") Welcome to category {{subName}}, daughter of {{catName}}
 
-p here is the {{categoryId}}
+p Here are the topics availabe in this category :
+ul
+  li(ng-repeat="topic in topics") {{topic.title}} / {{topic.author}} / {{topic.date}}
