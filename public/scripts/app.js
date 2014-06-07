@@ -18,13 +18,13 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
 
 app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.links = [
-                  {name: 'Inbox', unseen: 5, sublinks: [{name: 'Messages', unseen: 2}, {name: 'Tickets', unseen: 0}]},
-                  {name: 'Forum', unseen: 2, sublinks: []},
-                  {name: 'Modules', unseen: 5, sublinks: [{name: 'Algo', unseen: 2}]},
-                  {name: 'Conferences', unseen: 1, sublinks: [{name: 'News', unseen: 2}]},
-                  {name: 'Ldap', unseen: 0},
-                  {name: 'Elearning', unseen: 1, sublinks: [{name: 'Sem0', unseen: 2}, {name: 'Sem1', unseen: 2}, {name: 'Sem2', unseen: 2}]},
-                  {name: 'Activity', unseen: 0, sublinks: [{name: 'Past', unseen: 2}]}
+                  {"name": 'Inbox', "deploy":true, "unseen": 5, "sublinks": [{"name": 'Messages', "unseen": 2}, {"name": 'Tickets', "unseen": 0}]},
+                  {"name": 'Forum', "deploy":true, "unseen": 2, "sublinks": []},
+                  {"name": 'Ldap', "deploy":true, "unseen": 2, "sublinks": []},
+                  {"name": 'Elearning', "deploy":true, "unseen": 2, "sublinks": []},
+                  {"name": 'Modules', "deploy":false, "unseen": 5, "sublinks": [{"name": 'Algo', "unseen": 2}]},
+                  {"name": 'Conferences', "deploy":true, "unseen": 1, "sublinks": [{"name": 'News', "unseen": 2}]},
+                  {"name": 'Activity', "deploy":false, "unseen": 0, "sublinks": [{"name": 'Past', "unseen": 2}]}
                   ];
 
   $http.get('/forum/category')
@@ -38,6 +38,18 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
     console.log(headers);
     console.log(data);
   });
+
+  function formatLink(string) {
+    return string.toUpperCase();
+  }
+  $scope.genLink = function (lowpart, highpart, arguments) {
+    console.log(lowpart);
+    if (angular.isUndefined(highpart))
+      return (formatLink(string));
+    if (angular.isUndefined(arguments))
+      return (formatLink(string) + '/' + formatLink(highpart));
+    return (formatLink(string) + '/' + formatLink(highpart) + ':' + formatLink(arguments));
+  }
 
   $scope.selectLink = function (index) {
     if ($scope.selectedLink == index)
@@ -66,18 +78,20 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
 }]);
 
 app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
-  $scope.isDropdown = false;
+  $scope.menu = '';
+  $scope.dropdown = function (value) {
 
-  $scope.dropdown = function () {
-    $window.onclick = null;
-    $scope.isDropdown = !$scope.isDropdown;
-
-    if ($scope.isDropdown) {
-      $window.onclick = function (event) {
-          $scope.isDropdown = false;
+    $window.onclick = function (event) {
+        console.log(event.target.tagName);
+        if (event.target.tagName !== 'A' && event.target.tagName !== 'BUTTON') {
+          $scope.menu = '';
           $scope.$apply();
+        }
       };
-    }
+    if ($scope.menu === value)
+      $scope.menu = '';
+    else
+      $scope.menu = value;
   }
 
   $scope.search = function () {
