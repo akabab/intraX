@@ -5,20 +5,20 @@
       a(ui-sref="{{linkSref}}" tabindex="-1" ng-class="link.unseen ? 'bold' : 'wide'") {{link.name}}
       a.unseen(ng-if="link.unseen" ui-sref="{{linkSref + ':unseen'}}" tabindex="-1") ({{link.unseen}})
     .sublinks(ng-show="show")
-//- <<<<<<< HEAD
-//-       .sublink(ng-repeat="sublink in link.sublinks")
-//-         .elem.noselect(id="{{link.name | lowercase}}" ng-class="sublink.id === currentViewId" ng-click="subshow = !subshow")
-//-           button(disabled)
-//-             i.fa(ng-class='{open:subshow, active:sublink.children.length > 0}')
-//-           a(ng-href="{{'#/' +link.name + '/' + sublink.name | lowercase}}" tabindex="-1" ng-click="subshow = False") {{sublink.name}}
-//-             span(ng-show="sublink.unseen")  ({{sublink.unseen}})
-//-         .childlinks(ng-show="subshow")
-//-           .elem.noselect(ng-repeat="childlink in sublink.children" ng-class="childlink.id === currentViewId" ng-click="subshow = !subshow")
-//-             button(disabled)
-//-               i.fa
-//-             a(ng-href="{{'#/' + link.name + '/' + sublink.name + '/' + childlink.name | lowercase}}" tabindex="-1") {{childlink.name}}
-//-               span(ng-show="childlink.unseen")  ({{childlink.unseen}})
-//- =======
+      //- <<<<<<< HEAD
+      //-       .sublink(ng-repeat="sublink in link.sublinks")
+      //-         .elem.noselect(id="{{link.name | lowercase}}" ng-class="sublink.id === currentViewId" ng-click="subshow = !subshow")
+      //-           button(disabled)
+      //-             i.fa(ng-class='{open:subshow, active:sublink.children.length > 0}')
+      //-           a(ng-href="{{'#/' +link.name + '/' + sublink.name | lowercase}}" tabindex="-1" ng-click="subshow = False") {{sublink.name}}
+      //-             span(ng-show="sublink.unseen")  ({{sublink.unseen}})
+      //-         .childlinks(ng-show="subshow")
+      //-           .elem.noselect(ng-repeat="childlink in sublink.children" ng-class="childlink.id === currentViewId" ng-click="subshow = !subshow")
+      //-             button(disabled)
+      //-               i.fa
+      //-             a(ng-href="{{'#/' + link.name + '/' + sublink.name + '/' + childlink.name | lowercase}}" tabindex="-1") {{childlink.name}}
+      //-               span(ng-show="childlink.unseen")  ({{childlink.unseen}})
+      //- =======
       .sublink(ng-repeat="sublink in link.sublinks" ng-init="subshow = sublink.deploy; sublinkSref = genLink(link.name, sublink.name)")
         div(ng-if="sublink.children.length")
           .elem.noselect(id="{{sublinkSref}}")
