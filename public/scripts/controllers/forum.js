@@ -43,4 +43,20 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
     {title:"Ycribier is awesome", author:"ycribier", date:new Date().toString()},
     {title:"Please help me !", author:"anonymous", date:new Date().toString()}
   ];
+  
+  $scope.add = function (topicName) {
+    console.log(topicName);
+    $http({
+      method:"post",
+      url: "/forum/topic/add",
+      data: {description: topicName, categoryId:"0"}
+    })
+    .success(function (data) {
+      console.log("success : ", data);
+    })
+    .error(function (data) {
+      console.log("error : ", data);
+    });
+  };
+  
 }]);

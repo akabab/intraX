@@ -4,3 +4,7 @@ p(ng-show="subName") Welcome to category {{subName}}, daughter of {{catName}}
 p Here are the topics availabe in this category :
 ul
   li(ng-repeat="topic in topics") {{topic.title}} / {{topic.author}} / {{topic.date}}
+
+p add a topic :
+  input(type="text", ng-model="topicName")
+  button(ng-click="add(topicName)") add
