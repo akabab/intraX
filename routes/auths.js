@@ -38,6 +38,7 @@ function connectToLdap(login, password, req, res) {
           var account = result[i];
           if (bcrypt.compareSync(password, account['password'])) {
             req.session.account['accessRights'] = account['accessRights'];
+            req.session.account['_id'] = account['_id'];
             req.session['logged'] = true;
             res.json( {err: null} );
             return;
@@ -69,10 +70,12 @@ function connectToLdap(login, password, req, res) {
             accountsDB.save( {login: login,
                               password: bcrypt.hashSync(password),
                               dateOfCreation: Date.now(),
-                              accessRights: 0} );
-            req.session.account['accessRights'] = 0;
-            req.session['logged'] = true;
-            res.json( {err: null} );
+                              accessRights: 0}, function (error, result) {
+              req.session.account['accessRights'] = 0;
+              req.session.account['_id'] = result['_id'];
+              req.session['logged'] = true;
+              res.json( {err: null} );
+            });
             return;
           }
           //User already exists in database
@@ -80,7 +83,9 @@ function connectToLdap(login, password, req, res) {
             var account = result[i];
             if (bcrypt.compareSync(password, account['password'])) {
               req.session.account['accessRights'] = account['accessRights'];
+              req.session.account['_id'] = account['_id'];
               req.session['logged'] = true;
+              console.log(account);
               res.json( {err: null} );
               return;
             }

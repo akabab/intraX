@@ -1,19 +1,23 @@
-#user-panel.panel(ng-controller="UserCtrl")
-  div#user-card(ng-if="!isRequesting && user.found")
-    table
-      tr
-        td
-          img(src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg" onerror="this.src='https://intra.42.fr/static6854/img/nopicture-profilview.png'")
-        td
-          h1 {{user.lastName}} {{user.firstName}}
-          .user-info Uid: 
-            span.user-value {{user.uid}}
-          .user-info Phone: 
-            span.user-value {{user.mobilePhone}}
-          .user-info Birth Date: 
-            span.user-value {{user.birthDate}}
-          .user-info Mail: 
-            span.user-value {{user.mail}}
-          button(ng-if="user.isMe") Edit
-  div#user-notfound(ng-if="!isRequesting && !user.found")
-    h1 User '{{user.uid}}' not found
+#user-container(ng-controller="UserCtrl")
+  #user-card.panel
+    div(ng-if="!isRequesting && user.found")
+      table
+        tr
+          td
+            img(src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg" onerror="this.src='https://intra.42.fr/static6854/img/nopicture-profilview.png'")
+          td
+            h1 {{user.lastName}} {{user.firstName}}
+            .user-info Uid: 
+              span.user-value {{user.uid}}
+            .user-info Phone: 
+              span.user-value {{user.mobilePhone}}
+            .user-info Birth Date: 
+              span.user-value {{user.birthDate}}
+            .user-info Mail: 
+              span.user-value {{user.mail}}
+            button(ng-if="user.isMe") Edit
+    div#user-notfound(ng-if="!isRequesting && !user.found")
+      h1 User '{{user.uid}}' not found
+  .spacer
+
+
