@@ -9,6 +9,50 @@ var ldap = require('ldapjs');
 //   res.end();
 // });
 
+router.get('/all', function (req, res) {
+  var users = [];
+  var account = req.session.account;
+  var client = ldap.createClient({
+    url: "ldaps://ldap.42.fr:636"
+  });
+  client.bind(account.ldap.dn, account.ldap.password, function (err) {
+    if (err) {
+      return console.log('Bind err: ' + err);
+    }
+    var opts = {
+      attributes: [
+        "uid",
+        "uidNumber",
+        "first-name",
+        "last-name"
+        ],
+      filter:"!(close=non admis)",
+      scope: 'sub'
+    };
+    client.search('ou=2013,ou=people,dc=42,dc=fr', opts, function (err, result) {
+      result.on('searchEntry', function (entry) {
+        var user = {
+          uid: entry.object['uid'],
+          uidNumber: entry.object['uidNumber'],
+          firstName: entry.object['first-name'],
+          lastName: entry.object['last-name']
+        };
+        users.push(user);
+      });
+      result.on('searchReference', function (referral) {
+        res.json('referral: ' + referral.uris.join());
+      });
+      result.on('error', function (err) {
+        res.json({error: err.message});
+      });
+      result.on('end', function (result) {
+        res.json( users );
+        client.unbind(function (err) {});
+      });
+    });
+  });
+});
+
 router.get('/:uid', function (req, res) {
   var uid = req.params.uid;
   var account = req.session.account;
@@ -61,8 +105,8 @@ router.get('/:uid', function (req, res) {
       });
     });
   });
-
 });
+
 
 router.post('/:name', function (req, res) {
     //req.params

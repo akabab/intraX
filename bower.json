@@ -1,0 +1,9 @@
+{
+  "name": "intra",
+  "version": "0.1.0",
+  "dependencies": {
+    "angular": ">=1.2.*",
+    "angular-sanitize": ">=1.2.*",
+    "videogular": "0.3.0"
+  }
+}
