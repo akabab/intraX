@@ -4,8 +4,12 @@
 @import 'ui/sidebar.less';
 @import 'auth.less';
 @import 'user.less';
+@import 'elearning.less';
+@import 'ldap.less';
 
 // COLOR VARIABLES
+@blu1: #1c9de5;
+@blu2: #39c7f3;
 @bg: #cbcbcb; // Background Light Grey
 @fg: #404040; // Foreground Dark Grey
 @hl: #39c7f3; // Highlight Light Blue
@@ -57,7 +61,11 @@ body {
   padding: 0;
   border: 0;
   margin: 0;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: arial, "Lucida Grande", Helvetica, sans-serif;
+  font-size: 14px;
+}
+h1 {
+  margin-top: 0px;
 }
 input, button {
   border: 1px solid @bg;
@@ -66,7 +74,10 @@ input, button {
     outline: none;
   }
 }
-
+button {
+    cursor: pointer;
+}
+.bold { font-weight: bold; }
 .noselect, button {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -78,7 +89,7 @@ input, button {
 
 button::-moz-focus-inner { border: 0; }
 a {
-  color: @hl-dark;
+  color: @fg;
   text-decoration: none;
   &:hover, &:focus {
     outline: none;
