@@ -8,10 +8,10 @@ ul(id="thread")
       span(class="messageDate"){{message.date}}
       button(class="commentMessage", ng-click="comment(message.id)") commenter
       button(class="editMessage", ng-show="message.author == user", ng-click="editMessage(message.id)") éditer
-    p(id="{{message.id}}", class="messageContent"){{message.content}}
-    div(class="commentBox", ng-show="message.id == commenting")
+    p(id="message.id", class="messageContent"){{message.content}}
+    div(id="{{'commentBox' + $index}}", ng-show="message.id == commenting")
       textarea(ng-model="commentContent")
-      button(class="validComment", ng-click="valid(commentContent)") valider
+      button(class="validComment", ng-click="valid(commentContent, $index)") valider
     ul
       li(class="comment", ng-repeat="comment in message.comments")
         h4(class="commentTitle")
