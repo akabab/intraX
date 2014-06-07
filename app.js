@@ -48,6 +48,7 @@ app.use('/', index);
 app.use('/user', user);
 app.use('/forum', forum);
 app.use('/dltnt', dltnt);
+// app.use('/admin', admin);
 
 
 // catch 404 and forward to error handler
