@@ -46,7 +46,7 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
     
   $http({
     method: "get",
-    url: "/forum/topic/123456789012345678901234"
+    url: "/forum/  topic/123456789012345678901234"
   })
   .success(function (data) {
     $scope.topics = data;
@@ -86,6 +86,52 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
       console.log("error : ", data);
     });
   };
+}])
+  
+.controller('MessageCtrl', ["$scope", "$rootScope", "SessionService", "$http", "$stateParams",
+function ($scope, $rootScope, SessionService, $http, $stateParams) {
+  var a = $stateParams;
+  console.log(a.cat + " / " + a.sub + " / " + a.post);
+  
+//   $http({
+//     method:"post",
+//     url:"forum/topic/post/id"
+//     data:{something:somewhat}
+//   })
+//   .success(function (data) {
+//     $scope.messages = data;
+//   })
+//   .error(function (data) {
+//     console.log("error");
+//   });
+// });
 
+  $scope.messages = [
+    {id:"1234567890", author:"grebett", content:"lorem ipsum sic dolor", date:"21/01/1970", comments: [{author:"ycribier", content:"et felice pacem !", date:"22/04/1087"}]}
+  ];
+
+  $scope.comment = function (id) {
+    $scope.commenting = id;
+  };
+  $scope.valid = function (content) {
+    console.log(content);
+    $scope.commenting = false;
+  };
+  
+  $scope.editMessage = function (id, content) {
+    $scope.messages = id, content;
+  };
+  
+  $scope.editComment = function (id, content) {
+    $scope.comments = content;
+  };
+  
+  $scope.answer = function (content) {
+    $scope.bouh = content;
+    console.log(content);
+  }
+  
+  
+  
   
 }]);
