@@ -48,6 +48,7 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
 
   $http.get('/forum/category')
   .success(function (data) {
+    console.log(data);
     for (var i in data.tree) {
       $scope.links[1].sublinks.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
     }    
@@ -248,5 +249,3 @@ app.controller('CalendarCtrl', ['$scope', function ($scope) {
 app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";
 }]);
-
-
