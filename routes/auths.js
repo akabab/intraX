@@ -29,6 +29,7 @@ function connectToLdap(login, password, req, res) {
       req.session.account['firstName'] = login;
       req.session.account['lastName']  = "[noLdap]";
       req.session.account['uid']       = "uid";
+      req.session.account['isAdmin']   = true; //tmp
 
       accountsDB.find( {"login": login}, function (err, result) {
         if (!result.length) {
