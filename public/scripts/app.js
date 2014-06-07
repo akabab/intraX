@@ -1,4 +1,4 @@
-var app = angular.module('intraX', ['ui.router', 'intraX.services']); // 'ui.bootstrap'
+var app = angular.module('intraX', ['ui.router', 'intraX.services']);
 
 app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
   $urlRouterProvider.otherwise('/');
@@ -42,14 +42,14 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   function formatLink(string) {
     return string.toUpperCase();
   }
-  $scope.genLink = function (lowpart, highpart, arguments) {
+/*  $scope.genLink = function (lowpart, highpart, arguments) {
     console.log(lowpart);
     if (angular.isUndefined(highpart))
       return (formatLink(string));
     if (angular.isUndefined(arguments))
       return (formatLink(string) + '/' + formatLink(highpart));
     return (formatLink(string) + '/' + formatLink(highpart) + ':' + formatLink(arguments));
-  }
+  }*/
 
   $scope.selectLink = function (index) {
     if ($scope.selectedLink == index)
