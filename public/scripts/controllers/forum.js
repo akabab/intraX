@@ -106,15 +106,21 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
 //   });
 // });
 
+  // dummy data
   $scope.messages = [
-    {id:"1234567890", author:"grebett", content:"lorem ipsum sic dolor", date:"21/01/1970", comments: [{author:"ycribier", content:"et felice pacem !", date:"22/04/1087"}]}
+    {id:"1234567890", author:"grebett", content:"lorem ipsum sic dolor", date:"21/01/1970", comments: [{author:"ycribier", content:"et felice pacem !", date:"22/04/1087"}]},
+    {id:"0987654321", author:"cdenis", content:"lorem ipsum sic dolor", date:"01/11/1990", comments: [
+      {author:"adjivas", content:"et felice pacem !", date:"05/09/3085"},
+      {author:"grebett", content:"et felice pacem !", date:"05/09/2085"}]
+    }
   ];
 
   $scope.comment = function (id) {
     $scope.commenting = id;
   };
-  $scope.valid = function (content) {
+  $scope.valid = function (content, index) {
     console.log(content);
+    document.getElementById("commentBox" + index).firstChild.value = "";
     $scope.commenting = false;
   };
   
