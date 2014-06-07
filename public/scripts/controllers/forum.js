@@ -18,7 +18,7 @@ function ($scope, $rootScope, SessionService, $http) {
   //dynamic scope variables
   $http({
     method: "get",
-    url: "/forum/category",
+    url: "/forum/category/",
     headers: {'Content-Type': 'application/json'}
   })
   .success(function (data) {
@@ -37,26 +37,55 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
   //static scope variables
   $scope.catName = $stateParams.cat; 
   $scope.subName = $stateParams.sub;
+  $scope.isAdmin = true;
   
-  $scope.topics = [
-    {title:"The cake is a lie", author:"grebett", date:new Date().toString()},
-    {title:"Ycribier is awesome", author:"ycribier", date:new Date().toString()},
-    {title:"Please help me !", author:"anonymous", date:new Date().toString()}
-  ];
+  if (typeof($scope.subName) !== "undefined")
+    $scope._prefix = $scope.catName + "/" + $scope.subName + "/";
+  else
+    $scope._prefix = $scope.catName + "/";
+    
+  $http({
+    method: "get",
+    url: "/forum/topic/123456789012345678901234"
+  })
+  .success(function (data) {
+    $scope.topics = data;
+  })
+  .error(function (data) {
+    console.log("error");
+  });
   
   $scope.add = function (topicName) {
     console.log(topicName);
     $http({
       method:"post",
       url: "/forum/topic/add",
-      data: {description: topicName, categoryId:"0"}
+      data: {description: topicName, categoryId:"123456789012345678901234"}
     })
     .success(function (data) {
+      $scope.topics = data;
       console.log("success : ", data);
     })
     .error(function (data) {
       console.log("error : ", data);
     });
   };
+  
+  $scope.del = function (topicId) {
+    console.log(topicId);
+    $http({
+      method:"post",
+      url: "/forum/topic/del",
+      data: {topicId: topicId, categoryId:"123456789012345678901234"}
+    })
+    .success(function (data) {
+      $scope.topics = data;
+      console.log("success : ", data);
+    })
+    .error(function (data) {
+      console.log("error : ", data);
+    });
+  };
+
   
 }]);
