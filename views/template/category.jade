@@ -3,7 +3,10 @@ p(ng-show="subName") Welcome to category {{subName}}, daughter of {{catName}}
 
 p Here are the topics availabe in this category :
 ul
-  li(ng-repeat="topic in topics") {{topic.title}} / {{topic.author}} / {{topic.date}}
+  li(ng-repeat="topic in topics")
+    a(ng-href="{{'forum/' + _prefix + topic.description}}"){{topic.description}} / {{topic.author}} / {{topic.date}}
+    div(ng-if="isAdmin")
+      button(ng-click="del(topic._id)") remove
 
 p add a topic :
   input(type="text", ng-model="topicName")

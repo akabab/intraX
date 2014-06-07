@@ -13,7 +13,7 @@ router.get('/message', userMessage.get);
 router.post('/message', userMessage.post);
 router.get('/category/:action', userCategory.get);
 router.post('/category/:action', userCategory.post);
-router.get('/topic/:action', userTopic.get);
+router.get('/topic/:id', userTopic.get);
 router.post('/topic/:action', userTopic.post);
 router.get('/message/:action', userMessage.get);
 router.post('/message/:action', userMessage.post);
