@@ -3,7 +3,7 @@
     table
       tr
         td
-          img(ng-src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg")
+          img(src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg" onerror="this.src='https://intra.42.fr/static6854/img/nopicture-profilview.png'")
         td
           h1 {{user.lastName}} {{user.firstName}}
           .user-info Uid: 

@@ -3,25 +3,23 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt-nodejs');
-
 var easymongo = require('easymongo');
+var ldap = require('ldapjs');
 var mongo = new easymongo({dbname: 'db'});
 var accountsDB = mongo.collection('accounts');
-var ldap = require('ldapjs');
-var ldapClients = {};
 
-var D_ERR_AUTHS_EMPTY = "Empty informations";
-var D_ERR_AUTHS_FINDNO = "Account doesn't exist";
-var D_ERR_AUTHS_WRONGPWD = "Invalid password";
+
+var D_ERR_AUTHS_EMPTY     = "Empty informations";
+var D_ERR_AUTHS_FINDNO    = "Account doesn't exist";
+var D_ERR_AUTHS_WRONGPWD  = "Invalid password";
 var D_ERR_AUTHS_TIMEFORCE = "Sorry, try to see this page more later.";
 
 
 function connectToLdap(login, password, req, res) {
   var dn = 'uid=' + login + ',ou=2013,ou=people,dc=42,dc=fr';
   req.session.account['ldap'] = {"dn": dn, "password": password};
-  var client = ldap.createClient( {url: 'ldaps://ldap.42.fr:636'} );//ldapGetClient(account);
+  var client = ldap.createClient( {url: 'ldaps://ldap.42.fr:636'} );
 
-  //BIND
   client.bind(req.session.account.ldap.dn, req.session.account.ldap.password, function (err) {
     if (err) {
       console.log("ldap bind err: " + err);
@@ -39,7 +37,7 @@ function connectToLdap(login, password, req, res) {
         for (var i = 0; i < result.length; i++) {
           var account = result[i];
           if (bcrypt.compareSync(password, account['password'])) {
-              // req.session['account'] = account;
+            req.session.account['accessRights'] = account['accessRights'];
             req.session['logged'] = true;
             res.json( {err: null} );
             return;
@@ -61,27 +59,27 @@ function connectToLdap(login, password, req, res) {
       }
 
       result.on('searchEntry', function (entry) {
-        //ABLE TO CONNECT
-        req.session.account['firstName'] = entry.object['first-name'];
-        req.session.account['lastName']  = entry.object['last-name'];
-        req.session.account['uid']       = entry.object['uid'];
-        //DB check
+        req.session.account['firstName']    = entry.object['first-name'];
+        req.session.account['lastName']     = entry.object['last-name'];
+        req.session.account['uid']          = entry.object['uid'];
+
         accountsDB.find( {"login": login}, function (err, result) {
           if (!result.length) {
-            //Not in db
+          //User not in database -> create new entry && log
             accountsDB.save( {login: login,
                               password: bcrypt.hashSync(password),
                               dateOfCreation: Date.now(),
                               accessRights: 0} );
+            req.session.account['accessRights'] = 0;
             req.session['logged'] = true;
             res.json( {err: null} );
             return;
           }
-
+          //User already exists in database
           for (var i = 0; i < result.length; i++) {
             var account = result[i];
             if (bcrypt.compareSync(password, account['password'])) {
-                // req.session['account'] = account;
+              req.session.account['accessRights'] = account['accessRights'];
               req.session['logged'] = true;
               res.json( {err: null} );
               return;
@@ -124,8 +122,9 @@ router.post('/signin', function (req, res) {
     if (!req.session['account']) {
       req.session['account'] = {};
     }
-    //connect to ldap
+
     connectToLdap(login, password, req, res);
+
     return;
   }
 });
