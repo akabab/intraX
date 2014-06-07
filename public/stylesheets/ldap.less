@@ -1,14 +1,36 @@
 #ldap-panel {
+
+  .ldap-th {
+    margin-left: 100px;
+  }
+  a {
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    width: 100px;
+    margin: 2px;
+    border: 1px solid @blu1;
+    background-color: white;
+
+  }
+  .ldap-user {
+    cursor: pointer;
+
+    &:hover {
+      background: @fg-darker;
+      color: @hl;
+    }
+  }
   img {
     width: 40px;
+    vertical-align: middle;
+    // margin: 5px;
   }
-  th, td {
-    width: 80px;
+  .ldap-info {
+    display: inline-block;
+    vertical-align: middle;
     text-align: center;
-  }
-  td {
-    &:hover {
-      background: red;
-    }
+    width: 100px;
+    margin: 2px;
   }
 }
