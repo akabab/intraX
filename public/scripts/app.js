@@ -36,14 +36,22 @@ app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope,
 
 app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.links = [
-                  {"name": 'Inbox', "deploy":true, "unseen": 5, "sublinks": [{"name": 'Messages', "unseen": 2}, {"name": 'Tickets', "unseen": 0}]},
-                  {"name": 'Forum', "deploy":true, "unseen": 2, "sublinks": []},
-                  {"name": 'Ldap', "deploy":true, "unseen": 2, "sublinks": []},
-                  {"name": 'Elearning', "deploy":true, "unseen": 2, "sublinks": []},
-                  {"name": 'Modules', "deploy":false, "unseen": 5, "sublinks": [{"name": 'Algo', "unseen": 2}]},
-                  {"name": 'Conferences', "deploy":true, "unseen": 1, "sublinks": [{"name": 'News', "unseen": 2}]},
-                  {"name": 'Activity', "deploy":false, "unseen": 0, "sublinks": [{"name": 'Past', "unseen": 2}]}
-                  ];
+    {"name": 'Inbox', "deploy":true, "unseen": 5, "sublinks": [
+      {"name": 'Messages', "unseen": 2}, {"name": 'Tickets', "unseen": 0}
+    ]},
+    {"name": 'Forum', "deploy":true, "unseen": 2, "sublinks": []},
+    {"name": 'Ldap', "deploy":true, "unseen": 2, "sublinks": []},
+    {"name": 'Elearning', "deploy":true, "unseen": 2, "sublinks": []},
+    {"name": 'Modules', "deploy":false, "unseen": 5, "sublinks": [
+      {"name": 'Algo', "unseen": 2}
+    ]},
+    {"name": 'Conferences', "deploy":true, "unseen": 1, "sublinks": [
+      {"name": 'News', "unseen": 2}
+    ]},
+    {"name": 'Activity', "deploy":false, "unseen": 0, "sublinks": [
+      {"name": 'Past', "unseen": 2}
+    ]}
+  ];
 
   $http.get('/forum/category')
   .success(function (data) {
@@ -202,6 +210,14 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
 
 app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
   $scope.menu = '';
+  $scope.searchOptions = [
+    {"name":'LDAP', "append":'ldap/', "id":'1'},
+    {"name":'Forum', "append":'forum/', "id":'2'},
+    {"name":'Inbox', "append":'inbox/', "id":'3'},
+    {"name":'Elearning', "append":'elearning/', "id":'4'},
+    {"name":'Modules', "append":'module/', "id":'5'},
+    {"name":'Conferences', "append":'conferences/', "id":'5'}
+  ];
   $scope.dropdown = function (value) {
 
     $window.onclick = function (event) {
@@ -218,7 +234,7 @@ app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
   }
 
   $scope.search = function () {
-    if ($scope.searchValue.charAt(0) == '/')
+    if ($scope.searchValue && $scope.searchValue.length && $scope.searchValue.charAt(0) == '/')
       $window.location = $scope.searchValue;
     else
       $window.location = '/#/' + $scope.searchValue;

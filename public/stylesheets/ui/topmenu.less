@@ -31,9 +31,67 @@
     float: left;
     width: calc(~'100% - 172px');
     #search {
+      #remove-search {
+        background: none;
+        border: 0;
+        float: left;
+        text-shadow: 0 -1px rgba(0, 0, 0, 0.46);
+        &:hover { text-shadow: 0 1px rgba(0, 0, 0, 0.76); }
+        &.hidden {
+          text-shadow:none;
+          border-color: transparent!important;
+          color: transparent!important;
+          background-color: transparent!important;
+          display: hidden;
+        }
+      }
+      #search-selector {
+        float: left;
+        position: fixed;
+        left: 68px;
+        color: @fg-light!important;
+        &.active {
+          select {
+            color: #fff;
+            text-shadow: 0 -1px rgba(0, 0, 0, 0.46);
+            &:hover { text-shadow: 0 1px rgba(0, 0, 0, 0.76); }
+          }
+          background-color: #00C2FF;
+          border-color: #06A!important;
+          color: #fff;
+          box-shadow: 0 0 9px rgba(0, 0, 0, 0.3) inset;
+          text-shadow: 0 -1px rgba(0, 0, 0, 0.46);
+        }
+      }
+      select {
+        float: left;
+        -webkit-appearance: none;
+        width: 133px;
+        color: inherit;
+        margin-left: 3px;
+        height: 26px;
+        border: 1px solid transparent;
+        border-right-color: @bg;
+        background-color: transparent;
+        border-radius: 0;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        padding: 0 5px;
+        font-size: 16px;
+        &:focus {
+          outline: 0;
+        }
+      }
+      form {
+        display: inline-block;
+        width: 65%;
+        margin-left: 161px;
+      }
       width: 60%;
       float: left;
       input {
+        border-left: 0;
         width: calc(~'100% - 30px');
         height: 26px!important;
         margin: 0;

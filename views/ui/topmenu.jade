@@ -2,10 +2,18 @@ div(ng-controller="TopmenuCtrl")
   a#logo-42(ui-sref="index")
   #search-wrapper
     #search
-      form(name="SearchForm" novalidate ng-submit="search()")
-        input.text-input(type="text" ng-model="searchValue" placeholder="Search..." tabindex="1" autofocus)
-        button(type="submit" tabindex="-1")#search-btn
-          i.fa.fa-search
+      #search-box
+        #search-selector(ng-class="{active:searchSelected}")
+          button#remove-search(ng-click="searchSelected=''" ng-class="{hidden:!searchSelected}")
+            i.fa.fa-times
+          select(dir="rtl" ng-model="searchSelected")
+            option(value="") : All
+            option(ng-repeat="option in searchOptions" value="{{option.id}}") : {{option.name}}
+        .spacer
+        form(name="SearchForm" novalidate ng-submit="search()")
+          input.text-input(type="text" ng-model="searchValue" placeholder="Search..." tabindex="1" autofocus)
+          button(type="submit" tabindex="-1")#search-btn
+            i.fa.fa-search
     #user-name
       a(href="#/user/#{account.uid}")
         span.firstName #{account.firstName} 
