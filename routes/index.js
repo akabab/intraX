@@ -4,7 +4,6 @@ var express = require('express');
 var router = express.Router();
 
 router.get(['/', '/index'], function (req, res) {
-  console.log(req.session['account']);
   res.render('index', { account: req.session['account'] });
 });
 
