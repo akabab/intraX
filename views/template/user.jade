@@ -4,7 +4,8 @@
       table
         tr
           td
-            img(src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg" onerror="this.src='https://intra.42.fr/static6854/img/nopicture-profilview.png'")
+            img(ng-src="{{user.uid && 'https://cdn.42.fr/userprofil/profilview/' + user.uid + '.jpg' || 'https://intra.42.fr/static6854/img/nopicture-profilview.png'}}")
+            //-img(src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg" onerror="this.src='https://intra.42.fr/static6854/img/nopicture-profilview.png'")
           td
             h1 {{user.lastName}} {{user.firstName}}
             .user-info Uid: 
@@ -15,9 +16,24 @@
               span.user-value {{user.birthDate}}
             .user-info Mail: 
               span.user-value {{user.mail}}
-            button(ng-if="user.isMe") Edit
+            div(ng-if="user.isMe")
+              button Edit
+              button(ng-click="askToken()") Autologin Token
+
     div#user-notfound(ng-if="!isRequesting && !user.found")
       h1 User '{{user.uid}}' not found
   .spacer
+div.popup.token-popup(draggable="true")
+  //-(ng-show="askingToken")
+  div
+    form(novalidate ng-submit="getCurrentToken()")
+      label Enter your password
+      input(type="password" ng-model="password")
+      button(type="submit") OK
+  div.user-current-token(ng-show="token")
+    a(href="http://localhost:3000/auths/autologin/{{token}}") http://localhost:3000/auths/autologin/{{token}}
+    button(ng-click="getNewToken()") Generate
+  div(ng-show="errorMessage") {{errorMessage}}
+
 
 
