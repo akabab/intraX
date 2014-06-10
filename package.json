@@ -18,6 +18,8 @@
     "bcrypt-nodejs": "0.0.3",
     "express-session": "~1.0.4",
     "ldapjs": "0.6.0",
-    "q": "1.0.1"
+    "q": "1.0.1",
+    "passport": "0.2.0",
+    "passport-hash": "0.3.0"
   }
 }
