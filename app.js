@@ -8,11 +8,11 @@ var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
 // here should be the required route files
-var index = require('./routes/index');
-var user  = require('./routes/user' );
-var auths = require('./routes/auths');
-var dltnt = require('./routes/dltnt');
-var forum = require('./routes/forum');
+var index     = require('./routes/index');
+var user      = require('./routes/user' );
+var auths     = require('./routes/auths');
+var dltnt     = require('./routes/dltnt');
+var forum     = require('./routes/forum');
 
 var app = express();
 
@@ -39,7 +39,6 @@ app.all("*", function(req, res, next) {
   if (req.session && req.session['logged'])
     next();
   else {
-    console.log(req.url);
     res.redirect('/auths');
   }
 });

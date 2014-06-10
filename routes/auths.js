@@ -67,10 +67,13 @@ function connectToLdap(login, password, req, res) {
         accountsDB.find( {"login": login}, function (err, result) {
           if (!result.length) {
           //User not in database -> create new entry && log
-            accountsDB.save( {login: login,
-                              password: bcrypt.hashSync(password),
-                              dateOfCreation: Date.now(),
-                              accessRights: 0}, function (error, result) {
+            accountsDB.save( {'login': login,
+                              'password': bcrypt.hashSync(password),
+                              'firstName': entry.object['first-name'],
+                              'lastName': entry.object['last-name'],
+                              'uid': entry.object['uid'],
+                              'dateOfCreation': Date.now(),
+                              'accessRights': 0}, function (error, result) {
               req.session.account['accessRights'] = 0;
               req.session.account['_id'] = result['_id'];
               req.session['logged'] = true;
@@ -85,7 +88,6 @@ function connectToLdap(login, password, req, res) {
               req.session.account['accessRights'] = account['accessRights'];
               req.session.account['_id'] = account['_id'];
               req.session['logged'] = true;
-              console.log(account);
               res.json( {err: null} );
               return;
             }
@@ -132,6 +134,16 @@ router.post('/signin', function (req, res) {
 
     return;
   }
+});
+
+router.get('/autologin/:hash', function (req, res) {
+  accountsDB.find({'autologin': req.params.hash}, function (err, results) {
+    if (!results.length)
+      return res.redirect('/auths');
+    req.session.account = results[0];
+    req.session['logged'] = true;
+    res.redirect('/');
+  });
 });
 
 module.exports = router;
