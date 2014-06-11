@@ -2,23 +2,28 @@ div(ng-controller="TopmenuCtrl")
   a#logo-42(ui-sref="index")
   #search-wrapper
     #search
-      #search-box
-        #search-selector(ng-class="{active:searchSelected}")
-          button#remove-search(ng-click="searchSelected=''" ng-class="{hidden:!searchSelected}")
+      #search-box.noselect(ng-keydown="onKeyPress($event)")
+        #search-selector(ng-class="{active:searchShow !== 'All' || searchValue || showSearchMenu}")
+          button#remove-search(ng-click="optionSelected()" ng-class="{hidden:searchShow === 'All'}")
             i.fa.fa-times
-          select(dir="rtl" ng-model="searchSelected")
-            option(value="") : All
-            option(ng-repeat="option in searchOptions" value="{{option.id}}") : {{option.name}}
+          .select(dir="rtl" ng-click="showSearchMenu = !showSearchMenu") : {{searchShow}}
         .spacer
+        #search-options(ng-click="showSearchMenu = false")
+          .noselect(ng-show="searchValue")
+            .option(ng-repeat="option in searchOptions | fuzzyFilter:searchValue | orderBy:'score':true" ng-click="optionSelected(this); showSearchMenu = false" ng-class='{active:!$index && option.score}')
+              span(score="{{option.score}}" ng-bind-html="option.html" id="el-{{$index + 1}}")
+            .option.notice hit tab to select
+          .noselect(ng-show="showSearchMenu && !searchValue")
+            .option(ng-repeat="option in searchOptions" ng-click="optionSelected(this);")
+              | {{option.name}}
         form(name="SearchForm" novalidate ng-submit="search()")
-          input.text-input(type="text" ng-model="searchValue" placeholder="Search..." tabindex="1" autofocus)
-          button(type="submit" tabindex="-1")#search-btn
+          input#search-input.text-input(type="text" ng-model="searchValue" placeholder="Search..." tabindex="1" autofocus)
+          button#search-btn(type="submit" tabindex="-1")
             i.fa.fa-search
     #user-name
       a(href="#/user/#{account.uid}")
         span.firstName #{account.firstName} 
         span.lastName #{account.lastName}
-
   #icons-wrapper.noselect
     a.fa.fa-envelope-o(ng-click="dropdown('inbox')" ng-class="menu == 'inbox' ? 'active' : ''")
     a.fa.fa-cog(ng-click="dropdown('settings')" ng-class="menu == 'settings' ? 'active' : ''")
