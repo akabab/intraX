@@ -51,7 +51,7 @@
         left: 68px;
         color: @fg-light!important;
         &.active {
-          select {
+          .select {
             color: #fff;
             text-shadow: 0 -1px rgba(0, 0, 0, 0.46);
             &:hover { text-shadow: 0 1px rgba(0, 0, 0, 0.76); }
@@ -63,21 +63,55 @@
           text-shadow: 0 -1px rgba(0, 0, 0, 0.46);
         }
       }
-      select {
+      #search-options {
+        letter-spacing: 0.06em;
+        position: fixed;
+        top: 37px;
+        width: 162px;
+        b {
+          font-weight: normal;
+          color: @hl;
+        }
+        .option {
+          &.active {
+            background-color: @fg;
+            .disabled {
+              background-color: @fg-dark;
+            }
+          }
+          text-align: right;
+          background-color: @fg-dark;
+          color: @bg-lighter;
+          padding: 2px 5px;
+          border-bottom: 1px solid @fg;
+          cursor: pointer;
+          &.notice {
+            background-color: black;
+            color: @bg-darker;
+            &:hover {
+              background-color: black;
+              color: @bg-darker;
+            }
+          }
+          &:hover {
+            background-color: @fg;
+            color: @hl-light;
+            border-color: transparent;
+          }
+        }
+      }
+      .select {
+        cursor: pointer;
         float: left;
-        -webkit-appearance: none;
-        width: 133px;
-        color: inherit;
-        margin-left: 3px;
+        width: 131px;
         height: 26px;
-        border: 1px solid transparent;
-        border-right-color: @bg;
-        background-color: transparent;
+        &:hover { color: @fg-dark;}
         border-radius: 0;
         -moz-border-radius: 0;
         -webkit-border-radius: 0;
         border-radius: 0;
-        padding: 0 5px;
+        padding-right: 5px;
+        line-height: 26px;
         font-size: 16px;
         &:focus {
           outline: 0;
@@ -91,7 +125,6 @@
       width: 60%;
       float: left;
       input {
-        border-left: 0;
         width: calc(~'100% - 30px');
         height: 26px!important;
         margin: 0;

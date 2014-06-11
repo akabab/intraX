@@ -1,4 +1,4 @@
-var app = angular.module('intraX', ['ui.router', 'intraX.services']);
+var app = angular.module('intraX', ['ui.router', 'ngSanitize', 'intraX.services']);
 
 app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
   $urlRouterProvider.otherwise('/');
@@ -29,7 +29,6 @@ app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope,
     }
     else {
       $scope.user.found = false;
-      console.log(data);
     }
   });
 }]);
@@ -174,7 +173,6 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   }
 
   $scope.genLink = function (lowpart, highpart, arguments) {
-    console.log(lowpart);
     if (angular.isUndefined(highpart))
       return (formatLink(lowpart));
     if (angular.isUndefined(arguments))
@@ -210,16 +208,63 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
 
 app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
   $scope.menu = '';
+  $scope.searchShow = 'All';
   $scope.searchOptions = [
     {"name":'LDAP', "append":'ldap/', "id":'1'},
     {"name":'Forum', "append":'forum/', "id":'2'},
     {"name":'Inbox', "append":'inbox/', "id":'3'},
-    {"name":'Elearning', "append":'elearning/', "id":'4'},
+    {"name":'E-learning', "append":'elearning/', "id":'4'},
     {"name":'Modules', "append":'module/', "id":'5'},
     {"name":'Conferences', "append":'conferences/', "id":'5'}
   ];
+  $scope.onKeyPress = function ($event) {
+    var k = $event.keyCode;
+    switch (k) {
+      case 8:
+        if (!$scope.searchValue)
+          $scope.searchShow = 'All';
+        break;
+      case 9: // Tab
+      if (!$scope.searchValue)
+        break;
+      var valid = true;
+        if ($scope.searchValue && $scope.searchValue.toLowerCase() === 'all') {
+          $scope.searchShow = 'All';
+        }
+        else {
+          var elem = angular.element(document.querySelector('#el-1'))[0];
+          if (elem.attributes.score.value === "0")
+            valid = false;
+          else
+            $scope.searchShow = elem.innerText;
+        }
+        if (valid)
+          $scope.searchValue = '';
+        $event.preventDefault();
+        break;
+      case 13: // Enter
+        break;
+      case 40: // Down
+        break;
+      case 38: // Up
+        break;
+      case 27: // Esc
+        break;
+      default:
+        console.log(k);
+        //if ((k > 47 && k < 91) || (k > 95 && k < 112) || (k > 185))
+        break;
+    }
+  }
+  $scope.searchbar = angular.element(document.querySelector('#search-input'))[0];
+  $scope.optionSelected = function (arg) {
+    if (arg)
+      $scope.searchShow = arg.option.name;
+    else
+      $scope.searchShow = 'All';
+    $scope.searchbar.focus();
+  }
   $scope.dropdown = function (value) {
-
     $window.onclick = function (event) {
         console.log(event.target.tagName);
         if (event.target.tagName !== 'A' && event.target.tagName !== 'BUTTON') {
@@ -247,7 +292,6 @@ app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function 
 
 app.controller('InboxCtrl', ['$scope', 'SessionService', function ($scope, SessionService) {
   $scope.title = "Inbox";
-  console.log($scope.myStyle);
 }]);
 
 
@@ -265,8 +309,62 @@ app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";
 }]);
 
+app.filter('fuzzyFilter', function () {
+  return function (items, pattern) {
+    if (angular.isUndefined(items) || angular.isUndefined(pattern))
+      return items;
+    var patLen = pattern.length;
+    if (patLen < 1)
+      return items;
+
+    var tempItems = [];
+    for (var k = items.length - 1; k >= 0; k--) {
+      var string = items[k].name;
+      pattern = pattern.toLowerCase();
+      string = string.toLowerCase();
+      var patternIdx = 0;
+      var result = items[k].name.match(/[\s\S]{1}/g);
+      var len = string.length;
+      var totalScore = 0;
+      var currScore = 0;
+      var match = { "html":"", "score":0, "idx":0 };
+
+      for(var idx = 0; idx < len; idx++) {
+        if(string[idx] === pattern[patternIdx]) {
+          patternIdx++;
+          match.html = '<b>' + items[k].name[idx] + '</b>';
+          var isCap = (items[k].name[idx] !== string[idx]);
+          currScore += 1 + currScore;
+          if (isCap)
+            currScore++;
+          if (!idx)
+            match.currScore += 2;
+          else if (string[idx - 1] == ' ')
+            match.currScore++;
+          match.score = currScore;
+          match.idx = idx;
+          result[idx] = match.html;
+        } else
+          currScore = 0;
+        totalScore += currScore;
+      }
+      if(patternIdx === patLen) {
+        items[k].html = result.join('');
+        items[k].score = totalScore;
+        tempItems.push(items[k]);
+      }
+      else {
+        items[k].html = items[k].name;
+        items[k].score = 0;
+        tempItems.push(items[k]);
+      }
+    }
+    return tempItems;
+  }
+});
+
 app.directive('resizable', function($window) {
-  return function($scope) {
+  return function ($scope) {
     $scope.initializeWindowSize = function() {
       $scope.windowHeight = $window.innerHeight;
       $scope.myStyle = function (arg) {
@@ -280,8 +378,14 @@ app.directive('resizable', function($window) {
       $scope.myStyle = function (arg) {
         return { 'height': ($window.innerHeight - arg) + 'px' };
       }
-      console.log($scope.myStyle);
       return $scope.$apply();
     });
   };
+});
+
+app.directive('insertHtml', function() {
+  return function ($scope) {
+    console.log(angular.element(document.getElementById('#search-input')));
+    console.log($scope);
+  }
 });
