@@ -1,20 +1,48 @@
-var q = require("q");
-var fs = require("fs");
-var topic_get = require('./topic').topic_get;
-var easymongo = require("easymongo");
-var mongo = new easymongo({dbname: "db"});
-var topic = mongo.collection("topic");
+var q               = require("q");
+var fs              = require("fs");
+var easymongo       = require("easymongo");
+var mongo           = new easymongo({dbname: "db"});
+var category_get    = require('./category').category_get;
+var category_url    = require('./category').category_url;
+var category_tree   = require('./category').category_tree;
+var topic_get       = require('./topic').topic_get;
+var topic_url       = require('./topic').topic_url;
+var accounts_get    = require('./accounts').accounts_get;
+var accounts_uid    = require('./accounts').accounts_uid;
 
-/* http://127.0.0.1:3000/message/
+/* http://127.0.0.1:3000/forum/message/
 ** The anonyme function returns void.
 */
 
 exports.get = function (req, res) {
+  var urlCategory = req.params.topic;
+  var urlUnderCategory = req.params.subtopic;
+  var urlTopic = req.params.message;
+  var path = [urlCategory, urlUnderCategory];
+  var idTopic;
+  var treeTopic;
+  var idMessage;
+  var treeMessage;
 
+  if (urlCategory && urlTopic) {
+    category_get().then(function(result) {
+      treeTopic = category_tree({'list': result, 'root': ''});
+      idTopic = category_url({'tree': treeTopic, 'path': path});
+      topic_get({'categoryId': idTopic}).then(function(topics) {
+        idMessage = topic_url({'list': topics, 'nameMessage': urlTopic});
+        message_get({'idTopic': idMessage}).then(function(messages) {
+          accounts_get().then(function(accounts) {
+            accounts = accounts_uid({'list': messages, 'accounts': accounts});
+            treeMessage = message_tree({'list': messages, 'root': ''});
+            res.json({'messages': messages});
+          });
+        });
+      });
+    });
+  }
 }
 
-
-/* http://127.0.0.1:3000/message/
+/* http://127.0.0.1:3000/forum/message/
 ** The anonyme function returns void and adds, gets or dels a topic to
 ** topic' collection.
 */
@@ -23,7 +51,7 @@ exports.post = function (req, res) {
   var idMessageParent = req.body.idMessageParent;
   var idTopic = req.body.idTopic;
   var idMessage = req.body.idMessage;
-  var idAccounts = req.body.idAccounts;
+  var idAccounts = req.session.account._id;
   var contenue = req.body.contenue;
 
   if (idTopic.length == 24) {
@@ -49,7 +77,7 @@ exports.post = function (req, res) {
   }
 }
 
-/* http://127.0.0.1:3000/message/get
+/* http://127.0.0.1:3000/forum/message/get
 ** The function returns all message from (message + idtopic)'s collection
 ** according to the id from topic' collection.
 */
@@ -61,6 +89,7 @@ function message_get(argument) {
   var message = mongo.collection(('message' + idTopic));
   var deferred = q.defer();
 
+  console.log('message:', ('message' + idTopic));
   message.find({}, function(error, result) {
     if (error)
       deferred.reject(error);
@@ -70,7 +99,7 @@ function message_get(argument) {
   return (deferred.promise);
 }
 
-/* http://127.0.0.1:3000/message/get
+/* http://127.0.0.1:3000/forum/message/get
 ** The function returns a (message + idtopic)'s tree according to
 ** message's list.
 */
@@ -83,21 +112,23 @@ function message_tree(argument) {
   var root = argument.root;
   var node = [];
 
-  for (var count = 0; count < list.length; count += 1)
-    if (root == list[count]._idMessage)
+  for (var count = 0; count < list.length; count += 1) {
+    if (root == list[count].idMessageParent) {
       node.push({
         'parent': {
-           'id': list[count]._id,
+           'id': list[count].idMessageParent,
            'idAccounts': list[count]._idAccounts,
            'dateOfCreation': list[count].dateOfCreation,
            'contenue': list[count].contenue
          },
          'child': message_tree({'list': list, 'root': list[count]._id})
       });
+    }
+  }
   return (node);
 }
 
-/* http://127.0.0.1:3000/message/add
+/* http://127.0.0.1:3000/forum/message/add
 ** The function returns void and saves the new message to
 ** (message + idtopic)'s collection.
 */
@@ -115,7 +146,7 @@ function message_add(argument) {
   var message = mongo.collection(('message' + idTopic));
   var date = new Date();
   var data = {
-    '_idMessage': idMessageParent,
+    '_idMessageParent': idMessageParent,
     '_idAccounts': idAccounts,
     'dateOfCreation': date,
     'contenue': contenue
@@ -125,7 +156,7 @@ function message_add(argument) {
   });
 }
 
-/* http://127.0.0.1:3000/message/del
+/* http://127.0.0.1:3000/forum/message/del
 ** The function returns void and erases the message's id to
 ** topic' collection.
 */
@@ -138,7 +169,6 @@ function message_del(argument) {
   var idTopic = argument.idTopic;
   var message = mongo.collection(('message' + idTopic));
 
-  console.log(('message' + idTopic), idMessage);
   message.removeById(idMessage, function(error, results) {
   });
 }

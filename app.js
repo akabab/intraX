@@ -9,12 +9,10 @@ var lessMiddleware = require('less-middleware');
 
 // here should be the required route files
 var index = require('./routes/index');
-var user = require('./routes/user');
+var user  = require('./routes/user' );
 var auths = require('./routes/auths');
 var dltnt = require('./routes/dltnt');
-var userCategory = require('./routes/category');
-var userTopic = require('./routes/topic');
-var userMessage = require('./routes/message');
+var forum = require('./routes/forum');
 
 var app = express();
 
@@ -33,7 +31,6 @@ app.use(session());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 //routes
 app.use('/auths', auths);
 
@@ -49,19 +46,9 @@ app.all("*", function(req, res, next) {
 
 app.use('/', index);
 app.use('/user', user);
+app.use('/forum', forum);
 app.use('/dltnt', dltnt);
-app.get('/category', userCategory.get);
-app.post('/category', userCategory.post);
-app.get('/topic', userTopic.get);
-app.post('/topic', userTopic.post);
-app.get('/message', userMessage.get);
-app.post('/message', userMessage.post);
-app.get('/category/:action', userCategory.get);
-app.post('/category/:action', userCategory.post);
-app.get('/topic/:action', userTopic.get);
-app.post('/topic/:action', userTopic.post);
-app.get('/message/:action', userMessage.get);
-app.post('/message/:action', userMessage.post);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -96,22 +83,4 @@ app.use(function(err, req, res, next) {
   });
 });
 
-/*
- * Set accounts to db
-*/
-// var bcrypt = require('bcrypt-nodejs');
-// var hash = bcrypt.hashSync("bacon");
-// console.log(hash);
-
-// var easymongo = require('easymongo');
-// var mongo = new easymongo({dbname: 'db'});
-// var accounts = mongo.collection('accounts');
-
-// accounts.save({login: 'test', password: bcrypt.hashSync('test'), dateOfCreation: Date.now(), accessRights: 5});
-// accounts.save({login: 'admin', password: bcrypt.hashSync('admin'), dateOfCreation: Date.now(), accessRights: 5});
-// accounts.find({}, function(error, results) {
-// console.log(results);
-// });
-
-/* end */
 module.exports = app;

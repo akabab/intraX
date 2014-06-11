@@ -10,36 +10,42 @@ var accountsDB = mongo.collection('accounts');
 var ldap = require('ldapjs');
 var ldapClients = {};
 
+var D_ERR_AUTHS_EMPTY = "Empty informations";
+var D_ERR_AUTHS_FINDNO = "Account doesn't exist";
+var D_ERR_AUTHS_WRONGPWD = "Invalid password";
+var D_ERR_AUTHS_TIMEFORCE = "Sorry, try to see this page more later.";
 
-function ldapGetClient(account) {
-  var client = {};
-
-  if (account && ldapClients.hasOwnProperty(account._id)) {
-    client = ldapClients[account._id];
-  }
-  else {
-    client = ldap.createClient( {url: 'ldaps://ldap.42.fr:636', maxConnections: 2000} );
-    ldapClients[account._id] = client;
-  }
-  return (client);
-}
 
 function connectToLdap(login, password, req, res) {
   var dn = 'uid=' + login + ',ou=2013,ou=people,dc=42,dc=fr';
-  var account = req.session.account;
-  account['ldap'] = {"dn": dn, "password": password};
-  var client = ldapGetClient(account);
+  req.session.account['ldap'] = {"dn": dn, "password": password};
+  var client = ldap.createClient( {url: 'ldaps://ldap.42.fr:636'} );//ldapGetClient(account);
 
   //BIND
-  client.bind(account.ldap.dn, account.ldap.password, function (err) {
+  client.bind(req.session.account.ldap.dn, req.session.account.ldap.password, function (err) {
     if (err) {
       console.log("ldap bind err: " + err);
       //CONNECT WITHOUT LDAP
-      account['firstName'] = login;
-      account['lastName']  = "[noLdap]";
-      req.session['logged'] = true;
-      res.json( {err: null} );
-      return;
+      req.session.account['firstName'] = login;
+      req.session.account['lastName']  = "[noLdap]";
+
+      accountsDB.find( {"login": login}, function (err, result) {
+        if (!result.length) {
+          res.json( {err: D_ERR_AUTHS_FINDNO} );
+          return;
+        }
+
+        for (var i = 0; i < result.length; i++) {
+          var account = result[i];
+          if (bcrypt.compareSync(password, account['password'])) {
+              // req.session['account'] = account;
+            req.session['logged'] = true;
+            res.json( {err: null} );
+            return;
+          }
+        }
+        res.json( {err: D_ERR_AUTHS_WRONGPWD} );
+      });
     }
 
     var opts = {
@@ -54,11 +60,33 @@ function connectToLdap(login, password, req, res) {
       }
 
       result.on('searchEntry', function (entry) {
-        account['firstName'] = entry.object['first-name'];
-        account['lastName']  = entry.object['last-name'];
         //ABLE TO CONNECT
-        req.session['logged'] = true;
-        res.json( {err: null} );
+        req.session.account['firstName'] = entry.object['first-name'];
+        req.session.account['lastName']  = entry.object['last-name'];
+        //DB check
+        accountsDB.find( {"login": login}, function (err, result) {
+          if (!result.length) {
+            //Not in db
+            accountsDB.save( {login: login,
+                              password: bcrypt.hashSync(password),
+                              dateOfCreation: Date.now(),
+                              accessRights: 0} );
+            req.session['logged'] = true;
+            res.json( {err: null} );
+            return;
+          }
+
+          for (var i = 0; i < result.length; i++) {
+            var account = result[i];
+            if (bcrypt.compareSync(password, account['password'])) {
+                // req.session['account'] = account;
+              req.session['logged'] = true;
+              res.json( {err: null} );
+              return;
+            }
+          }
+          res.json( {err: D_ERR_AUTHS_WRONGPWD} );
+        });
       });
 
       result.on('searchReference', function (referral) {
@@ -71,6 +99,7 @@ function connectToLdap(login, password, req, res) {
 
       result.on('end', function (result) {
         console.log('status: ' + result.status);
+        client.unbind(function (err) {});
       });
 
     });
@@ -82,39 +111,21 @@ router.get('/', function (req, res) {
   res.render('auths', {title: 'Authentication'});
 });
 
-var D_ERR_AUTHS_EMPTY = "Empty informations";
-var D_ERR_AUTHS_FINDNO = "Account doesn't exist";
-var D_ERR_AUTHS_WRONGPWD = "Invalid password";
-var D_ERR_AUTHS_TIMEFORCE = "Sorry, try to see this page more later.";
-
 router.post('/signin', function (req, res) {
   if (!req.body.password || !req.body.login) {
-    res.json( {err: D_ERR_AUTHS_EMPTY} );
-    return;
+    return res.json( {err: D_ERR_AUTHS_EMPTY} );
   }
   else {
     var login = req.body.login.toLowerCase();
     var password = req.body.password;
-    accountsDB.find( {"login": login}, function (err, result) {
-      if (!result.length) {
-        res.json( {err: D_ERR_AUTHS_FINDNO} );
-        return;
-      }
-      for (var i = 0; i < result.length; i++) {
-        var account = result[i];
-        if (bcrypt.compareSync(password, account['password'])) {
-          if (!req.session['account']) {
-            req.session['account'] = account;
-          }
-          //LDAP binding
-          connectToLdap(login, password, req, res);
-          return;
-        }
-      }
-      res.json( {err: D_ERR_AUTHS_WRONGPWD} );
-    });
+
+    if (!req.session['account']) {
+      req.session['account'] = {};
+    }
+    //connect to ldap
+    connectToLdap(login, password, req, res);
+    return;
   }
 });
-
 
 module.exports = router;

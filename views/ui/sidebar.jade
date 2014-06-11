@@ -7,9 +7,17 @@ div#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
           td(ng-show="link.unseen") ({{link.unseen}})
     div(ng-show="$index==selectedLink")
       div(ng-repeat="sublink in link.sublinks")
+        div.drop
         div#sublink(ng-click="selectSublink($index)" ng-class="{selected: $index==selectedSublink, unseen: sublink.unseen, first: $first}")
           table
             tr
               td {{sublink.name}}
               td(ng-show="sublink.unseen") ({{sublink.unseen}})
+        div(ng-show="$index==selectedSublink")
+          div(ng-repeat="subsublink in sublink.children")
+            div#subsublink(ng-click="selectSubsublink($index)" ng-class="{selected: $index==selectedSubsublink, unseen: subsublink.unseen, first: $first}")
+              table
+                tr
+                  td {{subsublink.name}}
+                  td(ng-show="subsublink.unseen") ({{subsublink.unseen}})
   .spacer
