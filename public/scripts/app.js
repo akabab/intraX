@@ -35,19 +35,19 @@ app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope,
 
 app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.links = [
-    {"name": 'Inbox', "deploy":true, "unseen": 5, "sublinks": [
+    {"name": 'Inbox', "deploy":true, "unseen": 5, "children": [
       {"name": 'Messages', "unseen": 2}, {"name": 'Tickets', "unseen": 0}
     ]},
-    {"name": 'Forum', "deploy":true, "unseen": 2, "sublinks": []},
-    {"name": 'Ldap', "deploy":true, "unseen": 2, "sublinks": []},
-    {"name": 'Elearning', "deploy":true, "unseen": 2, "sublinks": []},
-    {"name": 'Modules', "deploy":false, "unseen": 5, "sublinks": [
+    {"name": 'Forum', "deploy":true, "unseen": 2, "children": []},
+    {"name": 'Ldap', "deploy":true, "unseen": 2, "children": []},
+    {"name": 'Elearning', "deploy":true, "unseen": 2, "children": []},
+    {"name": 'Modules', "deploy":false, "unseen": 5, "children": [
       {"name": 'Algo', "unseen": 2}
     ]},
-    {"name": 'Conferences', "deploy":true, "unseen": 1, "sublinks": [
+    {"name": 'Conferences', "deploy":true, "unseen": 1, "children": [
       {"name": 'News', "unseen": 2}
     ]},
-    {"name": 'Activity', "deploy":false, "unseen": 0, "sublinks": [
+    {"name": 'Activity', "deploy":false, "unseen": 0, "children": [
       {"name": 'Past', "unseen": 2}
     ]}
   ];
@@ -55,7 +55,7 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   $http.get('/forum/category')
   .success(function (data) {
     for (var i in data.tree) {
-      $scope.links[1].sublinks.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
+      $scope.links[1].children.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
     }    
   })
   .error(function (data, status, headers, config, statusText) {
@@ -209,6 +209,10 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
 app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
   $scope.menu = '';
   $scope.searchShow = 'All';
+  $scope.commands = [
+    {"name":'/logout', "alias":['/lg', '/quit']},
+    {"name":'/pm', "alias":['/w', '/mp', '/to']},
+  ];
   $scope.searchOptions = [
     {"name":'LDAP', "append":'ldap/', "id":'1'},
     {"name":'Forum', "append":'forum/', "id":'2'},
@@ -279,7 +283,7 @@ app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
   }
 
   $scope.search = function () {
-    if ($scope.searchValue && $scope.searchValue.length && $scope.searchValue.charAt(0) == '/')
+    if ($scope.searchValue && $scope.searchValue.length && $scope.searchValue.charAt(0) === '/')
       $window.location = $scope.searchValue;
     else
       $window.location = '/#/' + $scope.searchValue;
