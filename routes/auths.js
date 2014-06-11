@@ -143,7 +143,7 @@ router.post('/signin', function (req, res) {
 });
 
 //Get current autologin token
-router.post('/autologin', function (req, res) {
+router.post('/autologin/get', function (req, res) {
   if (!req.body.password) {
     return res.json( {err: D_ERR_AUTHS_EMPTY} );
   }
@@ -155,7 +155,6 @@ router.post('/autologin', function (req, res) {
           res.json( {err: 'No current token'} );
         }
         else {
-          console.log(result[0].autologin);
           res.json( {err: null, 'token': result[0].autologin} );
         }
       }
@@ -172,7 +171,7 @@ router.post('/autologin/new', function (req, res) {
   }
   var password = req.body.password;
   if (bcrypt.compareSync(password, req.session.account['password'])) {
-    crypto.randomBytes(24, function (ex, buf) {
+    crypto.randomBytes(16, function (ex, buf) {
       var token = buf.toString('hex');
       accountsDB.update({'password': req.session.account.password}, {$set: {'autologin': token}});
       res.json( {err: null, 'token': token} );

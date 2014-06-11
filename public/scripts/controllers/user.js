@@ -34,7 +34,7 @@ angular.module('intraX')
 
     console.log("yo");
 
-    $http.post('/auths/autologin', {'password': $scope.password})
+    $http.post('/auths/autologin/get', {'password': $scope.password})
     .success(function (data) {
       if (!data.err) {
         $scope.askingToken = false;

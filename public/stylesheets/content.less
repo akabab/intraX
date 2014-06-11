@@ -15,12 +15,30 @@
     padding: 5px;
   }
   .popup {
-    background-color: red;
-    border-color: #3f3f3f;
-    position: absolute;
-    width: 60%;
-    left: 20%;
-    top: 100px;
+    position: fixed;
+    width: calc(~'100% - 290px');
+    left: 260px;
+    top: 50%;
+
+    fieldset {
+      background-color: white;
+      border: 1px solid @hl-dark;
+      box-shadow: 0px 0px 5px @bg-dark;
+      padding: 5px;
+    }
+
+    legend {
+      background-color: white;
+      font-weight: bold;
+    }
+  }
+  button {
+    background-color: @fg;
+    border: 1px solid @fg-darker;
+    color: white;
+    &:hover {
+      color: @hl;
+    }
   }
 }
 
