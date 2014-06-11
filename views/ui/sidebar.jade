@@ -1,11 +1,11 @@
 #sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
   .link(ng-repeat="link in links" ng-init="show = link.deploy; linkSref = genLink(link.name)")
     .elem.noselect(id="sb-{{linkSref}}")
-      i.fa(ng-class='{open:show, active:link.sublinks.length > 0}' ng-click="show = !show")
+      i.fa(ng-class='{open:show, active:link.children.length > 0}' ng-click="show = !show")
       a(ui-sref="{{linkSref}}" tabindex="-1" ng-class="link.unseen ? 'bold' : 'wide'") {{link.name}}
       a.unseen(ng-if="link.unseen" ui-sref="{{linkSref + ':unseen'}}" tabindex="-1") ({{link.unseen}})
     .sublinks(ng-show="show")
-      .sublink(ng-repeat="sublink in link.sublinks" ng-init="subshow = sublink.deploy; sublinkSref = genLink(link.name, sublink.name)")
+      .sublink(ng-repeat="sublink in link.children" ng-init="subshow = sublink.deploy; sublinkSref = genLink(link.name, sublink.name)")
         div(ng-if="sublink.children.length")
           .elem.noselect(id="sb-{{sublinkSref}}")
             i.fa.active(ng-class='{open:subshow}' ng-click="subshow = !subshow")
