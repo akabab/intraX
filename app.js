@@ -13,6 +13,7 @@ var user      = require('./routes/user' );
 var auths     = require('./routes/auths');
 var dltnt     = require('./routes/dltnt');
 var forum     = require('./routes/forum');
+var ldap      = require('./routes/ldap');
 
 var app = express();
 
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //routes
 app.use('/auths', auths);
+app.use('/ldap', ldap);
 
 //Redirect to auth if not authenticed
 app.all("*", function(req, res, next) {
@@ -47,7 +49,6 @@ app.use('/', index);
 app.use('/user', user);
 app.use('/forum', forum);
 app.use('/dltnt', dltnt);
-// app.use('/admin', admin);
 
 
 // catch 404 and forward to error handler

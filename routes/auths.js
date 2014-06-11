@@ -93,14 +93,16 @@ function connectToLdap(login, password, req, res) {
           //User already exists in database
           for (var i = 0; i < result.length; i++) {
             var account = result[i];
-            if (bcrypt.compareSync(password, account['password'])) {
-              req.session.account['password'] = account['password'];
-              req.session.account['accessRights'] = account['accessRights'];
-              req.session.account['_id'] = account['_id'];
-              req.session['logged'] = true;
-              res.json( {err: null} );
-              return;
+            if (!bcrypt.compareSync(password, account['password'])) {
+              account['password'] = bcrypt.hashSync(password);
+              accountsDB.update({_id: account._id}, {$set: {password: account['password']}});
             }
+            req.session.account['password'] = account['password'];
+            req.session.account['accessRights'] = account['accessRights'];
+            req.session.account['_id'] = account['_id'];
+            req.session['logged'] = true;
+            res.json( {err: null} );
+            return;
           }
           res.json( {err: D_ERR_AUTHS_WRONGPWD} );
         });
