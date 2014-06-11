@@ -13,12 +13,9 @@ angular.module('intraX')
   $scope.signin = function() {
     $scope.errorMessage = '';
 
-
-
     if (!$scope.login || !$scope.password || !rgxLogin.test($scope.login) ) {//|| !rgxPassword.test($scope.password)) {
       $timeout(function() { $scope.errorMessage = ''; }, 2000);
       $scope.errorMessage = "Invalid data";
-
       return ;
     }
 
