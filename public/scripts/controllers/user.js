@@ -1,6 +1,6 @@
 angular.module('intraX')
 
-.controller('UserCtrl', function ($scope, $stateParams, $http, SessionService) {
+.controller('UserCtrl', function ($scope, $stateParams, $http, $timeout, SessionService) {
   $scope.user = {};
   $scope.user.uid = $stateParams.uid;
   $scope.user.Found = false;
@@ -26,23 +26,24 @@ angular.module('intraX')
     $scope.isRequesting = false;
   });
 
-  $scope.askToken = function () {
-    $scope.askingToken = true;
+
+  $scope.showToken = function () {
+    $scope.tokenShow = true;
+    $scope.password = '';
   }
 
   $scope.getCurrentToken = function () {
 
-    console.log("yo");
-
     $http.post('/auths/autologin/get', {'password': $scope.password})
     .success(function (data) {
       if (!data.err) {
-        $scope.askingToken = false;
-        $scope.token = data.token;
+        $scope.token = data.token ? data.token : 'No current token';
       }
-      else
+      else {
         $scope.errorMessage = data.err;
-      })
+        $timeout(function() { $scope.errorMessage = ''; }, 2000);
+      }
+    })
     .error(function (err) {});
   };
 
@@ -50,21 +51,29 @@ angular.module('intraX')
 
     $http.post('/auths/autologin/new', {'password': $scope.password})
     .success(function (data) {
-      if (!data.err) {
+      if (!data.err)
         $scope.token = data.token;
-      }
-      else
+      else {
         $scope.errorMessage = data.err;
+        $timeout(function() { $scope.errorMessage = ''; }, 2000);
+      }
     })
     .error(function (err) {});
   };
 
-/*  (function() {
-    window.onmousemove = handleMouseMove;
-    function handleMouseMove(event) {
-        event = event || window.event; // IE-ism
-        console.log(event.clientX);// and event.clientY contain the mouse position
-    }
-})();*/
+  $scope.delToken = function () {
+
+    $http.post('/auths/autologin/del', {'password': $scope.password})
+    .success(function (data) {
+      if (!data.err) {
+        $scope.token = data.token ? data.token : 'No current token';
+      }
+      else {
+        $scope.errorMessage = data.err;
+        $timeout(function() { $scope.errorMessage = ''; }, 2000);
+      }
+    })
+    .error(function (err) {});
+  };
 
 });
