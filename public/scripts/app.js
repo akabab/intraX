@@ -209,9 +209,10 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
 app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
   $scope.menu = '';
   $scope.searchShow = 'All';
+  $scope.searchValue = '';
   $scope.commands = [
-    {"name":'/logout', "alias":['/lg', '/quit']},
-    {"name":'/pm', "alias":['/w', '/mp', '/to']},
+    {"name":'/logout'},
+    {"name":'/message'},
   ];
   $scope.searchOptions = [
     {"name":'LDAP', "append":'ldap/', "id":'1'},
@@ -221,26 +222,39 @@ app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
     {"name":'Modules', "append":'module/', "id":'5'},
     {"name":'Conferences', "append":'conferences/', "id":'5'}
   ];
+  $scope.isValidSearch = function () {
+    var elem = angular.element(document.querySelector('#el-1'))[0];
+    if (elem.attributes.score.value === "true")
+      return elem.innerText;
+    return false;
+  }
   $scope.onKeyPress = function ($event) {
     var k = $event.keyCode;
     switch (k) {
       case 8:
-        if (!$scope.searchValue)
-          $scope.searchShow = 'All';
+        if (!$scope.searchValue) { $scope.searchShow = 'All'; }
         break;
       case 9: // Tab
-      if (!$scope.searchValue)
-        break;
-      var valid = true;
-        if ($scope.searchValue && $scope.searchValue.toLowerCase() === 'all') {
+        if (!$scope.searchValue) { break; }
+        var valid = true;
+        var searched = $scope.searchValue.toLowerCase();
+        if (searched === 'all') {
           $scope.searchShow = 'All';
         }
         else {
-          var elem = angular.element(document.querySelector('#el-1'))[0];
-          if (elem.attributes.score.value === "0")
+          var elem = $scope.isValidSearch();
+          if (elem === false) {
             valid = false;
+            elem = angular.element(document.querySelector('#res-1'));
+            if (elem) {
+              elem = elem[0];
+              if (elem.attributes.score.value === "true") {
+                $scope.searchValue = elem.innerText;
+              }
+            }
+          }
           else
-            $scope.searchShow = elem.innerText;
+            $scope.searchShow = elem;
         }
         if (valid)
           $scope.searchValue = '';
@@ -254,7 +268,10 @@ app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
         break;
       case 27: // Esc
         break;
+      case 191: // slash
+        break;
       default:
+      if ($scope.searchValue.length === 0)
         console.log(k);
         //if ((k > 47 && k < 91) || (k > 95 && k < 112) || (k > 185))
         break;
@@ -334,16 +351,16 @@ app.filter('fuzzyFilter', function () {
       var match = { "html":"", "score":0, "idx":0 };
 
       for(var idx = 0; idx < len; idx++) {
-        if(string[idx] === pattern[patternIdx]) {
+        if(string.charAt(idx) === pattern.charAt(patternIdx)) {
           patternIdx++;
-          match.html = '<b>' + items[k].name[idx] + '</b>';
-          var isCap = (items[k].name[idx] !== string[idx]);
+          match.html = '<b>' + items[k].name.charAt(idx) + '</b>';
+          var isCap = (items[k].name.charAt(idx) !== string.charAt(idx));
           currScore += 1 + currScore;
           if (isCap)
             currScore++;
           if (!idx)
             match.currScore += 2;
-          else if (string[idx - 1] == ' ')
+          else if (string.charAt(idx - 1) == ' ')
             match.currScore++;
           match.score = currScore;
           match.idx = idx;
@@ -355,11 +372,13 @@ app.filter('fuzzyFilter', function () {
       if(patternIdx === patLen) {
         items[k].html = result.join('');
         items[k].score = totalScore;
+        items[k].matched = true;
         tempItems.push(items[k]);
       }
       else {
         items[k].html = items[k].name;
-        items[k].score = 0;
+        items[k].score = totalScore;
+        items[k].matched = false;
         tempItems.push(items[k]);
       }
     }

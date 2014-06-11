@@ -10,8 +10,8 @@ div(ng-controller="TopmenuCtrl")
         .spacer
         #search-options(ng-click="showSearchMenu = false")
           .noselect(ng-show="searchValue")
-            .option(ng-repeat="option in searchOptions | fuzzyFilter:searchValue | orderBy:'score':true" ng-click="optionSelected(this); showSearchMenu = false" ng-class='{active:!$index && option.score}')
-              span(score="{{option.score}}" ng-bind-html="option.html" id="el-{{$index + 1}}")
+            .option(ng-repeat="option in searchOptions | fuzzyFilter:searchValue | orderBy:'score':true" ng-click="optionSelected(this); showSearchMenu = false" ng-class='{active:!$index && option.matched}')
+              span(score="{{option.matched}}" ng-bind-html="option.html" id="el-{{$index + 1}}")
             .option.notice hit tab to select
           .noselect(ng-show="showSearchMenu && !searchValue")
             .option(ng-repeat="option in searchOptions" ng-click="optionSelected(this);")
@@ -20,6 +20,10 @@ div(ng-controller="TopmenuCtrl")
           input#search-input.text-input(type="text" ng-model="searchValue" placeholder="Search..." tabindex="1" autofocus)
           button#search-btn(type="submit" tabindex="-1")
             i.fa.fa-search
+        #search-results.noselect(ng-show="searchValue")
+          .container
+            .option(ng-repeat="command in commands | fuzzyFilter:searchValue | orderBy:'score':true" ng-click="commandSelected(this)" ng-class='{active:!$index && !isValidSearch() && command.matched}')
+              span(score="{{command.matched}}" ng-bind-html="command.html" id="res-{{$index + 1}}")
     #user-name
       a(href="#/user/#{account.uid}")
         span.firstName #{account.firstName} 
