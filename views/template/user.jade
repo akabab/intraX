@@ -25,12 +25,13 @@
   .spacer
 form.popup.token-popup(novalidate ng-submit="getCurrentToken()")
   fieldset(draggable="true")
-    //-(ng-show="askingToken")
+    //- ng-show="askingToken" 
     legend Autologin Token
     label Enter your password
     input(type="password" ng-model="password")
     button(type="submit") OK
-    div.user-current-token(ng-show="token")
+    div.user-current-token
+      //- (ng-show="token || needFirst")
       a(href="http://localhost:3000/auths/autologin/{{token}}") http://localhost:3000/auths/autologin/{{token}}
       button(type='button' ng-click="getNewToken()") Generate
     div(ng-show="errorMessage") {{errorMessage}}
