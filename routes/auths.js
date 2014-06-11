@@ -152,7 +152,7 @@ router.post('/autologin/get', function (req, res) {
     accountsDB.find({'password': req.session.account.password}, function (err, result) {
       if (result.length) {
         if (!result[0].autologin) {
-          res.json( {err: 'No current token'} );
+          res.json( {err: null, 'token': null} );
         }
         else {
           res.json( {err: null, 'token': result[0].autologin} );
@@ -176,6 +176,20 @@ router.post('/autologin/new', function (req, res) {
       accountsDB.update({'password': req.session.account.password}, {$set: {'autologin': token}});
       res.json( {err: null, 'token': token} );
     });
+  }
+  else
+    res.json( {err: D_ERR_AUTHS_WRONGPWD} );
+});
+
+//Delete current autologin token
+router.post('/autologin/del', function (req, res) {
+  if (!req.body.password) {
+    return res.json( {err: D_ERR_AUTHS_EMPTY} );
+  }
+  var password = req.body.password;
+  if (bcrypt.compareSync(password, req.session.account['password'])) {
+      accountsDB.update({'password': req.session.account.password}, {$set: {'autologin': null}});
+      res.json( {err: null, 'token': null} );
   }
   else
     res.json( {err: D_ERR_AUTHS_WRONGPWD} );

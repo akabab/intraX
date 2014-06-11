@@ -31,11 +31,25 @@
       background-color: white;
       font-weight: bold;
     }
+
+    .close {
+      position: absolute;
+      left: calc(~'100% - 22px');
+      top: 6px;
+    }
   }
-  button {
+  .dark-btn {
     background-color: @fg;
     border: 1px solid @fg-darker;
     color: white;
+    &:hover {
+      color: @hl;
+    }
+  }
+  .light-btn {
+    background-color: transparent;
+    border: 0px;
+    color: @fg-darker;
     &:hover {
       color: @hl;
     }
