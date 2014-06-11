@@ -3,8 +3,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get(['/', '/index'], function (req, res) {
-  if (req.session && req.session['logged'])
+  if (req.session && req.session['logged']) {
     res.render('index', { account: req.session['account'] });
+  }
   else
     res.redirect('auths');
 });

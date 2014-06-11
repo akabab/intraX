@@ -3,14 +3,16 @@ var app = angular.module('intraX', ['ui.router', 'intraX.services']); // 'ui.boo
 app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
   $urlRouterProvider.otherwise('/');
   $stateProvider
-    .state('index', {       url: '/',            templateUrl: '/template/index',       controller: 'IndexCtrl' })
-    .state('user', {        url: '/user/:uid',  templateUrl: '/template/user',        controller: 'UserCtrl' })
-    .state('inbox', {       url: '/inbox',       templateUrl: '/template/inbox',       controller: 'InboxCtrl' })
-    .state('module', {      url: '/module',      templateUrl: '/template/module',      controller: 'ModuleCtrl' })
-    .state('calendar', {    url: '/calendar',    templateUrl: '/template/calendar',    controller: 'CalendarCtrl' })
-    .state('conferences', { url: '/conferences', templateUrl: '/template/conferences', controller: 'ConferencesCtrl' })
-    .state('elearning', {   url: '/elearning',   templateUrl: '/template/elearning',   controller: 'ElearningCtrl' })
-    .state('forum', {       url: '/forum',       templateUrl: '/template/community',   controller: 'ForumCtrl' });
+    .state('index', {         url: '/',                         templateUrl: '/template/index',          controller: 'IndexCtrl' })
+    .state('user', {          url: '/user/:uid',                templateUrl: '/template/user',           controller: 'UserCtrl' })
+    .state('inbox', {         url: '/inbox',                    templateUrl: '/template/inbox',          controller: 'InboxCtrl' })
+    .state('module', {        url: '/module',                   templateUrl: '/template/module',         controller: 'ModuleCtrl' })
+    .state('calendar', {      url: '/calendar',                 templateUrl: '/template/calendar',       controller: 'CalendarCtrl' })
+    .state('conferences', {   url: '/conferences',              templateUrl: '/template/conferences',    controller: 'ConferencesCtrl' })
+    .state('elearning', {     url: '/elearning',                templateUrl: '/template/elearning',      controller: 'ElearningCtrl' })
+    .state('forum', {         url: '/forum',                    templateUrl: '/template/forum',          controller: 'ForumCtrl' })
+    .state('category', {      url: '/forum/category/:cat/:sub', templateUrl: '/template/category',       controller: 'CategoryCtrl' })
+    .state('adminCategory', { url: '/admin/category',           templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
 }]);
 
 app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
@@ -32,22 +34,41 @@ app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope,
 
 }]);
 
-app.controller('SidebarCtrl', ['$scope', function ($scope) {
+app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.links = [
                   {name: 'Inbox', unseen: 5, sublinks: [{name: 'Messages', unseen: 2}, {name: 'Tickets', unseen: 0}]},
-                  {name: 'Forum', unseen: 2, sublinks: [{name: 'General', unseen: 2}]},
+                  {name: 'Forum', unseen: 2, sublinks: []},
                   {name: 'Modules', unseen: 5, sublinks: [{name: 'Algo', unseen: 2}]},
                   {name: 'Conferences', unseen: 1, sublinks: [{name: 'News', unseen: 2}]},
                   {name: 'Activity', unseen: 0, sublinks: [{name: 'Past', unseen: 2}]}
                   ];
 
+  $http.get('/forum/category')
+  .success(function (data) {
+    // here are my modifications
+    for (var i in data.tree) {
+      $scope.links[1].sublinks.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
+    }    
+  })
+  .error(function (data, status, headers, config, statusText) {
+    console.log(statusText + " : " + status);
+    console.log(headers);
+    console.log(data);
+  });
+
   $scope.selectLink = function (index) {
       $scope.selectedLink = index;
       $scope.selectedSublink = -1;
+      $scope.selectedSubsublink = -1;
   }
 
   $scope.selectSublink = function (index) {
       $scope.selectedSublink = index;
+      $scope.selectedSubsublink = -1;
+  }
+  
+  $scope.selectSubsublink = function (index) {
+      $scope.selectedSubsublink = index;
   }
 
 }]);
@@ -80,7 +101,6 @@ app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function 
 }]);
 
 
-
 app.controller('InboxCtrl', ['$scope', 'SessionService', function ($scope, SessionService) {
     $scope.title = "Inbox";
 }]);
@@ -100,12 +120,6 @@ app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";
 }]);
 
-
 app.controller('ElearningCtrl', ['$scope', function ($scope) {
     $scope.title = "Elearning";
-}]);
-
-
-app.controller('ForumCtrl', ['$scope', function ($scope) {
-    $scope.title = "Forum";
 }]);
