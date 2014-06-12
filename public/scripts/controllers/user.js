@@ -1,11 +1,13 @@
 angular.module('intraX')
 
-.controller('UserCtrl', function ($scope, $stateParams, $http, SessionService) {
+.controller('UserCtrl', function ($scope, $stateParams, $http, $timeout, SessionService) {
   $scope.user = {};
   $scope.user.uid = $stateParams.uid;
-  
+  $scope.user.Found = false;
   $scope.isRequesting = true;
+  $scope.askingToken = false;
 
+  //Get User info
   $http.get('/user/' + $stateParams.uid).success(function (data) {
 
     if (!data.error) {
@@ -24,5 +26,54 @@ angular.module('intraX')
     $scope.isRequesting = false;
   });
 
+
+  $scope.showToken = function () {
+    $scope.tokenShow = true;
+    $scope.password = '';
+  }
+
+  $scope.getCurrentToken = function () {
+
+    $http.post('/auths/autologin/get', {'password': $scope.password})
+    .success(function (data) {
+      if (!data.err) {
+        $scope.token = data.token ? data.token : 'No current token';
+      }
+      else {
+        $scope.errorMessage = data.err;
+        $timeout(function() { $scope.errorMessage = ''; }, 2000);
+      }
+    })
+    .error(function (err) {});
+  };
+
+  $scope.getNewToken = function () {
+
+    $http.post('/auths/autologin/new', {'password': $scope.password})
+    .success(function (data) {
+      if (!data.err)
+        $scope.token = data.token;
+      else {
+        $scope.errorMessage = data.err;
+        $timeout(function() { $scope.errorMessage = ''; }, 2000);
+      }
+    })
+    .error(function (err) {});
+  };
+
+  $scope.delToken = function () {
+
+    $http.post('/auths/autologin/del', {'password': $scope.password})
+    .success(function (data) {
+      if (!data.err) {
+        $scope.token = data.token ? data.token : 'No current token';
+      }
+      else {
+        $scope.errorMessage = data.err;
+        $timeout(function() { $scope.errorMessage = ''; }, 2000);
+      }
+    })
+    .error(function (err) {});
+  };
 
 });
