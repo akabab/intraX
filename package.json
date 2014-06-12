@@ -18,6 +18,7 @@
     "bcrypt-nodejs": "0.0.3",
     "express-session": "~1.0.4",
     "ldapjs": "0.6.0",
-    "q": "1.0.1"
+    "q": "1.0.1",
+    "crypto": "0.0.3"
   }
 }
