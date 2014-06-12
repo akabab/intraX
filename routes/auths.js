@@ -2,6 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
+var crypto = require('crypto');
 var bcrypt = require('bcrypt-nodejs');
 var easymongo = require('easymongo');
 var ldap = require('ldapjs');
@@ -14,6 +15,11 @@ var D_ERR_AUTHS_FINDNO    = "Account doesn't exist";
 var D_ERR_AUTHS_WRONGPWD  = "Invalid password";
 var D_ERR_AUTHS_TIMEFORCE = "Sorry, try to see this page more later.";
 
+
+//Render Authentication page
+router.get('/', function (req, res) {
+  res.render('auths', {title: 'Authentication'});
+});
 
 function connectToLdap(login, password, req, res) {
   var dn = 'uid=' + login + ',ou=2013,ou=people,dc=42,dc=fr';
@@ -37,7 +43,9 @@ function connectToLdap(login, password, req, res) {
         for (var i = 0; i < result.length; i++) {
           var account = result[i];
           if (bcrypt.compareSync(password, account['password'])) {
+            req.session.account['password'] = account['password']
             req.session.account['accessRights'] = account['accessRights'];
+            req.session.account['_id'] = account['_id'];
             req.session['logged'] = true;
             res.json( {err: null} );
             return;
@@ -66,24 +74,35 @@ function connectToLdap(login, password, req, res) {
         accountsDB.find( {"login": login}, function (err, result) {
           if (!result.length) {
           //User not in database -> create new entry && log
-            accountsDB.save( {login: login,
-                              password: bcrypt.hashSync(password),
-                              dateOfCreation: Date.now(),
-                              accessRights: 0} );
-            req.session.account['accessRights'] = 0;
-            req.session['logged'] = true;
-            res.json( {err: null} );
+            var pwd = bcrypt.hashSync(password);
+            accountsDB.save( {'login': login,
+                              'password': pwd,
+                              'firstName': entry.object['first-name'],
+                              'lastName': entry.object['last-name'],
+                              'uid': entry.object['uid'],
+                              'dateOfCreation': Date.now(),
+                              'accessRights': 0}, function (error, result) {
+              req.session.account['password'] = pwd;
+              req.session.account['accessRights'] = 0;
+              req.session.account['_id'] = result['_id'];
+              req.session['logged'] = true;
+              res.json( {err: null} );
+            });
             return;
           }
           //User already exists in database
           for (var i = 0; i < result.length; i++) {
             var account = result[i];
-            if (bcrypt.compareSync(password, account['password'])) {
-              req.session.account['accessRights'] = account['accessRights'];
-              req.session['logged'] = true;
-              res.json( {err: null} );
-              return;
+            if (!bcrypt.compareSync(password, account['password'])) {
+              account['password'] = bcrypt.hashSync(password);
+              accountsDB.update({_id: account._id}, {$set: {password: account['password']}});
             }
+            req.session.account['password'] = account['password'];
+            req.session.account['accessRights'] = account['accessRights'];
+            req.session.account['_id'] = account['_id'];
+            req.session['logged'] = true;
+            res.json( {err: null} );
+            return;
           }
           res.json( {err: D_ERR_AUTHS_WRONGPWD} );
         });
@@ -106,11 +125,7 @@ function connectToLdap(login, password, req, res) {
   });
 }
 
-
-router.get('/', function (req, res) {
-  res.render('auths', {title: 'Authentication'});
-});
-
+//Signin via authentication page
 router.post('/signin', function (req, res) {
   if (!req.body.password || !req.body.login) {
     return res.json( {err: D_ERR_AUTHS_EMPTY} );
@@ -128,5 +143,72 @@ router.post('/signin', function (req, res) {
     return;
   }
 });
+
+//Get current autologin token
+router.post('/autologin/get', function (req, res) {
+  if (!req.body.password) {
+    return res.json( {err: D_ERR_AUTHS_EMPTY} );
+  }
+  var password = req.body.password;
+  if (bcrypt.compareSync(password, req.session.account['password'])) {
+    accountsDB.find({'password': req.session.account.password}, function (err, result) {
+      if (result.length) {
+        if (!result[0].autologin) {
+          res.json( {err: null, 'token': null} );
+        }
+        else {
+          res.json( {err: null, 'token': result[0].autologin} );
+        }
+      }
+    });
+  }
+  else
+    res.json( {err: D_ERR_AUTHS_WRONGPWD} );
+});
+
+//Generate new autologin token
+router.post('/autologin/new', function (req, res) {
+  if (!req.body.password) {
+    return res.json( {err: D_ERR_AUTHS_EMPTY} );
+  }
+  var password = req.body.password;
+  if (bcrypt.compareSync(password, req.session.account['password'])) {
+    crypto.randomBytes(16, function (ex, buf) {
+      var token = buf.toString('hex');
+      accountsDB.update({'password': req.session.account.password}, {$set: {'autologin': token}});
+      res.json( {err: null, 'token': token} );
+    });
+  }
+  else
+    res.json( {err: D_ERR_AUTHS_WRONGPWD} );
+});
+
+//Delete current autologin token
+router.post('/autologin/del', function (req, res) {
+  if (!req.body.password) {
+    return res.json( {err: D_ERR_AUTHS_EMPTY} );
+  }
+  var password = req.body.password;
+  if (bcrypt.compareSync(password, req.session.account['password'])) {
+      accountsDB.update({'password': req.session.account.password}, {$set: {'autologin': null}});
+      res.json( {err: null, 'token': null} );
+  }
+  else
+    res.json( {err: D_ERR_AUTHS_WRONGPWD} );
+});
+
+//Connect via autologin token
+router.get('/autologin/:token', function (req, res) {
+  var token = req.params.token;
+  accountsDB.find({'autologin': token}, function (err, result) {
+    if (!result.length)
+      return res.redirect('/auths');
+    req.session.account = result[0];
+    req.session['logged'] = true;
+    res.redirect('/');
+  });
+});
+
+
 
 module.exports = router;

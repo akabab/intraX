@@ -8,15 +8,15 @@ var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
 // here should be the required route files
-var index = require('./routes/index');
-var user  = require('./routes/user' );
-var auths = require('./routes/auths');
-var dltnt = require('./routes/dltnt');
-var forum = require('./routes/forum');
-var inbox = require('./routes/inbox');
+var index     = require('./routes/index');
+var user      = require('./routes/user' );
+var auths     = require('./routes/auths');
+var dltnt     = require('./routes/dltnt');
+var forum     = require('./routes/forum');
+var ldap      = require('./routes/ldap' );
+var inbox     = require('./routes/inbox');
 
 var app = express();
-console.log(inbox);
 /*
 ** View engine setup.
 */
@@ -34,13 +34,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //routes
 app.use('/auths', auths);
+app.use('/ldap', ldap);
 
 //Redirect to auth if not authenticed
 app.all("*", function(req, res, next) {
   if (req.session && req.session['logged'])
     next();
   else {
-    console.log(req.url);
     res.redirect('/auths');
   }
 });

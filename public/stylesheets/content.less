@@ -12,7 +12,47 @@
   }
   .panel {
     border: 1px solid #cbcbcb;
-    padding: 10px;
+    padding: 5px;
+  }
+  .popup {
+    position: fixed;
+    width: calc(~'100% - 290px');
+    left: 260px;
+    top: 50%;
+
+    fieldset {
+      background-color: white;
+      border: 1px solid @hl-dark;
+      box-shadow: 0px 0px 5px @bg-dark;
+      padding: 5px;
+    }
+
+    legend {
+      background-color: white;
+      font-weight: bold;
+    }
+
+    .close {
+      position: absolute;
+      left: calc(~'100% - 22px');
+      top: 6px;
+    }
+  }
+  .dark-btn {
+    background-color: @fg;
+    border: 1px solid @fg-darker;
+    color: white;
+    &:hover {
+      color: @hl;
+    }
+  }
+  .light-btn {
+    background-color: transparent;
+    border: 0px;
+    color: @fg-darker;
+    &:hover {
+      color: @hl;
+    }
   }
 }
 
