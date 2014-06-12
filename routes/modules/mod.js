@@ -4,7 +4,6 @@ var easymongo = require("easymongo");
 var mongo = new easymongo({dbname: "db"});
 var modules = mongo.collection("modules");
 
-
 exports.get = function (req, res) {
   if (typeof(req.params.module) === "undefined")
     var argument = "";
@@ -24,7 +23,7 @@ exports.post = function (req, res) {
     });
   }
   else if (req.params.action === "del") {
-    module_del({"id": req.body.id}).then(function (result) {
+    module_del({_id: req.body._id}).then(function (result) {
       module_get().then(function (result) {
         res.json(result);
       });
@@ -49,11 +48,11 @@ var module_get = function (argument) {
       deferred.resolve(result);
   });
   return (deferred.promise);
-}
+};
 
 var module_add = function (argument) {
   var deferred = q.defer();
-
+  
   var name = argument.name.toLowerCase(),
   description = argument.description.toLowerCase(),
   slots = argument.slots,
@@ -79,20 +78,16 @@ var module_add = function (argument) {
    };
 
   modules.save(data, function(error, result) {
+    //var collection = mongo.collection("activity" + result._id);
     deferred.resolve(result);
   });
   return (deferred.promise);
-}
+};
 
 var module_update = function (argument) {
   var deferred = q.defer();
-  
-  var id = argument.id,
-  name = argument.name.toLowerCase(),
-  description = argument.description.toLowerCase(),
-  slots = argument.slots,
-  credits = argument.credits;
-  
+  var _id = argument._id;
+
   // HERE MANAGE DATES
   var start = argument.start.split("/"),
   end = argument.end.split("/");
@@ -102,28 +97,28 @@ var module_update = function (argument) {
     throw new Error ("error end");
   var etd = new Date(parseInt(start[2]), parseInt(start[1]), parseInt(start[0]));
   var eta = new Date(parseInt(end[2]), parseInt(end[1]), parseInt(end[0]));
-    
+
   var data = {
-    name: name,
-    description: description,
-    slots: slots,
-    credits: credits,
+    name: argument.name.toLowerCase(),
+    description: argument.description.toLowerCase(),
+    slots: argument.slots,
+    credits: argument.credits,
     start: etd,
     end: eta
    };
 
-  modules.update({_id:id}, {$set:data}, function(error, result) {
+  modules.update({_id:_id}, {$set:data}, function(error, result) {
     deferred.resolve(result);
   });
   return (deferred.promise);
-}
+};
 
 var module_del = function (argument) {
-  var id = argument.id;
+  var _id = argument._id;
   var deferred = q.defer();
-  console.log(id);
-  modules.removeById(id, function(error, result) {
+
+  modules.removeById(_id, function(error, result) {
     deferred.resolve(result);
   });
   return (deferred.promise);
-}
+};
