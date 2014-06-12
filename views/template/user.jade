@@ -1,19 +1,45 @@
-#user-panel.panel(ng-controller="UserCtrl")
-  div#user-card(ng-if="!isRequesting && user.found")
-    table
-      tr
-        td
-          img(ng-src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg")
-        td
-          h1 {{user.lastName}} {{user.firstName}}
-          .user-info Uid: 
-            span.user-value {{user.uid}}
-          .user-info Phone: 
-            span.user-value {{user.mobilePhone}}
-          .user-info Birth Date: 
-            span.user-value {{user.birthDate}}
-          .user-info Mail: 
-            span.user-value {{user.mail}}
-          button(ng-if="user.isMe") Edit
-  div#user-notfound(ng-if="!isRequesting && !user.found")
-    h1 User '{{user.uid}}' not found
+#user-container
+  #user-card.panel
+    div(ng-if="!isRequesting && user.found")
+      table
+        tr
+          td
+            img(ng-src="{{user.uid && 'https://cdn.42.fr/userprofil/profilview/' + user.uid + '.jpg' || 'https://intra.42.fr/static6854/img/nopicture-profilview.png'}}")
+            //-img(src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg" onerror="this.src='https://intra.42.fr/static6854/img/nopicture-profilview.png'")
+          td
+            h1 {{user.lastName}} {{user.firstName}}
+            .user-info Uid: 
+              span.user-value {{user.uid}}
+            .user-info Phone: 
+              span.user-value {{user.mobilePhone}}
+            .user-info Birth Date: 
+              span.user-value {{user.birthDate}}
+            .user-info Mail: 
+              span.user-value {{user.mail}}
+            div(ng-if="user.isMe")
+              button.dark-btn Edit
+              button.dark-btn(ng-click="showToken()") Autologin Token
+
+    div#user-notfound(ng-if="!isRequesting && !user.found")
+      h1 User '{{user.uid}}' not found
+  .spacer
+  form.popup.token-popup(ng-show="tokenShow" novalidate ng-submit="getCurrentToken()")
+    fieldset
+      legend Autologin Token
+      div(ng-show="!token")
+        label Enter your password
+        input(type="password" ng-model="password")
+        button.dark-btn(type="submit") OK
+      div#current-token(ng-show="token")
+        //- (ng-show="token || needFirst")
+        //- a(href="http://localhost:3000/auths/autologin/{{token}}")
+        | Current Token: 
+        span {{token}}
+        br
+        button.dark-btn(type='button' ng-click="getNewToken()") Generate
+        button.dark-btn(type='button' ng-click="delToken()") Delete
+      div(ng-show="errorMessage") {{errorMessage}}
+      button(type='button' ng-click="tokenShow=false").light-btn.fa.fa-times.close
+
+
+

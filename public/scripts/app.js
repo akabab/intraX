@@ -170,7 +170,6 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   }
 
   $scope.genLink = function (lowpart, highpart, arguments) {
-    console.log(lowpart);
     if (angular.isUndefined(highpart))
       return (formatLink(lowpart));
     if (angular.isUndefined(arguments))

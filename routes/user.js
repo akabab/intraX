@@ -2,13 +2,6 @@ var express = require('express');
 var router = express.Router();
 var ldap = require('ldapjs');
 
-/* GET users listing. */
-// router.get('/', function (req, res) {
-//   console.log(user);
-//   res.render('template/user', {user: {firstname: 'yoann' } });
-//   res.end();
-// });
-
 router.get('/all', function (req, res) {
   var users = [];
   var account = req.session.account;
@@ -67,12 +60,10 @@ router.get('/:uid', function (req, res) {
       attributes: [
         "uid",
         "uidNumber",
-        // "picture",
         "first-name",
         "last-name",
         "birth-date",
         "mobile-phone"
-        // "alias"
         ],
       filter:"!(close=non admis)",
       scope: 'sub'
@@ -85,11 +76,8 @@ router.get('/:uid', function (req, res) {
           uidNumber: entry.object['uidNumber'],
           firstName: entry.object['first-name'],
           lastName: entry.object['last-name'],
-          birthDate: entry.object['birth-date'],
-          mobilePhone: entry.object['mobile-phone'].replace(/ /g, "")
-          // mail: entry.object['alias'][2]
-          // alias: entry.object['alias']
-          // picture: entry.raw['picture'].toString("base64")
+          birthDate: entry.object['birth-date'] ? entry.object['birth-date'] : '/',
+          mobilePhone: entry.object['mobile-phone'] ? entry.object['mobile-phone'].replace(/ /g, "") : '/'
         };
         res.json( user );
       });
