@@ -59,7 +59,8 @@ exports.post = function (req, res) {
       category_set({'id': delIdChild, 'name': addName});
   }*/
   category_get().then(function(parents) {
-    res.json({'parents': parents});
+    tree = category_tree({'list': parents, 'root': ''});
+    res.json({'parents': parents, 'tree': tree});
   });
    res.json('');
 }
@@ -104,7 +105,6 @@ function category_del(argument) {
   var id = argument.id;
 
   category.removeById(id, function(error, results) {
-
   });
 }
 

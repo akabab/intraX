@@ -59,8 +59,11 @@ exports.post = function (req, res) {
     if (req.params.action === 'del' && topicId.length == 24)
       topic_del({'categoryId': categoryId, 'topicId': topicId});
     else if (req.params.action === 'add' && description)
-      topic_add({'categoryId': categoryId, 'description': description});
+      topic_add({'categoryId': categoryId, 'description': description, 'author': req.session.account["uid"]});
   }
+  topic_get({'categoryId': categoryId}).then(function(topics) {
+    res.json(topics);
+  });
 };
 
 /* http://127.0.0.1:3000/topic/538cada300107c05a8547fa4
@@ -95,9 +98,11 @@ var topic_get = function (argument) {
 function topic_add(argument) {
   var topic = mongo.collection(('topic' + argument.categoryId));
   var name = argument.description.toLowerCase();
-  var data = {'description': name};
+  var author = argument.author;
+  var data = {'description': name, 'author': author, date: new Date().toString()};
 
   topic.save(data, function(error, results) {
+    console.log("saved : ", results);
   });
 }
 
