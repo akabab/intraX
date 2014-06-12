@@ -3,23 +3,23 @@ p Welcome to message.jade
 ul(id="thread")
   li(class="message", ng-repeat="message in messages")
     h3(class="messageTitle")
-      span(class="messageAuthor"){{message.author}}
+      span(class="messageAuthor") {{message.author}}
       |&nbsp;-&nbsp;
-      span(class="messageDate"){{message.date}}
+      span(class="messageDate") {{message.date}}
       button(class="commentMessage", ng-click="comment(message.id)") commenter
       button(class="editMessage", ng-show="message.author == user", ng-click="editMessage(message.id)") éditer
-    p(id="message.id", class="messageContent"){{message.content}}
+    p(id="message.id", class="messageContent") {{message.content}}
     div(id="{{'commentBox' + $index}}", ng-show="message.id == commenting")
       textarea(ng-model="commentContent")
       button(class="validComment", ng-click="valid(commentContent, $index)") valider
     ul
       li(class="comment", ng-repeat="comment in message.comments")
         h4(class="commentTitle")
-          span(class="commentAuthor"){{comment.author}}
+          span(class="commentAuthor") {{comment.author}}
           |&nbsp;-&nbsp;
-          span(class="commentDate"){{comment.date}}
+          span(class="commentDate") {{comment.date}}
           a(class="editComment", ng-show="comment.author == user", ng-click="editComment(comment.id)") éditer
-        p(id="{{comment.id}}", class="commentContent"){{comment.content}}
+        p(id="{{comment.id}}", class="commentContent") {{comment.content}}
   br
   textarea(id="answerBox", ng-model="message")
   button(id="answerButton", ng-click="answer(message)") répondre
