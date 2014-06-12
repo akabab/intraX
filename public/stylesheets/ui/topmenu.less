@@ -31,6 +31,36 @@
     width: calc(~'100% - 172px');
     #search {
       #search-results {
+        .ldap-search {
+          .fuzzy {
+            float: left;
+            line-height: 32px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            &.pt-1 {
+              float: right;
+              max-width: 20%;
+            }
+            &.pt-2 {
+              padding-left: 6px;
+              max-width: 66%;
+              max-width: calc(~'75% - 40px');
+            }
+          }
+          .img {
+            float: left;
+            width: 32px;
+            display: block;
+            min-width: 32px;
+            min-height: 32px;
+            max-height: 32px;
+            border-radius: 20%;
+            background-image: url('https://intra.42.fr/static6854/img/nopicture-profilview.png');
+            background-position: center;
+            background-size: 100%;
+          }
+        }
         .option {
           padding: 2px 5px;
           border-bottom: 1px solid @bg;

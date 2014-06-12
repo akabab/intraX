@@ -166,8 +166,8 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
   }
 
   function removeDiacritics (str) {
-    return str.replace(/[^\u0000-\u007E]/g, function(a){ 
-     return diacriticsMap[a] || a; 
+    return str.replace(/[^\u0000-\u007E]/g, function (a) {
+      return diacriticsMap[a] || a;
     });
   }
 
@@ -210,83 +210,129 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
 
 }]);
 
-app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
+app.controller('TopmenuCtrl', ['$scope', '$window', '$http', function ($scope, $window, $http) {
   $scope.menu = '';
+  $scope.searchHelp = 'Search...';
   $scope.searchShow = 'All';
   $scope.searchValue = '';
+  $scope.searchDone = false;
+  $scope.searchPosition = 0;
+  $scope.users = '';
   $scope.commands = [
-    {"name":'/logout'},
-    {"name":'/message'},
+    {"name":'/logout', 'alias':'/quit', 'description':'Log out of the intra', 'icon':'power-off '},
+    {"name":'/clear', 'alias':'/all', 'description':'Clear the selected search', 'icon':'eraser'},
+    {"name":'/message', 'alias':'/whisper', 'description':'Send a private message to...', 'icon':'comment-o'},
   ];
   $scope.searchOptions = [
-    {"name":'LDAP', "append":'ldap/', "id":'1'},
-    {"name":'Forum', "append":'forum/', "id":'2'},
-    {"name":'Inbox', "append":'inbox/', "id":'3'},
-    {"name":'E-learning', "append":'elearning/', "id":'4'},
-    {"name":'Modules', "append":'module/', "id":'5'},
-    {"name":'Conferences', "append":'conferences/', "id":'5'}
+    {"name":'LDAP'},
+    {"name":'Forum'},
+    {"name":'Inbox'},
+    {"name":'E-learning'},
+    {"name":'Modules'},
+    {"name":'Conferences'}
   ];
-  $scope.isValidSearch = function () {
-    var elem = angular.element(document.querySelector('#el-1'))[0];
-    if (elem.attributes.score.value === "true")
-      return elem.innerText;
-    return false;
+  function clearSearchMenu () {
+    $scope.searchShow = 'All';
+    $scope.searchHelp = 'Search...';
+  }
+  function setSearchMenu (arg) {
+    $scope.searchShow = arg;
+    $scope.searchHelp = "Hit 'Esc' to clear...";
+  }
+  $scope.isValidSearch = function (domId) {
+    var elem = angular.element(document.querySelector(domId))[0];
+    if (!elem || !elem.attributes.arg) { return "false"; }
+    return elem.attributes.arg.value;
   }
   $scope.onKeyPress = function ($event) {
     var k = $event.keyCode;
     switch (k) {
-      case 8:
-        if (!$scope.searchValue) { $scope.searchShow = 'All'; }
+      case 8: // Del
+        $scope.searchDone = false;
+        // if (!$scope.searchValue) { $scope.searchShow = 'All'; }
         break;
       case 9: // Tab
         if (!$scope.searchValue) { break; }
         var valid = true;
         var searched = $scope.searchValue.toLowerCase();
-        if (searched === 'all') {
-          $scope.searchShow = 'All';
-        }
+        if (searched === 'all' || searched === 'clear')
+          clearSearchMenu();
         else {
-          var elem = $scope.isValidSearch();
-          if (elem === false) {
+          var elem = $scope.isValidSearch('#el-' + $scope.searchPosition);
+          if (elem === "false") {
             valid = false;
-            elem = angular.element(document.querySelector('#res-1'));
-            if (elem) {
-              elem = elem[0];
-              if (elem.attributes.score.value === "true") {
-                $scope.searchValue = elem.innerText;
-              }
+            elem = $scope.isValidSearch('#res-' + $scope.searchPosition)
+            if (elem !== "false") {
+              valid = "OK";
+              $scope.searchPosition = 0;
+              $scope.searchValue = elem;
             }
           }
-          else
-            $scope.searchShow = elem;
+          else {
+            switch (elem) {
+              case "LDAP":
+                if ($scope.users === '') {
+                  $http.get('/user/all')
+                  .success(function (data) { $scope.users = data; })
+                  .error(function (data, status) { console.log('Error:', status); });
+                } break;
+              default: break;
+            }
+            setSearchMenu(elem);
+          }
         }
-        if (valid)
-          $scope.searchValue = '';
+        if (valid) {
+          if (valid === true)
+            $scope.searchValue = '';
+          $scope.searchDone = true;
+        }
         $event.preventDefault();
         break;
       case 13: // Enter
+        if ($scope.menu === value)
+          $scope.menu = '';
+        else
+          $scope.menu = value;
+        $event.preventDefault();
         break;
       case 40: // Down
+        $event.preventDefault();
+        if ($scope.searchPosition > 8)
+          $scope.searchPosition = 0;
+        else
+          $scope.searchPosition++;
         break;
       case 38: // Up
+        $event.preventDefault();
+        if ($scope.searchPosition < 1)
+          $scope.searchPosition = 9;
+        else
+          $scope.searchPosition--;
         break;
       case 27: // Esc
+        $event.preventDefault();
+        if ($scope.searchValue)
+          $scope.searchValue = '';
+        else
+          clearSearchMenu();
         break;
       case 191: // slash
         break;
       default:
-      if ($scope.searchValue.length === 0)
-        console.log(k);
-        //if ((k > 47 && k < 91) || (k > 95 && k < 112) || (k > 185))
+//        if ($scope.searchValue.length === 0) console.log(k);
+        if ((k > 47 && k < 91) || (k > 95 && k < 112) || (k > 185)) {
+          $scope.searchDone = false;
+          $scope.searchPosition = 0;
+        }
         break;
     }
   }
   $scope.searchbar = angular.element(document.querySelector('#search-input'))[0];
   $scope.optionSelected = function (arg) {
     if (arg)
-      $scope.searchShow = arg.option.name;
+      setSearchMenu(arg.option.name);
     else
-      $scope.searchShow = 'All';
+      clearSearchMenu();
     $scope.searchbar.focus();
   }
   $scope.dropdown = function (value) {
@@ -334,56 +380,75 @@ app.controller('ConferencesCtrl', ['$scope', function ($scope) {
 }]);
 
 app.filter('fuzzyFilter', function () {
+  function fuzzySearchString (sub, pattern) {
+    if (typeof sub !== "string") { return; }
+    var string = sub;
+    string = string.toLowerCase();
+    var patternIdx = 0;
+    var result = sub.split('');
+    var len = string.length;
+    var totalScore = 0;
+    var currScore = 0;
+    var match = { "html":"", "score":0, "idx":0 };
+    for(var idx = 0; idx < len; idx++) {
+      var at = string.charAt(idx);
+      if (at === pattern.charAt(patternIdx)) {
+        patternIdx++;
+        match.html = '<b>' + sub.charAt(idx) + '</b>';
+        var isCap = (sub.charAt(idx) !== at);
+        currScore += 1 + currScore;
+        if (isCap)
+          currScore++;
+        if (!idx)
+          match.currScore += 2;
+        else if (string.charAt(idx - 1) == ' ')
+          match.currScore++;
+        match.currScore = currScore;
+        match.idx = idx;
+        result[idx] = match.html;
+      }
+      else
+        currScore = 0;
+      totalScore += currScore;
+    }
+    return {'html':result, 'score':totalScore, 'index':patternIdx};
+  }
   return function (items, pattern) {
     if (angular.isUndefined(items) || angular.isUndefined(pattern))
       return items;
     var patLen = pattern.length;
     if (patLen < 1)
       return items;
+    var whitelist = {
+      "name":true,
+      "uid":true,
+      "alias":true,
+      "fullName":true
+    };
 
     var tempItems = [];
     for (var k = items.length - 1; k >= 0; k--) {
-      var string = items[k].name;
-      pattern = pattern.toLowerCase();
-      string = string.toLowerCase();
-      var patternIdx = 0;
-      var result = items[k].name.match(/[\s\S]{1}/g);
-      var len = string.length;
-      var totalScore = 0;
-      var currScore = 0;
-      var match = { "html":"", "score":0, "idx":0 };
-
-      for(var idx = 0; idx < len; idx++) {
-        if(string.charAt(idx) === pattern.charAt(patternIdx)) {
-          patternIdx++;
-          match.html = '<b>' + items[k].name.charAt(idx) + '</b>';
-          var isCap = (items[k].name.charAt(idx) !== string.charAt(idx));
-          currScore += 1 + currScore;
-          if (isCap)
-            currScore++;
-          if (!idx)
-            match.currScore += 2;
-          else if (string.charAt(idx - 1) == ' ')
-            match.currScore++;
-          match.score = currScore;
-          match.idx = idx;
-          result[idx] = match.html;
-        } else
-          currScore = 0;
-        totalScore += currScore;
+      item = items[k];
+      var count = 0;
+      if (item.hasOwnProperty('firstName')
+        && item.hasOwnProperty('lastName')
+        && !item.hasOwnProperty('fullName'))
+        item.fullName = item.firstName + ' ' + item.lastName;
+      item.score = 0;
+      item.matched = false;
+      item.html = '';
+      for (var key in item) {
+        if (whitelist.hasOwnProperty(key)) {
+          count++;
+          var result = fuzzySearchString(item[key], pattern.toLowerCase());
+          item.html += '<span class="fuzzy pt-' + count + '">' + result.html.join('') + '</span>';
+          if (item.score < result.score)
+            item.score = result.score;
+          if (result.index === patLen)
+            item.matched = true;
+        }
       }
-      if(patternIdx === patLen) {
-        items[k].html = result.join('');
-        items[k].score = totalScore;
-        items[k].matched = true;
-        tempItems.push(items[k]);
-      }
-      else {
-        items[k].html = items[k].name;
-        items[k].score = totalScore;
-        items[k].matched = false;
-        tempItems.push(items[k]);
-      }
+      tempItems.push(item);
     }
     return tempItems;
   }
