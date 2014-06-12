@@ -1,36 +1,38 @@
-#ldap-panel {
+#ldap {
+  padding: 30px;
+  #ldap-panel {
+    .ldap-th {
+      margin-left: 100px;
+      a {
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+        width: 100px;
+        margin: 3px;
+        background-color: transparent;
+      }
+    }
 
-  .ldap-th {
-    margin-left: 100px;
-    a {
-      display: inline-block;
-      text-align: center;
+    .ldap-user {
       cursor: pointer;
+
+      &:hover {
+        background: @fg-darker;
+        color: @hl;
+      }
+    }
+
+    img {
+      width: 40px;
+      vertical-align: middle;
+    }
+
+    .ldap-info {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
       width: 100px;
-      margin: 3px;
-      background-color: transparent;
+      margin: 2px;
     }
-  }
-
-  .ldap-user {
-    cursor: pointer;
-
-    &:hover {
-      background: @fg-darker;
-      color: @hl;
-    }
-  }
-
-  img {
-    width: 40px;
-    vertical-align: middle;
-  }
-
-  .ldap-info {
-    display: inline-block;
-    vertical-align: middle;
-    text-align: center;
-    width: 100px;
-    margin: 2px;
   }
 }
