@@ -1,18 +1,42 @@
-var q = require("q");
-var fs = require("fs");
-var topic_get = require('./topic').topic_get;
-var easymongo = require("easymongo");
-var mongo = new easymongo({dbname: "db"});
-var topic = mongo.collection("topic");
+var q               = require("q");
+var fs              = require("fs");
+var easymongo       = require("easymongo");
+var mongo           = new easymongo({dbname: "db"});
+var category_get    = require('./category').category_get;
+var category_url    = require('./category').category_url;
+var category_tree   = require('./category').category_tree;
+var topic_get       = require('./topic').topic_get;
+var topic_url       = require('./topic').topic_url;
 
 /* http://127.0.0.1:3000/message/
 ** The anonyme function returns void.
 */
 
 exports.get = function (req, res) {
+  var urlCategory = req.params.topic;
+  var urlUnderCategory = req.params.subtopic;
+  var urlTopic = req.params.message;
+  var path = [urlCategory, urlUnderCategory];
+  var idTopic;
+  var treeTopic;
+  var idMessage;
+  var treeMessage;
 
+  console.log('message');
+  if (urlCategory && urlTopic) {
+    category_get().then(function(result) {
+      treeTopic = category_tree({'list': result, 'root': ''});
+      idTopic = category_url({'tree': treeTopic, 'path': path});
+      topic_get({'categoryId': idTopic}).then(function(topics) {
+        idMessage = topic_url({'list': topics, 'nameMessage': urlTopic});
+        message_get({'idTopic': idMessage}).then(function(messages) {
+          treeMessage = message_tree({'list': messages, 'root': ''});
+          res.json({'messages': treeMessage});
+        });
+      });
+    });
+  }
 }
-
 
 /* http://127.0.0.1:3000/message/
 ** The anonyme function returns void and adds, gets or dels a topic to
@@ -83,17 +107,19 @@ function message_tree(argument) {
   var root = argument.root;
   var node = [];
 
-  for (var count = 0; count < list.length; count += 1)
-    if (root == list[count]._idMessage)
+  for (var count = 0; count < list.length; count += 1) {
+    if (root == list[count].idMessageParent) {
       node.push({
         'parent': {
-           'id': list[count]._id,
+           'id': list[count].idMessageParent,
            'idAccounts': list[count]._idAccounts,
            'dateOfCreation': list[count].dateOfCreation,
            'contenue': list[count].contenue
          },
          'child': message_tree({'list': list, 'root': list[count]._id})
       });
+    }
+  }
   return (node);
 }
 
@@ -115,7 +141,7 @@ function message_add(argument) {
   var message = mongo.collection(('message' + idTopic));
   var date = new Date();
   var data = {
-    '_idMessage': idMessageParent,
+    '_idMessageParent': idMessageParent,
     '_idAccounts': idAccounts,
     'dateOfCreation': date,
     'contenue': contenue
@@ -138,7 +164,6 @@ function message_del(argument) {
   var idTopic = argument.idTopic;
   var message = mongo.collection(('message' + idTopic));
 
-  console.log(('message' + idTopic), idMessage);
   message.removeById(idMessage, function(error, results) {
   });
 }
