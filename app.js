@@ -16,7 +16,7 @@ var forum = require('./routes/forum');
 var inbox = require('./routes/inbox');
 
 var app = express();
-
+console.log(inbox);
 /*
 ** View engine setup.
 */
