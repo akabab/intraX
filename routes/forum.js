@@ -15,4 +15,5 @@ router.post('/message/:action', userMessage.post);
 router.get('/topic/:topic/', userTopic.get);
 router.get('/topic/:topic/:subtopic/', userTopic.get);
 router.post('/topic/:action', userTopic.post);
+
 module.exports = router;

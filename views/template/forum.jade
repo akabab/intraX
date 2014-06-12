@@ -1,10 +1,9 @@
 p {{welcome}}
-p {{speach}}
 
-ul
-  li(ng-repeat="item in data")
-    a(ng-href="#/category/{{item.node.name}}/") {{item.node.name}}
-    ul
-      li(ng-repeat="child in item.child")
-        a(ng-href="#/category/{{item.node.name}}/{{child.node.name}}") {{child.node.name}}
-p
+p My subjects
+  ul
+    li(ng-repeat="userTopic in userTopics") {{userTopic.title}} / {{userTopic.date}}
+
+p Subjects followed
+  ul
+    li(ng-repeat="followedTopic in followedTopics") {{followedTopic.title}} / {{followedTopic.author}} / {{ followedTopic.date}}

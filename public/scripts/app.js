@@ -12,8 +12,11 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('conferences', {   url: '/conferences',              templateUrl: '/template/conferences',    controller: 'ConferencesCtrl' })
     .state('elearning', {     url: '/elearning',                templateUrl: '/template/elearning',      controller: 'ElearningCtrl' })
     .state('forum', {         url: '/forum',                    templateUrl: '/template/forum',          controller: 'ForumCtrl' })
-    .state('category', {      url: '/forum/category/:cat/:sub', templateUrl: '/template/category',       controller: 'CategoryCtrl' })
-    .state('adminCategory', { url: '/admin/category',           templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
+    .state('topics', {        url: '/forum/:cat',               templateUrl: '/template/category',       controller: 'CategoryCtrl' })
+    .state('posts', {         url: '/forum/:cat/:post',         templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('subtopics', {     url: '/forum/:cat/:sub',          templateUrl: '/template/category',       controller: 'CategoryCtrl' })
+    .state('subposts', {      url: '/forum/:cat/:sub/:post',    templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('adminCategory', { url: '/admin/forum/category',     templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
 }]);
 
 app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
@@ -54,6 +57,7 @@ app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
 
   $http.get('/forum/category')
   .success(function (data) {
+    console.log(data);
     for (var i in data.tree) {
       $scope.links[1].children.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
     }    
@@ -324,7 +328,6 @@ app.controller('ModuleCtrl', ['$scope', function ($scope) {
 app.controller('CalendarCtrl', ['$scope', function ($scope) {
     $scope.title = "Calendar";
 }]);
-
 
 app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";
