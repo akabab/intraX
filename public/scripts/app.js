@@ -232,9 +232,9 @@ app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function 
     $scope.title = "Index";
 }]);
 
-
 app.controller('InboxCtrl', ['$scope', 'SessionService', function ($scope, SessionService) {
-    $scope.title = "Inbox";
+  $scope.title = "Inbox";
+  console.log($scope.myStyle);
 }]);
 
 
@@ -250,3 +250,24 @@ app.controller('CalendarCtrl', ['$scope', function ($scope) {
 app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";
 }]);
+
+app.directive('resizable', function($window) {
+  return function($scope) {
+    $scope.initializeWindowSize = function() {
+      $scope.windowHeight = $window.innerHeight;
+      $scope.myStyle = function (arg) {
+        return { 'height': ($window.innerHeight - arg) + 'px' };
+      }
+      return $scope.windowWidth = $window.innerWidth;
+    };
+    $scope.initializeWindowSize();
+    return angular.element($window).bind('resize', function() {
+      $scope.initializeWindowSize();
+      $scope.myStyle = function (arg) {
+        return { 'height': ($window.innerHeight - arg) + 'px' };
+      }
+      console.log($scope.myStyle);
+      return $scope.$apply();
+    });
+  };
+});
