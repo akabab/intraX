@@ -1,0 +1,32 @@
+#activity
+  #list-activity
+    button.dark-btn.smart-btn(ng-click="hideList=!hideList") List
+    select.dark-btn.smart-btn(ng-options="module.name for module in modules" ng-model="moduleSelected" ng-change="getActivities(moduleSelected.name)")
+      option(value="") -- pick a module --
+    .panel(ng-class="{hidden:hideList}")
+      div(ng-repeat="activity in activities")
+        div(ng-hide="!activity.name")
+          button.dark-btn(ng-click="delActivity(moduleSelected, activity._id)")
+            i.fa.fa-minus
+          | {{activity.name}}  -- {{activity._id}}
+  #add-activity(ng-hide="!moduleSelected.name")
+    button.dark-btn.smart-btn(ng-click="hideNew=!hideNew") New
+    .panel(ng-class="{hidden:hideNew}")
+      form
+        label Name
+          input(type='text' ng-model="newActivity.name")
+        label Description
+          textarea(ng-model="newActivity.description")
+        label.inline Slots
+          input(type="number" ng-model="newActivity.slots" placeholder="unlimited if empty")
+        label.inline Credits
+          input(type="number" ng-model="newActivity.credits")
+        br
+        label.inline Start
+          input(type="date" ng-model="newActivity.start")
+        label.inline End 
+          input(type="date" ng-model="newActivity.end")
+        br
+        button.dark-btn(ng-click="addActivity(moduleSelected.name, newActivity)")
+          i.fa.fa-plus
+          |  to {{moduleSelected.name}}

@@ -1,58 +1,52 @@
 var q = require("q");
-var fs = require("fs");
 var easymongo = require("easymongo");
 var mongo = new easymongo({dbname: "db"});
 var modules = mongo.collection("modules");
 
-
 exports.get = function (req, res) {
-  console.log(req.params);
-  var argument = {name: req.params.module};
-  module_get(argument).then(function (result) {
-    var id = result[0]._id;
-    if (req.params.activity === "*") //find something better ?
-      var activity = "";
-    else
-      var activity = {name:req.params.activity};
-    activity_get(activity, id).then(function (result) {
-      res.json(result);
-    });
+  var moduleName = req.params.module;
+
+  module_get(moduleName).then(function (result) {
+    var module = result[0];
+
+    if (req.params.activity === "all") {
+      activity_get_all(module._id).then(function (result) {
+        res.json(result);
+      });
+    }
+    else {
+      activity_get(module._id, req.params.activity).then(function (result) {
+        res.json(result);
+      });
+    }
   },
   function (error) {
-    res.json({error:error});
+    res.json({'error':error});
   });
 };
 
-// i'd like a switch / should we get parentId or find it with parent name
 exports.post = function (req, res) {
-  var parentId = req.body.parentId;
-  if (req.params.action === "add") {
-    activity_add(req.body, parentId).then(function (result) {
-      activity_get("", parentId).then(function (result) {
+  var moduleName = req.params.module;
+
+
+  module_get(moduleName).then(function (result) {
+    var module = result[0];
+    var activity = req.body.activity;
+    var action = req.params.action;
+
+    activityActions[action](activity, module._id).then(function (result) {
+      activity_get_all(module._id).then(function (result) {
         res.json(result);
       });
     });
-  }
-  else if (req.params.action === "del") {
-    activity_del({_id: req.body._id}, req.body.parentId).then(function (result) {
-      activity_get("", parentId).then(function (result) {
-        res.json(result);
-      });
-    });
-  }
-  else if (req.params.action === "update") {
-    activity_update(req.body, req.body.parentId).then(function (result) {
-      activity_get("", parentId).then(function (result) {
-        res.json(result);
-      });
-    });
-  }
+  });
 };
 
-var module_get = function (argument) {
+//Get module identified by name
+var module_get = function (moduleName) {
   var deferred = q.defer();
 
-  modules.find(argument, function(error, result) {
+  modules.find({'name': moduleName}, function (error, result) {
     if (error)
       deferred.reject(error);
     if (result.length == 0)
@@ -63,12 +57,13 @@ var module_get = function (argument) {
   return (deferred.promise);
 };
 
-var activity_get = function (argument, parentId) {
+//Get activity identified by name & inside collection "activity + moduleId"
+var activity_get = function (activityName, moduleId) {
   var deferred = q.defer();
-  console.log("activity" + parentId);
-  var activities = mongo.collection("activity" + parentId);  
 
-  activities.find(argument, function(error, result) {
+  var activity = mongo.collection("activity" + moduleId);
+
+  activity.find({'name': activityName}, function (error, result) {
     if (error)
       deferred.reject(error);
     if (result)
@@ -77,82 +72,52 @@ var activity_get = function (argument, parentId) {
   return (deferred.promise);
 };
 
-var activity_add = function (argument, parentId) {
+var activity_get_all = function (moduleId) {
   var deferred = q.defer();
-  var activities = mongo.collection("activity" + parentId);
 
-  // HERE MANAGE DATES
-  var start = argument.start.split("/"),
-  end = argument.end.split("/");
-  if (start.length !== 3)
-    throw new Error ("error start");
-  if (end.length !== 3)
-    throw new Error ("error end");
-  var etd = new Date(parseInt(start[2]), parseInt(start[1]), parseInt(start[0]));
-  var eta = new Date(parseInt(end[2]), parseInt(end[1]), parseInt(end[0]));
-  
-  var data = {
-    name: argument.name.toLowerCase(),
-    type: argument.type,
-    description: argument.description.toLowerCase(),
-    subject: argument.subject, // later a .pdf
-    slots: argument.slots,
-    groupSize: argument.groupSize,
-    peerNumber: argument.peerNumber,
-    autoGroup: argument.autoGroup, //bool
-    start: etd,
-    end: eta
-   };
+  var activity = mongo.collection("activity" + moduleId);
 
-  activities.save(data, function(error, result) {
-    deferred.resolve(result);
+  activity.find(function (error, result) {
+    if (error)
+      deferred.reject(error);
+    if (result)
+      deferred.resolve(result);
   });
   return (deferred.promise);
 };
 
-var activity_update = function (argument, parentId) {
-  var deferred = q.defer();
-  var activities = mongo.collection("activity" + parentId);
-  
-  var _id = argument._id;
-  
-  // HERE MANAGE DATES
-  var start = argument.start.split("/"),
-  end = argument.end.split("/");
-  if (start.length !== 3)
-    throw new Error ("error start");
-  if (end.length !== 3)
-    throw new Error ("error end");
-  var etd = new Date(parseInt(start[2]), parseInt(start[1]), parseInt(start[0]));
-  var eta = new Date(parseInt(end[2]), parseInt(end[1]), parseInt(end[0]));
-    
-  var data = {
-    name: argument.name.toLowerCase(),
-    type: argument.type,
-    description: argument.description.toLowerCase(),
-    subject: argument.subject, // later a .pdf
-    slots: argument.slots,
-    groupSize: argument.groupSize,
-    peerNumber: argument.peerNumber,
-    autoGroup: argument.autoGroup, //bool
-    start: etd,
-    end: eta
-   };
+var activityActions = {
+  add: function (activity, moduleId) {
+    console.log('werwe');
+    var deferred = q.defer();
 
-  activities.update({_id:_id}, {$set:data}, function(error, result) {
-    deferred.resolve(result);
-  });
-  return (deferred.promise);
-};
+    var activityCol = mongo.collection("activity" + moduleId);
 
-var activity_del = function (argument, parentId) {
-  var deferred = q.defer();
-  var activities = mongo.collection("activity" + parentId);
-  
-  var _id = argument._id;
-  
-  activities.removeById(_id, function(error, result) {
-    deferred.resolve(result);
-  });
-  return (deferred.promise);
+    activityCol.save(activity, function (error, result) {
+      deferred.resolve(result);
+    });
+    return (deferred.promise);
+  },
+
+  update: function (activity, moduleId) {
+    var deferred = q.defer();
+
+    var activityCol = mongo.collection("activity" + moduleId);
+
+    activityCol.update({'_id': activity._id}, {$set: activity}, function (error, result) {
+      deferred.resolve(result);
+    });
+    return (deferred.promise);
+  },
+
+  del: function (activity, moduleId) {
+    var deferred = q.defer();
+
+    var activityCol = mongo.collection("activity" + moduleId);
+
+    activityCol.removeById(activity._id, function (error, result) {
+      deferred.resolve(result);
+    });
+    return (deferred.promise);
+  }
 };
