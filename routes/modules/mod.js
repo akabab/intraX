@@ -53,31 +53,37 @@ var module_get = function (argument) {
 var module_add = function (argument) {
   var deferred = q.defer();
   
-  var name = argument.name.toLowerCase(),
-  description = argument.description.toLowerCase(),
-  slots = argument.slots,
-  credits = argument.credits;
+  var name        = argument.name,
+      description = argument.description,
+      slots       = argument.slots,
+      credits     = argument.credits,
+      start       = argument.start,
+      end         = argument.end;
   
-  // HERE MANAGE DATES
-  var start = argument.start.split("/"),
-  end = argument.end.split("/");
-  if (start.length !== 3)
-    throw new Error ("error start");
-  if (end.length !== 3)
-    throw new Error ("error end");
-  var etd = new Date(parseInt(start[2]), parseInt(start[1]), parseInt(start[0]));
-  var eta = new Date(parseInt(end[2]), parseInt(end[1]), parseInt(end[0]));
+  // // HERE MANAGE DATES
+  // var start = argument.start.split("/"),
+  // end = argument.end.split("/");
+  // if (start.length !== 3)
+  //   throw new Error ("error start");
+  // if (end.length !== 3)
+  //   throw new Error ("error end");
+  // var etd = new Date(parseInt(start[2]), parseInt(start[1]), parseInt(start[0]));
+  // var eta = new Date(parseInt(end[2]), parseInt(end[1]), parseInt(end[0]));
   
     var data = {
-    name: name,
-    description: description,
-    slots: slots,
-    credits: credits,
-    start: etd,
-    end: eta
+    'name': name,
+    'description': description,
+    'slots': slots,
+    'credits': credits,
+    'start': start,
+    'end': end
    };
 
+   console.log(data);
+
   modules.save(data, function(error, result) {
+    if (error) console.log(error);
+    console.log(result);
     //var collection = mongo.collection("activity" + result._id);
     deferred.resolve(result);
   });

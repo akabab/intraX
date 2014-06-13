@@ -1,0 +1,52 @@
+#admin {
+
+  .panel {
+    padding-top: 20px;
+    &.hidden {
+      height: 0px;
+      margin: 0px;
+      padding: 0px;
+      border: 0px;
+      border-top: 1px solid @bg;
+      box-shadow: 0px 0px 0px;
+      overflow: hidden;
+    }
+  }
+
+  .admin-panel {
+    padding-top: 5px;
+    padding-bottom: 20px;
+    box-shadow: 0px 0px 5px @hl-dark;
+  }
+
+  .smart-btn {
+    position: relative;
+    top: 16px;
+    left: 10px;
+    padding: 4px;
+    border-radius: 3px;
+  }
+
+  .title {
+    width: 80px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 14px;
+  }
+
+  form {
+    label, input, textarea {
+      display: block;
+      &.inline {
+        display: inline-block;
+        margin-right: 30px;
+      }
+    }
+    label {
+      margin: 5px;
+    }
+    textarea {
+      width: 450px;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+#module
+  #list-module
+    button.dark-btn.smart-btn(ng-click="hideList=!hideList") List
+    .panel(ng-class="{hidden:hideList}")
+      div(ng-repeat="module in modules")
+        div
+          button.dark-btn(ng-click="delModule(module._id)")
+            i.fa.fa-minus
+          | {{module.name}} -- {{module._id}}
+  #add-module
+    button.dark-btn.smart-btn(ng-click="hideNew=!hideNew") New
+    .panel(ng-class="{hidden:hideNew}")
+      form
+        label Name
+          input(type='text' ng-model="newModule.name")
+        label Description
+          textarea(ng-model="newModule.description")
+        label.inline Slots
+          input(type="number" ng-model="newModule.slots" placeholder="unlimited if empty")
+        label.inline Credits
+          input(type="number" ng-model="newModule.credits")
+        br
+        label.inline Start
+          input(type="date" ng-model="newModule.start")
+        label.inline End 
+          input(type="date" ng-model="newModule.end")
+        br
+        button.dark-btn(ng-click="addModule(newModule)")
+          i.fa.fa-plus
+

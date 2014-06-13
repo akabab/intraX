@@ -38,13 +38,13 @@ app.use('/auths', auths);
 app.use('/ldap', ldap);
 
 //Redirect to auth if not authenticed
-// app.all("*", function(req, res, next) {
-//   if (req.session && req.session['logged'])
-//     next();
-//   else {
-//     res.redirect('/auths');
-//   }
-// });
+app.all("*", function(req, res, next) {
+  if (req.session && req.session['logged'])
+    next();
+  else {
+    res.redirect('/auths');
+  }
+});
 
 app.use('/', index);
 app.use('/user', user);
