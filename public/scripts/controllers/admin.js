@@ -2,13 +2,13 @@ angular.module('intraX')
 
 .controller('AdminCtrl', function ($scope, $http, $timeout) {
 
-  $scope.panels = [ {name: 'Module', template: 'admin_module'},
+  $scope.panels = [ {name: 'Module',   template: 'admin_module'},
                     {name: 'Activity', template: 'admin_activity'},
-                    {name: 'Forum', template: 'admin_forum'}
+                    {name: 'Forum',    template: 'admin_forum'}
                    ];
 
-  $scope.modules = {};
-  $scope.activities = {};
+  $scope.modules = [];
+  $scope.activities = [];
 
   $scope.getModules = function () {
     $http.get('/modules')
