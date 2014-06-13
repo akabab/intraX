@@ -4,7 +4,6 @@
     width: 500px;
     margin-right: 10px;
     float: left;
-    // clear: both;
   }
 
   .panel {
@@ -23,7 +22,9 @@
   .admin-panel {
     padding-top: 5px;
     padding-bottom: 20px;
-    box-shadow: 0px 0px 5px @hl-dark;
+    box-shadow: 0 0 9px rgba(0, 164, 255, 0.33);
+    background-color: rgba(255, 255, 255, 0.6);;
+    border: 1px solid #9CA4B8;
   }
 
   .smart-btn {
@@ -41,6 +42,10 @@
     font-size: 14px;
   }
 
+  .activity {
+    margin-left: 5px;
+  }
+
   form {
     label, input, textarea {
       display: block;
@@ -48,6 +53,10 @@
         display: inline-block;
         margin-right: 30px;
       }
+    }
+    .ng-dirty.ng-invalid {
+      box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+      border: 1px solid rgba(255, 0, 0, 0.5);
     }
     label {
       margin: 5px;

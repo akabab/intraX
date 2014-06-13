@@ -9,6 +9,7 @@ angular.module('intraX')
 
   $scope.modules = [];
   $scope.activities = [];
+  $scope.curActivity = {};
 
   $scope.getModules = function () {
     $http.get('/modules')
@@ -44,16 +45,32 @@ angular.module('intraX')
   };
 
   $scope.addActivity = function (module_name, newActivity) {
+    console.log('add');
     $http.post('/modules/' + module_name + '/add', {'activity': newActivity})
     .success(function (data) {
-      console.log('yo');
       $scope.activities = data;
     })
     .error(function (data) {});
   };
 
-  $scope.delActivity = function (module_name, activity_id) {
-    $http.post('/modules/' + module_name + '/del', {'activity': {'_id': activity_id}})
+  $scope.editActivity = function (activity) {
+    $scope.curActivity = activity;
+    $scope.isEditing = true;
+    console.log($scope.curActivity, $scope.isEditing);
+  }
+
+  $scope.updateActivity = function (module_name, activity) {
+    console.log('edit %j', activity);
+    $http.post('/modules/' + module_name + '/update', {'activity': activity})
+    .success(function (data) {
+      console.log(data);
+      $scope.activities = data;
+    })
+    .error(function (data) {});
+  };
+
+  $scope.delActivity = function (module_name, activity) {
+    $http.post('/modules/' + module_name + '/del', {'activity': {'moduleId': activity.moduleId, '_id': activity._id}})
     .success(function (data) {
       $scope.activities = data;
     })
