@@ -6,7 +6,7 @@
     .panel(ng-class="{hidden:hideList}")
       div(ng-repeat="activity in activities")
         div(ng-hide="!activity.name")
-          button.dark-btn(ng-click="delActivity(moduleSelected, activity._id)")
+          button.dark-btn(ng-click="delActivity(moduleSelected.name, activity._id)")
             i.fa.fa-minus
           | {{activity.name}}  -- {{activity._id}}
   #add-activity(ng-hide="!moduleSelected.name")
@@ -26,6 +26,17 @@
           input(type="date" ng-model="newActivity.start")
         label.inline End 
           input(type="date" ng-model="newActivity.end")
+        br
+        label.inline Group Size
+          input(type="number" ng-model="newActivity.groupSize" placeholder="individual if empty")
+        label.inline Peers
+          input(type="number" ng-model="newActivity.peerNumber")
+        br
+        label.inline Auto Group
+          input(type="checkbox" ng-model="newActivity.autoGroup")
+        br
+        label.inline Subject
+          input(type="file" ng-model="newActivity.subject")
         br
         button.dark-btn(ng-click="addActivity(moduleSelected.name, newActivity)")
           i.fa.fa-plus
