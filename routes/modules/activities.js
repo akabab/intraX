@@ -28,16 +28,12 @@ exports.get = function (req, res) {
 exports.post = function (req, res) {
   var moduleName = req.params.module;
 
+  var activity = req.body.activity;
+  var action = req.params.action;
 
-  module_get(moduleName).then(function (result) {
-    var module = result[0];
-    var activity = req.body.activity;
-    var action = req.params.action;
-
-    activityActions[action](activity, module._id).then(function (result) {
-      activity_get_all(module._id).then(function (result) {
-        res.json(result);
-      });
+  activityActions[action](activity).then(function (result) {
+    activity_get_all(activity.moduleId).then(function (result) {
+      res.json(result);
     });
   });
 };
@@ -87,11 +83,11 @@ var activity_get_all = function (moduleId) {
 };
 
 var activityActions = {
-  add: function (activity, moduleId) {
-    console.log('werwe');
+  add: function (activity) {
     var deferred = q.defer();
 
-    var activityCol = mongo.collection("activity" + moduleId);
+    console.log('adding: %j', activity);
+    var activityCol = mongo.collection("activity" + activity.moduleId);
 
     activityCol.save(activity, function (error, result) {
       deferred.resolve(result);
@@ -99,21 +95,24 @@ var activityActions = {
     return (deferred.promise);
   },
 
-  update: function (activity, moduleId) {
+  update: function (activity) {
     var deferred = q.defer();
 
-    var activityCol = mongo.collection("activity" + moduleId);
+    var activityCol = mongo.collection("activity" + activity.moduleId);
+    var id = activity._id;
+    delete activity._id;
 
-    activityCol.update({'_id': activity._id}, {$set: activity}, function (error, result) {
+    activityCol.update({'_id': id}, {$set: activity}, function (error, result) {
+      console.log(error, result);
       deferred.resolve(result);
     });
     return (deferred.promise);
   },
 
-  del: function (activity, moduleId) {
+  del: function (activity) {
     var deferred = q.defer();
 
-    var activityCol = mongo.collection("activity" + moduleId);
+    var activityCol = mongo.collection("activity" + activity.moduleId);
 
     activityCol.removeById(activity._id, function (error, result) {
       deferred.resolve(result);
