@@ -3,8 +3,6 @@ var fs = require("fs");
 var easymongo = require("easymongo");
 var mongo = new easymongo({dbname: "db"});
 var category = mongo.collection("category");
-//var ObjectId = require('mongodb').ObjectID;
-
 
 /*
 ** The anonyme function returns void and puts a see on
@@ -58,11 +56,13 @@ var category_tree = function (argument) {
   var root = argument.root;
   var node = [];
 
-  for (var count = 0; count < list.length; count += 1)
+  for (var count = 0; count < list.length; count += 1) /* Propose by @cdenis */
+  /* for (var count = 0; count < list.length; count += 1). */
     if (root == list[count]._idCategory)
       node.push({
         'id': list[count]._id,
         'name': list[count].name,
+        'url': list[count].url,
         'children': category_tree({'list': list, 'root': list[count]._id})
       });
   return (node);
@@ -72,25 +72,13 @@ var category_tree = function (argument) {
 ** The function returns the final id from path according to a tree root.
 */
 
-var category_url = function (argument) {
-  var tree = argument.tree;
-  var path = argument.path;
-  var id = argument.id;
-  var name;
+function category_encode(argument) {
+  var name = argument.name;
 
-  if (typeof path[0] === 'undefined')
-    return (id);
-  for (var i = tree.length - 1; i >= 0; i -= 1) {
-      name = tree[i].name;
-      name = latin_to_ascii({'word': name});
-/*    name = removeDiacritics(name).replace((/(['\s]+)/g), '-'); */
-      name = name.toLowerCase().replace((/(?!-)[\W]/g), '');
-      if (path[0] == name) {
-        path.shift();
-        return (category_url({'tree': tree, 'path': path, 'id': tree[i].id}));
-      }
-  }
-  return (undefined);
+  name = latin_to_ascii({'word': name});
+/*name = removeDiacritics(name).replace((/(['\s]+)/g), '-'); */
+  name = name.toLowerCase().replace((/(?!-)[\W]/g), '');
+  return (name);
 }
 
 /*
@@ -118,9 +106,11 @@ var category_get = function (argument) {
 function category_add(argument) {
   var parent = argument.parent;
   var name = argument.name.toLowerCase();
-  var data = {'_idCategory': parent, 'name': name};
+  var data = {'_idCategory': parent, 'name': name, 'url': category_encode(name)};
 
   category.save(data, function(error, results) {
+//    if (results)
+//      accounts_topic_new()
   });
 }
 
@@ -133,7 +123,6 @@ function category_del(argument) {
   var id = argument.id;
 
   category.removeById(id, function(error, results) {
-
   });
 }
 
@@ -142,39 +131,47 @@ function category_del(argument) {
 ** the id to category' collection.
 */
 
-/*function category_set(argument) {
+function category_set(argument) {
   var id = ObjectId(argument.id);
   var name = argument.name.toLowerCase();
   var data = {'_id': id, 'name': name};
 
-  var mongoskin = require('mongoskin');
-  console.log('ok2');
-  var db = mongo.db("db", {native_parser: true});
+  db.category.update({'_id': id}, {'$set': {'name': name}});
+}
 
-  console.log('ok3');
-  var categoryskin = db.collection("category");
-  console.log('ok4');
+/*
+** The function returns the final id from path according to a tree root.
+*/
 
-  categoryskin.update(data).toArray(function(err, items) {
-    console.log('err');
-    db.close();
-  });
-  db.category.update({'_id': ObjectId('539219598df931e27d52daab')}, {$set: {'name': 'ADMIN'}});
-}*/
+var category_url = function (argument) {
+  var tree = argument.tree;
+  var path = argument.path;
+  var id = argument.id;
+
+  if (typeof path[0] === 'undefined')
+    return (id);
+  for (var i = tree.length - 1; i >= 0; i -= 1) {
+      if (path[0] == tree[i].url) {
+        path.shift();
+        return (category_url({'tree': tree, 'path': path, 'id': tree[i].id}));
+      }
+  }
+  return (undefined);
+}
 
 function latin_to_ascii(argument) {
-  var latin_map = {'Á': 'A', 'Ă': 'A', 'Ắ': 'A', 'Ặ': 'A', 'Ằ': 'A', 'Ẳ': 'A',
-                   'Ẵ': 'A', 'Ǎ': 'A', 'Â': 'A', 'Ấ': 'A', 'Ậ': 'A', 'Ầ': 'A',
-                   'Ẩ': 'A', 'Ẫ': 'A', 'Ä': 'A', 'Ǟ': 'A', 'Ȧ': 'A', 'Ǡ': 'A',
-                   'Ạ': 'A', 'Ȁ': 'A', 'À': 'A', 'Ả': 'A', 'Ȃ': 'A', 'Ā': 'A',
-                   'Ą': 'A', 'Å': 'A', 'Ǻ': 'A', 'Ḁ': 'A', 'Ⱥ': 'A', 'Ã': 'A',
-                   'Ꜳ': 'AA', 'Æ': 'AE', 'Ǽ': 'AE', 'Ǣ': 'AE', 'Ꜵ': 'AO',
-                   'Ꜷ': 'AU', 'Ꜹ': 'AV', 'Ꜻ': 'AV', 'Ꜽ': 'AY', 'Ḃ': 'B',
-                   'Ḅ': 'B', 'Ɓ': 'B', 'Ḇ': 'B', 'Ƀ': 'B', 'Ƃ': 'B', 'Ć': 'C',
-                   'Č': 'C', 'Ç': 'C', 'Ḉ': 'C', 'Ĉ': 'C', 'Ċ': 'C', 'Ƈ': 'C',
-                   'Ȼ': 'C', 'Ď': 'D', 'Ḑ': 'D', 'Ḓ': 'D', 'Ḋ': 'D', 'Ḍ': 'D',
-                   'Ɗ': 'D', 'Ḏ': 'D', 'ǲ': 'D', 'ǅ': 'D', 'Đ': 'D', 'Ƌ': 'D',
-                   'Ǳ': 'DZ', 'Ǆ': 'DZ', 'É': 'E', 'Ĕ': 'E', 'Ě': 'E',
+  var latin_map = {' ': '-', 'Á': 'A', 'Ă': 'A', 'Ắ': 'A', 'Ặ': 'A', 'Ằ': 'A',
+                   'Ẳ': 'A', 'Ẵ': 'A', 'Ǎ': 'A', 'Â': 'A', 'Ấ': 'A', 'Ậ': 'A',
+                   'Ầ': 'A', 'Ẩ': 'A', 'Ẫ': 'A', 'Ä': 'A', 'Ǟ': 'A', 'Ȧ': 'A',
+                   'Ǡ': 'A', 'Ạ': 'A', 'Ȁ': 'A', 'À': 'A', 'Ả': 'A', 'Ȃ': 'A',
+                   'Ā': 'A', 'Ą': 'A', 'Å': 'A', 'Ǻ': 'A', 'Ḁ': 'A', 'Ⱥ': 'A',
+                   'Ã': 'A', 'Ꜳ': 'AA', 'Æ': 'AE', 'Ǽ': 'AE', 'Ǣ': 'AE',
+                   'Ꜵ': 'AO', 'Ꜷ': 'AU', 'Ꜹ': 'AV', 'Ꜻ': 'AV', 'Ꜽ': 'AY',
+                   'Ḃ': 'B', 'Ḅ': 'B', 'Ɓ': 'B', 'Ḇ': 'B', 'Ƀ': 'B', 'Ƃ': 'B',
+                   'Ć': 'C', 'Č': 'C', 'Ç': 'C', 'Ḉ': 'C', 'Ĉ': 'C', 'Ċ': 'C',
+                   'Ƈ': 'C', 'Ȼ': 'C', 'Ď': 'D', 'Ḑ': 'D', 'Ḓ': 'D', 'Ḋ': 'D',
+                   'Ḍ': 'D', 'Ɗ': 'D', 'Ḏ': 'D', 'ǲ': 'D', 'ǅ': 'D', 'Đ': 'D',
+                   'Ƌ': 'D', 'Ǳ': 'DZ', 'Ǆ': 'DZ', 'É': 'E', 'Ĕ': 'E', 'Ě': 'E',
                    'Ȩ': 'E', 'Ḝ': 'E', 'Ê': 'E', 'Ế': 'E', 'Ệ': 'E', 'Ề': 'E',
                    'Ể': 'E', 'Ễ': 'E', 'Ḙ': 'E', 'Ë': 'E', 'Ė': 'E', 'Ẹ': 'E',
                    'Ȅ': 'E', 'È': 'E', 'Ẻ': 'E', 'Ȇ': 'E', 'Ē': 'E', 'Ḗ': 'E',
@@ -318,5 +315,4 @@ function latin_to_ascii(argument) {
 }
 
 exports.category_get = category_get;
-exports.category_url = category_url;
 exports.category_tree = category_tree;

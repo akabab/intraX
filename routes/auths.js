@@ -70,7 +70,8 @@ function connectToLdap(login, password, req, res) {
             accountsDB.save( {login: login,
                               password: bcrypt.hashSync(password),
                               dateOfCreation: Date.now(),
-                              accessRights: 0} );
+                              accessRights: 0,
+                              topicSeeNot: []} );
             req.session['logged'] = true;
             res.json( {err: null} );
             return;
