@@ -83,4 +83,13 @@ app.use(function(err, req, res, next) {
   });
 });
 
+
+var easymongo        = require("easymongo");
+var mongo            = new easymongo({dbname: "db"});
+var accounts         = mongo.collection("accounts");
+
+
+
+accounts_topic_old({'idAccounts': '539c704ab4d99eed376a5153', 'idTopic': 'test2'});
+
 module.exports = app;

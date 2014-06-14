@@ -59,5 +59,32 @@ var accounts_uid = function (argument) {
   return (list);
 }
 
+/*
+** The function adds for all accounts the new event.
+*/
+
+var accounts_topic_new = function (argument) {
+  var idTopic = argument.idTopic;
+
+  accounts.update({}, {'$push': {'topicSeeNot': idTopic}},
+  function(error, result) {
+  });
+}
+
+/*
+** The function dels for the account the old event.
+*/
+
+var accounts_topic_old = function (argument) {
+  var idAccounts = argument.idAccounts;
+  var idTopic = argument.idTopic;
+
+  accounts.update({'_id': idAccounts}, {'$pull': {'topicSeeNot': idTopic}},
+  function(error, result) {
+  });
+}
+
+exports.accounts_topic_old = accounts_topic_old;
+exports.accounts_topic_new = accounts_topic_new;
 exports.accounts_get = accounts_get;
 exports.accounts_uid = accounts_uid;
