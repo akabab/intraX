@@ -1,27 +1,26 @@
-#activity
+#activity(ng-init="hideList=true;hideForm=false")
   #list-activity
-    button.dark-btn.smart-btn(ng-init="hideList=true" ng-click="hideList=!hideList") List
-    select.dark-btn.smart-btn(ng-options="module.name for module in modules" ng-model="moduleSelected" ng-change="getActivities(moduleSelected.name); curActivity.moduleId=moduleSelected._id")
+    button.dark-btn.smart-btn(ng-click="hideList=!hideList") List
+    select.dark-btn.smart-btn(ng-options="module.name for module in modules" ng-model="moduleSelected" ng-change="getActivities(moduleSelected);resetActivityForm()")
       option(value="") -- pick a module --
     .panel(ng-class="{hidden:hideList}")
-      div(ng-if="moduleSelected.name" ng-repeat="activity in activities")
-        button.dark-btn(ng-click="delActivity(moduleSelected.name, activity)")
+      div(ng-show="moduleSelected.name" ng-repeat="activity in activities")
+        button.dark-btn(ng-click="delActivity(moduleSelected, activity);")
           i.fa.fa-minus
-        button.dark-btn(ng-click="editActivity(activity)")
+        button.dark-btn(ng-click="editActivity(activity);$parent.hideForm=false")
           i.fa.fa-pencil
-        span.activity {{activity.name}}  -- {{activity._id}}
-  #add-activity(ng-hide="!moduleSelected.name")
-    button.dark-btn.smart-btn(ng-click="hideNew=!hideNew" ng-bind="isEditingActivity ? 'Edit' : 'New'")
-    .panel(ng-class="{hidden:hideNew}")
-      form(name="Form" novalidate ng-submit="isEditingActivity ? updateActivity(moduleSelected.name, curActivity) : addActivity(moduleSelected.name, curActivity)")
+        span.activity {{activity.name}} 
+        span ({{activity._id}})
+  #form-activity(ng-hide="!moduleSelected.name")
+    button.dark-btn.smart-btn(ng-click="hideForm=!hideForm" ng-bind="isEditingActivity ? 'Edit' : 'New'")
+    .panel(ng-class="{hidden:hideForm}")
+      form(name="Form" novalidate ng-submit="isEditingActivity ? updateActivity(moduleSelected, curActivity) : addActivity(moduleSelected, curActivity)")
         label Name
           input(type='text' ng-model="curActivity.name")
         label Description
           textarea(ng-model="curActivity.description")
         label.inline Slots
           input(type="number" ng-model="curActivity.slots" placeholder="unlimited if empty")
-        label.inline Credits
-          input(type="number" ng-model="curActivity.credits")
         br
         label.inline Start
           input(type="date" ng-model="curActivity.start")
@@ -42,7 +41,9 @@
         button.dark-btn(type="submit")
           i.fa(ng-class="isEditingActivity ? 'fa-pencil' : 'fa-plus'")
           |  to {{moduleSelected.name}}
-        button.dark-btn(type="button" ng-show="isEditingActivity" ng-click="newActivity();curActivity.moduleId=moduleSelected._id")
+        button.dark-btn(type="button" ng-show="isEditingActivity" ng-click="resetActivityForm()")
           i.fa.fa-ban
-          |  cancel
-        span.message(ng-show="activityMessage") {{activityMessage}}
+          |  back
+  #message-activity.message(ng-show="activityMessage")
+    i
+    |  {{activityMessage}}
