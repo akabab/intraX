@@ -11,11 +11,11 @@
           i.fa.fa-pencil
         span.activity {{activity.name}}  -- {{activity._id}}
   #add-activity(ng-hide="!moduleSelected.name")
-    button.dark-btn.smart-btn(ng-click="hideNew=!hideNew" ng-bind="isEditing ? 'Edit' : 'New'")
+    button.dark-btn.smart-btn(ng-click="hideNew=!hideNew" ng-bind="isEditingActivity ? 'Edit' : 'New'")
     .panel(ng-class="{hidden:hideNew}")
-      form(name="Form"  novalidate ng-submit="isEditing ? updateActivity(moduleSelected.name, curActivity) : addActivity(moduleSelected.name, curActivity)")
+      form(name="Form" novalidate ng-submit="isEditingActivity ? updateActivity(moduleSelected.name, curActivity) : addActivity(moduleSelected.name, curActivity)")
         label Name
-          input(type='text' ng-model="curActivity.name" required)
+          input(type='text' ng-model="curActivity.name")
         label Description
           textarea(ng-model="curActivity.description")
         label.inline Slots
@@ -40,7 +40,9 @@
           input(type="file" ng-model="curActivity.subject")
         br
         button.dark-btn(type="submit")
-          i.fa(ng-class="isEditing ? 'fa-pencil' : 'fa-plus'")
+          i.fa(ng-class="isEditingActivity ? 'fa-pencil' : 'fa-plus'")
           |  to {{moduleSelected.name}}
-        button.dark-btn(type="button" ng-show="isEditing" ng-click="curActivity={};isEditing=false")
+        button.dark-btn(type="button" ng-show="isEditingActivity" ng-click="newActivity();curActivity.moduleId=moduleSelected._id")
           i.fa.fa-ban
+          |  cancel
+        span.message(ng-show="activityMessage") {{activityMessage}}

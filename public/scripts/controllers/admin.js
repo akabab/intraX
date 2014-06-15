@@ -3,13 +3,30 @@ angular.module('intraX')
 .controller('AdminCtrl', function ($scope, $http, $timeout) {
 
   $scope.panels = [ {name: 'Module',   template: 'admin_module'},
-                    {name: 'Activity', template: 'admin_activity'},
-                    {name: 'Forum',    template: 'admin_forum'}
+                    {name: 'Activity', template: 'admin_activity'}
                    ];
 
   $scope.modules = [];
+  $scope.curModule = {};
+  $scope.isEditingModule;
+  $scope.moduleMessage = '';
+
   $scope.activities = [];
   $scope.curActivity = {};
+  $scope.isEditingActivity;
+  $scope.activityMessage = '';
+
+
+  //Modules
+  $scope.newModule = function () {
+    $scope.curModule = {};
+    $scope.isEditingModule = false;
+  }
+
+  $scope.editModule = function (module) {
+    $scope.curModule = module;
+    $scope.isEditingModule = true;
+  }
 
   $scope.getModules = function () {
     $http.get('/modules')
@@ -27,8 +44,8 @@ angular.module('intraX')
     .error(function (data) {});
   };
 
-  $scope.delModule = function (module_id) {
-    $http.post('/modules/del', {'_id': module_id})
+  $scope.delModule = function (module) {
+    $http.post('/modules/del', {'_id': module._id})
     .success(function (data) {
       $scope.modules = data;
     })
@@ -36,6 +53,16 @@ angular.module('intraX')
   };
 
   //Activities
+  $scope.newActivity = function () {
+    $scope.curActivity = {};
+    $scope.isEditingActivity = false;
+  }
+
+  $scope.editActivity = function (activity) {
+    $scope.curActivity = activity;
+    $scope.isEditingActivity = true;
+  }
+
   $scope.getActivities = function (module_name) {
     $http.get('/modules/' + module_name + '/all')
     .success(function (data) {
@@ -48,16 +75,13 @@ angular.module('intraX')
     console.log('add');
     $http.post('/modules/' + module_name + '/add', {'activity': newActivity})
     .success(function (data) {
+      $timeout(function() { $scope.activityMessage = ''; }, 2000);
+      $scope.activityMessage = 'Activity added successfuly';
       $scope.activities = data;
+      $scope.curActivity = {};
     })
     .error(function (data) {});
   };
-
-  $scope.editActivity = function (activity) {
-    $scope.curActivity = activity;
-    $scope.isEditing = true;
-    console.log($scope.curActivity, $scope.isEditing);
-  }
 
   $scope.updateActivity = function (module_name, activity) {
     console.log('edit %j', activity);
