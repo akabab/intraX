@@ -1,8 +1,7 @@
 #admin(ng-controller="AdminCtrl" ng-init="getModules()")
   div(ng-repeat="panel in panels" id="{{panel.name | lowercase}}-panel")
     .admin-block
-      button.dark-btn.smart-btn.title(ng-click="hide=!hide") {{panel.name}}
-      //-ng-init="hide=true" 
+      button.dark-btn.smart-btn.title(ng-init="hide=true" ng-click="hide=!hide") {{panel.name}}
       .admin-panel.panel(ng-class="{hidden:hide}")
         div(ng-include="'/template/' + panel.template + '.jade'")
 

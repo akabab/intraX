@@ -1,30 +1,36 @@
 #module
   #list-module
-    button.dark-btn.smart-btn(ng-click="hideList=!hideList") List
+    button.dark-btn.smart-btn(ng-init="hideList=true" ng-click="hideList=!hideList") List
     .panel(ng-class="{hidden:hideList}")
       div(ng-repeat="module in modules")
         div
-          button.dark-btn(ng-click="delModule(module._id)")
+          button.dark-btn(ng-click="delModule(module)")
             i.fa.fa-minus
-          | {{module.name}} -- {{module._id}}
+          button.dark-btn(ng-click="editModule(module)")
+            i.fa.fa-pencil
+          span.module {{module.name}} -- {{module._id}}
   #add-module
-    button.dark-btn.smart-btn(ng-click="hideNew=!hideNew") New
+    button.dark-btn.smart-btn(ng-click="hideNew=!hideNew" ng-bind="isEditingModule ? 'Edit' : 'New'")
     .panel(ng-class="{hidden:hideNew}")
-      form
+      form(name="Form" novalidate ng-submit="isEditingModule ? updateModule(curModule) : addModule(curModule)")
         label Name
-          input(type='text' ng-model="newModule.name")
+          input(type='text' ng-model="curModule.name")
         label Description
-          textarea(ng-model="newModule.description")
+          textarea(ng-model="curModule.description")
         label.inline Slots
-          input(type="number" ng-model="newModule.slots" placeholder="unlimited if empty")
+          input(type="number" ng-model="curModule.slots" placeholder="unlimited if empty")
         label.inline Credits
-          input(type="number" ng-model="newModule.credits")
+          input(type="number" ng-model="curModule.credits")
         br
         label.inline Start
-          input(type="date" ng-model="newModule.start")
+          input(type="date" ng-model="curModule.start")
         label.inline End 
-          input(type="date" ng-model="newModule.end")
+          input(type="date" ng-model="curModule.end")
         br
-        button.dark-btn(ng-click="addModule(newModule)")
-          i.fa.fa-plus
+        button.dark-btn(type="submit")
+          i.fa(ng-class="isEditingActivity ? 'fa-pencil' : 'fa-plus'")
+        button.dark-btn(type="button" ng-show="isEditingModule" ng-click="newModule()")
+          i.fa.fa-ban
+          |  cancel
+        span.message(ng-show="moduleMessage") {{moduleMessage}}
 
