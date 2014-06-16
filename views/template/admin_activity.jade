@@ -15,8 +15,13 @@
     button.dark-btn.smart-btn(ng-click="hideForm=!hideForm" ng-bind="isEditingActivity ? 'Edit' : 'New'")
     .panel(ng-class="{hidden:hideForm}")
       form(name="Form" novalidate ng-submit="isEditingActivity ? updateActivity(moduleSelected, curActivity) : addActivity(moduleSelected, curActivity)")
-        label Name
+        label.inline Name
           input(type='text' ng-model="curActivity.name")
+        label.inline Type
+          select(ng-model="curActivity.type" required)
+            option Project
+            option Exam
+            option TD
         label Description
           textarea(ng-model="curActivity.description")
         label.inline Slots
