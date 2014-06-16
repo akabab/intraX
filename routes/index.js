@@ -9,6 +9,7 @@ router.get(['/', '/index'], function (req, res) {
 
 router.get('/template/:name', function (req, res) {
   var name = req.params.name;
+  console.log(name);
   res.render('template/' + name, { account: req.session['account'] });
 });
 
