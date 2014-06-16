@@ -7,15 +7,17 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('user', {          url: '/user/:uid',                templateUrl: '/template/user',           controller: 'UserCtrl' })
     .state('ldap', {          url: '/ldap',                     templateUrl: '/template/ldap',           controller: 'LdapCtrl' })
     .state('inbox', {         url: '/inbox',                    templateUrl: '/template/inbox',          controller: 'InboxCtrl' })
+    .state('messages', {      url: '/inbox/messages',           templateUrl: '/template/messages',       controller: 'InboxCtrl' })
+    .state('tickets', {       url: '/inbox/tickets',            templateUrl: '/template/tickets',        controller: 'InboxCtrl' })
     .state('module', {        url: '/module',                   templateUrl: '/template/module',         controller: 'ModuleCtrl' })
     .state('calendar', {      url: '/calendar',                 templateUrl: '/template/calendar',       controller: 'CalendarCtrl' })
     .state('conferences', {   url: '/conferences',              templateUrl: '/template/conferences',    controller: 'ConferencesCtrl' })
     .state('elearning', {     url: '/elearning',                templateUrl: '/template/elearning',      controller: 'ElearningCtrl' })
     .state('forum', {         url: '/forum',                    templateUrl: '/template/forum',          controller: 'ForumCtrl' })
     .state('topics', {        url: '/forum/:cat',               templateUrl: '/template/category',       controller: 'CategoryCtrl' })
-    .state('posts', {         url: '/forum/:cat/:post',         templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('posts', {         url: '/forum/:cat/:post',         templateUrl: '/template/message',        controller: 'MessageCtrl' })
     .state('subtopics', {     url: '/forum/:cat/:sub',          templateUrl: '/template/category',       controller: 'CategoryCtrl' })
-    .state('subposts', {      url: '/forum/:cat/:sub/:post',    templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('subposts', {      url: '/forum/:cat/:sub/:post',    templateUrl: '/template/message',        controller: 'MessageCtrl' })
     .state('adminCategory', { url: '/admin/forum/category',     templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
 }]);
 
@@ -362,6 +364,17 @@ app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function 
 }]);
 
 app.controller('InboxCtrl', ['$scope', 'SessionService', function ($scope, SessionService) {
+  var fakeMsg = {
+    "from": "cdenis",
+    "title": "Je suis nul, j'ai pas vu l'inscription J04",
+    "resolved": true,
+    "content": "J'ai rate l'inscription du Jour 04 : /\n\nC'est une erreur et rien de volontaire si jammais j'ai une chance de la ratrapper je suis preneur, sinon tampis je ferais les exo J04 quand même.",
+    "comments": [
+      { "from":"sgregory", "content":"Bonjour,\nNon. Fais quand meme les exercices et fais attention la prochaine fois.\nCordialement.", "date":212316 },
+      { "from":"zaz", "content":"En effet, dans ce cas la tu sert a rien.\n\n Cordialement", "date":212955 },
+    ]
+  };
+  $scope.tickets = [ fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg , fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg , fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg, fakeMsg ];
   $scope.title = "Inbox";
 }]);
 
