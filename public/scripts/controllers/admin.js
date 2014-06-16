@@ -41,6 +41,8 @@ angular.module('intraX')
   };
 
   $scope.addModule = function (module) {
+    module.users = [];
+
     $http.post('/modules/add', {'module': module})
     .success(function (data) {
       setMessage('moduleMessage', 'Module added successfuly');
@@ -90,11 +92,9 @@ angular.module('intraX')
   }
 
   $scope.getActivities = function (module) {
-    $http.get('/modules/' + module.name + '/all')
-    .success(function (data) {
+    ModuleService.getActivities(module.name).then(function (data) {
       $scope.activities = data;
-    })
-    .error(function (err) {
+    }, function (err) {
       console.log(err);
     });
   };

@@ -27,10 +27,15 @@
         label.inline Slots
           input(type="number" ng-model="curActivity.slots" placeholder="unlimited if empty")
         br
-        label.inline Start
-          input(type="date" ng-model="curActivity.start")
+        label.inline Subscribe Start
+          input(type="date" ng-model="curActivity.subStart")
         label.inline End 
-          input(type="date" ng-model="curActivity.end")
+          input(type="date" ng-model="curActivity.subEnd")
+        br
+        label.inline Work Start
+          input(type="date" ng-model="curActivity.workStart")
+        label.inline End 
+          input(type="date" ng-model="curActivity.workEnd")
         br
         label.inline Group Size
           input(type="number" ng-model="curActivity.groupSize" placeholder="individual if empty")
