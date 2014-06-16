@@ -6,7 +6,7 @@ var activities = require('./modules/activities');
 
 router.get('/', modules.get);
 router.get('/:module', modules.get);
-router.post('/:action', bodyParser(), modules.post); //could del bodyParser() ?
+router.post('/:action', bodyParser(), modules.post);
 
 router.get('/:module/:activity', activities.get);
 router.post('/:module/:action', bodyParser(), activities.post);

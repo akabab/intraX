@@ -22,14 +22,19 @@
         label.inline Credits
           input(type="number" ng-model="curModule.credits")
         br
-        label.inline Start
-          input(type="date" ng-model="curModule.start")
+        label.inline Subscribe Start
+          input(type="date" ng-model="curModule.subStart")
         label.inline End 
-          input(type="date" ng-model="curModule.end")
+          input(type="date" ng-model="curModule.subEnd")
+        br
+        label.inline Work Start
+          input(type="date" ng-model="curModule.workStart")
+        label.inline End 
+          input(type="date" ng-model="curModule.workEnd")
         br
         button.dark-btn(type="submit")
           i.fa(ng-class="isEditingActivity ? 'fa-pencil' : 'fa-plus'")
-        button.dark-btn(type="button" ng-show="isEditingModule" ng-click="ResetModuleForm()")
+        button.dark-btn(type="button" ng-show="isEditingModule" ng-click="resetModuleForm()")
           i.fa.fa-ban
           |  back
   #message-module.message(ng-show="moduleMessage")

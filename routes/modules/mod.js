@@ -22,17 +22,25 @@ exports.post = function (req, res) {
   var module = req.body.module;
   var action = req.params.action;
 
-  moduleActions[action](module).then(function (result) {
-    module_get_all().then(function (result) {
-      res.json(result);
-    });
+  console.log(action);
+  moduleActions[action](req, module).then(function (result) {
+    if (action == 'subscribe') {
+      module_get(module.name).then(function (result) {
+        res.json(result);
+      });
+    }
+    else {
+      module_get_all().then(function (result) {
+        res.json(result);
+      });
+    }
   });
 };
 
 var module_get = function (moduleName) {
   var deferred = q.defer();
 
-  modules.find({'name': moduleName}, function(error, result) {
+  modules.find({'name': moduleName}, function (error, result) {
     if (error)
       deferred.reject(error);
     if (result)
@@ -44,7 +52,7 @@ var module_get = function (moduleName) {
 var module_get_all = function () {
   var deferred = q.defer();
 
-  modules.find( function(error, result) {
+  modules.find(function (error, result) {
     if (error)
       deferred.reject(error);
     if (result)
@@ -54,7 +62,7 @@ var module_get_all = function () {
 };
 
 var moduleActions = {
-  add: function (module) {
+  add: function (req, module) {
     var deferred = q.defer();
 
     modules.save(module, function (error, result) {
@@ -63,7 +71,7 @@ var moduleActions = {
     return (deferred.promise);
   },
 
-  update: function (module) {
+  update: function (req, module) {
     var deferred = q.defer();
     var id = module._id;
     delete module._id;
@@ -74,12 +82,23 @@ var moduleActions = {
     return (deferred.promise);
   },
 
-  del: function (module) {
+  del: function (req, module) {
     var deferred = q.defer();
 
     modules.removeById(module._id, function (error, result) {
       deferred.resolve(result);
     });
     return (deferred.promise);
+  },
+
+  subscribe: function (req, module) {
+    var deferred = q.defer();
+    var uid = req.session.account.uid;
+
+    modules.update({'_id': module._id}, {$push: {'users': uid}}, function (error, result) {
+      deferred.resolve(result);
+    });
+    return (deferred.promise);
   }
+
 };
