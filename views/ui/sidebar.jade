@@ -1,24 +1,24 @@
 #sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
   .link(ng-repeat="link in links" ng-init="show = link.deploy; linkSref = genLink(link.name)")
-    .elem.noselect(id="{{linkSref}}")
+    .elem.noselect(id="sb-{{linkSref}}")
       i.fa(ng-class='{open:show, active:link.sublinks.length > 0}' ng-click="show = !show")
       a(ui-sref="{{linkSref}}" tabindex="-1" ng-class="link.unseen ? 'bold' : 'wide'") {{link.name}}
       a.unseen(ng-if="link.unseen" ui-sref="{{linkSref + ':unseen'}}" tabindex="-1") ({{link.unseen}})
     .sublinks(ng-show="show")
       .sublink(ng-repeat="sublink in link.sublinks" ng-init="subshow = sublink.deploy; sublinkSref = genLink(link.name, sublink.name)")
         div(ng-if="sublink.children.length")
-          .elem.noselect(id="{{sublinkSref}}")
+          .elem.noselect(id="sb-{{sublinkSref}}")
             i.fa.active(ng-class='{open:subshow}' ng-click="subshow = !subshow")
             a(ui-sref="{{sublinkSref}}" tabindex="-1" ng-class="sublink.unseen ? 'bold' : 'wide'") {{sublink.name}}
             a.unseen(ng-if="sublink.unseen" ui-sref="{{sublinkSref + ':unseen'}}" tabindex="-1") ({{sublink.unseen}})
           .childlinks(ng-show="subshow")
             .childlink(ng-repeat="childlink in sublink.children" ng-init="childlinkSref = genLink(link.name, sublink.name, childlink.name)")
-              .elem.noselect(id="{{childlinkSref}}")
+              .elem.noselect(id="sb-{{childlinkSref}}")
                 i.fa
                 a(ui-sref="{{childlinkSref}}" tabindex="-1" ng-class="childlink.unseen ? 'bold' : 'wide'") {{childlink.name}}
                 a.unseen(ng-if="childlink.unseen" ui-sref="{{childlinkSref + ':unseen'}}" tabindex="-1") ({{childlink.unseen}})
         div(ng-if="!sublink.children.length")
-          .elem.noselect(id="{{sublinkSref}}")
+          .elem.noselect(id="sb-{{sublinkSref}}")
             i.fa
             a(ui-sref="{{sublinkSref}}" tabindex="-1" ng-class="sublink.unseen ? 'bold' : 'wide'") {{sublink.name}}
             a.unseen(ng-if="sublink.unseen" ui-sref="{{sublinkSref + ':unseen'}}" tabindex="-1") ({{sublink.unseen}})

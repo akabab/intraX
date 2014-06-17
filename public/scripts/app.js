@@ -12,10 +12,14 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('calendar', {      url: '/calendar',                 templateUrl: '/template/calendar',       controller: 'CalendarCtrl' })
     .state('conferences', {   url: '/conferences',              templateUrl: '/template/conferences',    controller: 'ConferencesCtrl' })
     .state('elearning', {     url: '/elearning',                templateUrl: '/template/elearning',      controller: 'ElearningCtrl' })
+    .state('admin', {         url: '/admin',                    templateUrl: '/template/admin',          controller: 'AdminCtrl' })
     .state('forum', {         url: '/forum',                    templateUrl: '/template/forum',          controller: 'ForumCtrl' })
     .state('category', {      url: '/forum/category/:cat/:sub', templateUrl: '/template/category',       controller: 'CategoryCtrl' })
-    .state('admin', {         url: '/admin',                    templateUrl: '/template/admin',          controller: 'AdminCtrl' })
-    .state('adminCategory', { url: '/admin/category',           templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
+    .state('topics', {        url: '/forum/:cat',               templateUrl: '/template/category',       controller: 'CategoryCtrl' })
+    .state('posts', {         url: '/forum/:cat/:post',         templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('subtopics', {     url: '/forum/:cat/:sub',          templateUrl: '/template/category',       controller: 'CategoryCtrl' })
+    .state('subposts', {      url: '/forum/:cat/:sub/:post',    templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('adminCategory', { url: '/admin/forum/category',     templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
 }]);
 
 app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
@@ -35,7 +39,6 @@ app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope,
     }
   });
 }]);
-
 
 app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
   $scope.menu = '';
@@ -66,9 +69,9 @@ app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function 
     $scope.title = "Index";
 }]);
 
-
 app.controller('InboxCtrl', ['$scope', 'SessionService', function ($scope, SessionService) {
-    $scope.title = "Inbox";
+  $scope.title = "Inbox";
+  console.log($scope.myStyle);
 }]);
 
 
@@ -81,9 +84,27 @@ app.controller('CalendarCtrl', ['$scope', function ($scope) {
     $scope.title = "Calendar";
 }]);
 
-
 app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";
 }]);
 
-
+app.directive('resizable', function($window) {
+  return function($scope) {
+    $scope.initializeWindowSize = function() {
+      $scope.windowHeight = $window.innerHeight;
+      $scope.myStyle = function (arg) {
+        return { 'height': ($window.innerHeight - arg) + 'px' };
+      }
+      return $scope.windowWidth = $window.innerWidth;
+    };
+    $scope.initializeWindowSize();
+    return angular.element($window).bind('resize', function() {
+      $scope.initializeWindowSize();
+      $scope.myStyle = function (arg) {
+        return { 'height': ($window.innerHeight - arg) + 'px' };
+      }
+      console.log($scope.myStyle);
+      return $scope.$apply();
+    });
+  };
+});

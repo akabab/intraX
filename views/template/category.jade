@@ -1,4 +1,14 @@
-p(ng-hide="subName") welcome to category {{catName}}
-p(ng-show="subName") welcome to category {{subName}}, daughter of {{catName}}
+p(ng-hide="subName") Welcome to category {{catName}}
+p(ng-show="subName") Welcome to category {{subName}}, daughter of {{catName}}
 
-p here is the {{categoryId}}
+p Here are the topics availabe in this category :
+ul
+  li(ng-repeat="topic in topics")
+    a(ng-href="{{'#/forum/' + _prefix + topic.description}}") {{topic.description}} / {{topic.author}} / {{topic.date}}
+    - if (account.isAdmin) {
+        button(ng-click="del(topic._id)") remove
+    - }
+
+p add a topic :
+  input(type="text", ng-model="topicName")
+  button(ng-click="add(topicName)") add
