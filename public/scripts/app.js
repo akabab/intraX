@@ -7,6 +7,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('user', {          url: '/user/:uid',                templateUrl: '/template/user',           controller: 'UserCtrl' })
     .state('ldap', {          url: '/ldap',                     templateUrl: '/template/ldap',           controller: 'LdapCtrl' })
     .state('inbox', {         url: '/inbox',                    templateUrl: '/template/inbox',          controller: 'InboxCtrl' })
+    .state('activity', {      url: '/module/:mName/:aName',     templateUrl: '/template/activity',       controller: 'ActivityCtrl' })
     .state('module', {        url: '/module/:name',             templateUrl: '/template/module',         controller: 'ModuleCtrl' })
     .state('calendar', {      url: '/calendar',                 templateUrl: '/template/calendar',       controller: 'CalendarCtrl' })
     .state('conferences', {   url: '/conferences',              templateUrl: '/template/conferences',    controller: 'ConferencesCtrl' })

@@ -54,7 +54,7 @@ var module_get = function (moduleName) {
 };
 
 //Get activity identified by name & inside collection "activity + moduleId"
-var activity_get = function (activityName, moduleId) {
+var activity_get = function (moduleId, activityName) {
   var deferred = q.defer();
 
   var activity = mongo.collection("activity" + moduleId);
