@@ -26,6 +26,18 @@ angular.module('intraX.services')
       return deferred.promise;
     },
 
+    getActivity: function (moduleName, activityName) {
+      var deferred = $q.defer();
+
+      $http.get('/modules/' + moduleName + '/' + activityName).then(function (res) {
+        deferred.resolve(res.data);
+      }, function (err) {
+        deferred.reject(err);
+      });
+
+      return deferred.promise;
+    },
+
     getActivities: function (moduleName) {
       var deferred = $q.defer();
 
