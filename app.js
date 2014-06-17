@@ -15,6 +15,7 @@ var dltnt     = require('./routes/dltnt');
 var forum     = require('./routes/forum');
 var ldap      = require('./routes/ldap');
 var modules   = require('./routes/modules');
+var inbox     = require('./routes/inbox');
 
 var app = express();
 
@@ -49,6 +50,7 @@ app.all("*", function(req, res, next) {
 app.use('/', index);
 app.use('/user', user);
 app.use('/forum', forum);
+app.use('/inbox', inbox);
 app.use('/dltnt', dltnt);
 app.use('/modules', modules);
 

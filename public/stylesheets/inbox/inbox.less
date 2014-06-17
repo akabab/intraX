@@ -1,0 +1,53 @@
+#inbox {
+  .inbox-wrapper { margin: auto; max-width: 1220px; }
+  padding: 12px 0 0 6px;
+  .content-wrapper {
+    padding: 15px;
+  }
+  h2 {
+    text-align: center;
+    margin: 15px 0;
+    text-shadow: 0 1px rgba(255, 255, 255, .5);
+  }
+  .line-dark, .line-light {
+    height: 2px;
+    background-image: url('/images/ui/line-gradient.png');
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .line-dark {
+    background-position-y: 0;
+  }
+  .compact {
+    height: 100%;
+    width:33%;
+    float: right;
+    > div {
+      background-color: @bg-light;
+      min-height: 450px;
+      height: 100%;
+      border-radius: 5px 5px 0 0;
+      margin-right: 15px;
+      border: 1px solid @bg;
+    }
+    #tickets-compact {
+      h2 {
+        text-shadow: 0 -2px @fg-darker;
+      }
+      border-color: @fg-darker;
+      color: @bg-light;
+      background-color: @fg-dark;
+    }
+  }
+  @media (max-width: 950px) {
+    padding-top: 3px;
+    padding-left: 0;
+    margin-left: -2px;
+    .compact {
+      > div {
+        margin-right: 3px;
+        border-radius: 0;
+      }
+    }
+  }
+}
