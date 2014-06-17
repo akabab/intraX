@@ -50,10 +50,22 @@ angular.module('intraX.services')
       return deferred.promise;
     },
 
-    subscribe: function (module) {
+    moduleSubscribe: function (module) {
       var deferred = $q.defer();
 
       $http.post('/modules/subscribe', {'module': module}).then(function (res) {
+        deferred.resolve(res.data);
+      }, function (err) {
+        deferred.reject(err);
+      });
+
+      return deferred.promise;
+    },
+
+    activitySubscribe: function (moduleName, activity) {
+      var deferred = $q.defer();
+
+      $http.post('/modules/'+ moduleName +'/subscribe', {'activity': activity}).then(function (res) {
         deferred.resolve(res.data);
       }, function (err) {
         deferred.reject(err);

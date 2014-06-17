@@ -1,6 +1,6 @@
 angular.module('intraX')
 
-.controller('ModuleCtrl', function ($scope, $http, $stateParams, ModuleService, SessionService) {
+.controller('ModuleCtrl', function ($scope, $http, $stateParams, $window, ModuleService, SessionService) {
   $scope.module = {};
   $scope.moduleAsked = $stateParams.name;
   $scope.activities = [];
@@ -52,13 +52,17 @@ angular.module('intraX')
   }
 
   $scope.subscribe = function (module) {
-    ModuleService.subscribe(module).then(function (data) {
+    ModuleService.moduleSubscribe(module).then(function (data) {
       $scope.module = data[0];
       setRegisterVal();
     }, function (err) {
       console.log(err);
     });
   };
+
+  $scope.reachActivity = function (activityName) {
+    $window.location = $window.location.href + '/' + activityName;
+  }
 
   var dateToTimestamp = function (date) {
     var tmp = date.split("-");

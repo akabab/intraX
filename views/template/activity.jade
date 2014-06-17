@@ -1,13 +1,13 @@
-#activity
-  h1(ng-init="getModule(moduleAsked);getActivity(moduleAsked, activityAsked)") Activity
-  //- .panel(ng-if="activity.name")
-  //-   h1.title [{{module.name}}] {{activity.name}}
-  //-   #register
-  //-     button.dark-btn(ng-if="!isRegistred && canRegister" ng-click="subscribe(activity)") doit
-  //-     span(ng-if="isRegistred") registred
-  //-     span(ng-if="!isRegistred && !canRegister") too late!
-  //-   #desc-bloc
-  //-     .description {{module.description}}
+#activity(ng-init="getModule(moduleAsked);getActivity(moduleAsked, activityAsked)")
+  .panel(ng-if="activity.name")
+    h1.title [{{module.name}}]
+      span#activity-title {{activity.name}}
+    #register
+      button.dark-btn(ng-if="!isRegistred && canRegister" ng-click="subscribe(module.name, activity)") doit
+      span(ng-if="isRegistred") registred
+      span(ng-if="!isRegistred && !canRegister") too late!
+    #desc-bloc
+      .description {{activity.description}}
   //-   #activities(ng-init="getActivities(module.name)")
   //-     h2.title(ng-hide="!activities.length") Activities
       
@@ -20,6 +20,7 @@
   //-             .timebar(ng-style="{width: '{{activity.deltaTimePercent}}%'}")
   //-             span.time.startTime(ng-show="showTime") {{activity.workStart_ts | date:'dd-MM'}}
   //-             span.time.endTime(ng-show="showTime") {{activity.workEnd_ts | date:'dd-MM'}}
-  #activity-notfound(ng-if="!isRequesting && !activity.name")
+  #module-notfound(ng-if="!isRequesting && !module.name")
     h1 Module '{{moduleAsked}}' not found
+  #activity-notfound(ng-if="!isRequesting && module.name && !activity.name")
     h1 Activity '{{activityAsked}}' not found

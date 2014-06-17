@@ -101,6 +101,7 @@ angular.module('intraX')
 
   $scope.addActivity = function (module, activity) {
     activity.moduleId = module._id;
+    activity.users = [];
 
     $http.post('/modules/' + module.name + '/add', {'activity': activity})
     .success(function (data) {

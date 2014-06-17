@@ -27,13 +27,23 @@ exports.get = function (req, res) {
 
 exports.post = function (req, res) {
   var moduleName = req.params.module;
-
   var activity = req.body.activity;
   var action = req.params.action;
 
-  activityActions[action](activity).then(function (result) {
-    activity_get_all(activity.moduleId).then(function (result) {
-      res.json(result);
+  module_get(moduleName).then(function (result) {
+    var module = result[0];
+
+    activityActions[action](req, activity).then(function (result) {
+      if (action == 'subscribe') {
+        activity_get(module._id, activity.name).then(function (result) {
+          res.json(result);
+        });
+      }
+      else {
+        activity_get_all(module._id).then(function (result) {
+          res.json(result);
+        });
+      }
     });
   });
 };
@@ -83,10 +93,9 @@ var activity_get_all = function (moduleId) {
 };
 
 var activityActions = {
-  add: function (activity) {
+  add: function (req, activity) {
     var deferred = q.defer();
 
-    console.log('adding: %j', activity);
     var activityCol = mongo.collection("activity" + activity.moduleId);
 
     activityCol.save(activity, function (error, result) {
@@ -95,7 +104,7 @@ var activityActions = {
     return (deferred.promise);
   },
 
-  update: function (activity) {
+  update: function (req, activity) {
     var deferred = q.defer();
 
     var activityCol = mongo.collection("activity" + activity.moduleId);
@@ -109,7 +118,7 @@ var activityActions = {
     return (deferred.promise);
   },
 
-  del: function (activity) {
+  del: function (req, activity) {
     var deferred = q.defer();
 
     var activityCol = mongo.collection("activity" + activity.moduleId);
@@ -118,5 +127,18 @@ var activityActions = {
       deferred.resolve(result);
     });
     return (deferred.promise);
+  },
+
+  subscribe: function (req, activity) {
+    var deferred = q.defer();
+    var uid = req.session.account.uid;
+
+    var activityCol = mongo.collection("activity" + activity.moduleId);
+
+    activityCol.update({'_id': activity._id}, {$push: {'users': uid}}, function (error, result) {
+      deferred.resolve(result);
+    });
+    return (deferred.promise);
   }
+
 };
