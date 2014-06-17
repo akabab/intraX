@@ -12,13 +12,11 @@ angular.module('intraX')
 
   var user = SessionService.get('user');
 
-  console.log($scope.moduleAsked, $scope.activityAsked);
-
   var setRegisterVal = function () {
-    var users = $scope.module.users;
+    var users = $scope.activity.users;
 
-    var subStart_ts = dateToTimestamp($scope.module.subStart);
-    var subEnd_ts = dateToTimestamp($scope.module.subEnd);
+    var subStart_ts = dateToTimestamp($scope.activity.subStart);
+    var subEnd_ts = dateToTimestamp($scope.activity.subEnd);
     var cur_ts = Date.now();
 
     if (cur_ts > subStart_ts && cur_ts < subEnd_ts)
@@ -37,8 +35,7 @@ angular.module('intraX')
 
     ModuleService.getModule(moduleName).then(function (data) {
       $scope.module = data[0];
-      if ($scope.module)
-        setRegisterVal();
+
       $scope.isRequesting = false;
     }, function (err) {
       $scope.isRequesting = false;
@@ -50,7 +47,8 @@ angular.module('intraX')
 
     ModuleService.getActivity(moduleName, activityName).then(function (data) {
       $scope.activity = data[0];
-      console.log(data);
+      if ($scope.activity)
+        setRegisterVal();
       $scope.isRequesting = false;
       // getActivityCurTime();
     }, function (err) {
@@ -59,9 +57,11 @@ angular.module('intraX')
     });
   };
 
-  $scope.subscribe = function (module) {
-    ModuleService.subscribe(module).then(function (data) {
-      $scope.module = data[0];
+  $scope.subscribe = function (moduleName, activity) {
+    activity.moduleId = $scope.module._id;
+
+    ModuleService.activitySubscribe(moduleName, activity).then(function (data) {
+      $scope.activity = data[0];
       setRegisterVal();
     }, function (err) {
       console.log(err);

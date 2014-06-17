@@ -22,7 +22,6 @@ exports.post = function (req, res) {
   var module = req.body.module;
   var action = req.params.action;
 
-  console.log(action);
   moduleActions[action](req, module).then(function (result) {
     if (action == 'subscribe') {
       module_get(module.name).then(function (result) {

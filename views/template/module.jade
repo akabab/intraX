@@ -9,8 +9,9 @@
       .description {{module.description}}
     #activities(ng-init="getActivities(module.name)")
       h2.title(ng-hide="!activities.length") Activities
+      
       table
-        tr(ng-repeat="activity in activities" ng-init="showTime=false" ng-class-even="'even'" ng-click="test()")
+        tr(ng-repeat="activity in activities" ng-init="showTime=false" ng-class-even="'even'" ng-click="reachActivity(activity.name)")
           td.name {{activity.name}}
           td.description {{activity.description}}
           td
