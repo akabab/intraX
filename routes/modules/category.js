@@ -3,6 +3,7 @@ var fs = require("fs");
 var easymongo = require("easymongo");
 var mongo = new easymongo({dbname: "db"});
 var category = mongo.collection("category");
+var accounts_get = require('./accounts').accounts_get;
 
 /*
 ** The anonyme function returns void and puts a see on
@@ -10,11 +11,18 @@ var category = mongo.collection("category");
 */
 
 exports.get = function (req, res) {
+  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
+  var idAccount = req.session.account._id;
+  var isOpenAccount;
   var tree;
 
-  category_get().then(function(result) {
-    tree = category_tree({'list': result, 'root': ''});
-    res.json({'parents': result, 'tree': tree});
+  accounts_get({'_id': idAccount}).then(function(lstOpen) {
+    isOpenAccount = account.categoryIsOpen;
+    category_get().then(function(lstCate) {
+      console.log('s');
+      tree = category_tree({'lstCate': lstCate, 'lstOpen': lstOpen, 'root': ''});
+      res.json([account[0].categoryIsOpen, result]);
+    });
   });
 };
 
@@ -24,26 +32,43 @@ exports.get = function (req, res) {
 */
 
 exports.post = function (req, res) {
-  var addIdParent = req.body.addIdParent;
-  var addName = req.body.addName;
-  var delIdChild = req.body.delIdChild;
+  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
+  var idAccount = req.session.account._id;
+  var node = req.body.node;
+  var name = req.body.name;
 
-  if (req.params.action === 'add' && addName) {
-    if (addIdParent.length === 0 || addIdParent.length === 24)
-      category_add({'parent': addIdParent, 'name': addName});
-  }
-  else if (req.params.action === 'del' && delIdChild.length === 24) {
-    category_del({'id': delIdChild});
-  }
-  /*else if (req.params.action === 'set' && delIdChild.length === 24) {
-    console.log(delIdChild, addName);
-    if (addName)
-      category_set({'id': delIdChild, 'name': addName});
-  }*/
-  category_get().then(function(parents) {
-    res.json({'parents': parents});
+  accounts_get({'_id': idAccount}).then(function(result) {
+    if (result[0].accessRights === Infinity) {
+      if (req.params.action === 'add' && Boolean(name)) {
+        if (!node || node.length === 24)
+          category_add({'parent': node, 'name': name});
+      }
+      else if (req.params.action === 'del' && node.length === 24) {
+        category_del({'id': node});
+      }
+      else if (req.params.action === 'set' && node.length === 24) {
+        if (name)
+          category_set({'id': node, 'name': name});
+      }
+    }
   });
-   res.json('');
+  res.json('');
+}
+
+/*
+** The function returns a boolean if the category is open.
+*/
+
+function category_open(argument) {
+  var lstOpen = argument.lstOpen;
+  var id = argument.id;
+
+  for (var i = lstOpen.length - 1; i >= 0; i--) {
+    if (lstOpen[i] === id) {
+      return (true);
+    }
+  }
+  return (false);
 }
 
 /*
@@ -52,18 +77,21 @@ exports.post = function (req, res) {
 */
 
 var category_tree = function (argument) {
-  var list = argument.list;
+  var lstCate = argument.lstCate;
+  var lstOpen = argument.lstOpen;
   var root = argument.root;
   var node = [];
 
-  for (var count = 0; count < list.length; count += 1) /* Propose by @cdenis */
-  /* for (var count = 0; count < list.length; count += 1). */
-    if (root == list[count]._idCategory)
+  console.log('s');
+  for (var count = 0; count < lstCate.length; count += 1)    /* Propose by @cdenis */
+  /* for (var count = 0; count < lstCate.length; count += 1). */
+    if (root == lstCate[count]._idCategory)
       node.push({
-        'id': list[count]._id,
-        'name': list[count].name,
-        'url': list[count].url,
-        'children': category_tree({'list': list, 'root': list[count]._id})
+        'id': lstCate[count]._id,
+        'name': lstCate[count].name,
+        'url': lstCate[count].url,
+        'isOpen': category_open({'lstOpen': lstOpen, 'id': lstCate[count]._id}),
+        'children': category_tree({'lstCate': lstCate, 'root': lstCate[count]._id})
       });
   return (node);
 }
@@ -106,11 +134,10 @@ var category_get = function (argument) {
 function category_add(argument) {
   var parent = argument.parent;
   var name = argument.name.toLowerCase();
-  var data = {'_idCategory': parent, 'name': name, 'url': category_encode(name)};
+  var url = category_encode({'name': name});
+  var data = {'_idCategory': parent, 'name': name, 'url': url};
 
   category.save(data, function(error, results) {
-//    if (results)
-//      accounts_topic_new()
   });
 }
 
@@ -132,11 +159,13 @@ function category_del(argument) {
 */
 
 function category_set(argument) {
-  var id = ObjectId(argument.id);
+  var id = argument.id;
   var name = argument.name.toLowerCase();
-  var data = {'_id': id, 'name': name};
+  var url = category_encode({'name': name});
 
-  db.category.update({'_id': id}, {'$set': {'name': name}});
+  category.update({'_id': id}, {'$set': {'name': name, 'url': url}},
+  function(error, results) {
+  });
 }
 
 /*
