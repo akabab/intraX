@@ -1,14 +1,16 @@
-var q               = require("q");
-var fs              = require("fs");
-var easymongo       = require("easymongo");
-var mongo           = new easymongo({dbname: "db"});
-var category_get    = require('./category').category_get;
-var category_url    = require('./category').category_url;
-var category_tree   = require('./category').category_tree;
-var topic_get       = require('./topic').topic_get;
-var topic_url       = require('./topic').topic_url;
-var accounts_get    = require('./accounts').accounts_get;
-var accounts_uid    = require('./accounts').accounts_uid;
+var q                  = require("q");
+var fs                 = require("fs");
+var easymongo          = require("easymongo");
+var mongo              = new easymongo({dbname: "db"});
+var category_get       = require('./category').category_get;
+var category_url       = require('./category').category_url;
+var category_tree      = require('./category').category_tree;
+var topic_get          = require('./topic').topic_get;
+var topic_url          = require('./topic').topic_url;
+var accounts_get       = require('./accounts').accounts_get;
+var accounts_uid       = require('./accounts').accounts_uid;
+var accounts_topic_old = require('./accounts').accounts_topic_old;
+var accounts_topic_new = require('./accounts').accounts_topic_new;
 
 /* http://127.0.0.1:3000/forum/message/
 ** The anonyme function returns void.
@@ -48,33 +50,37 @@ exports.get = function (req, res) {
 */
 
 exports.post = function (req, res) {
+  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
+  var idAccount = req.session.account._id;
   var idMessageParent = req.body.idMessageParent;
   var idTopic = req.body.idTopic;
   var idMessage = req.body.idMessage;
-  var idAccounts = req.session.account._id;
   var contenue = req.body.contenue;
 
   if (idTopic.length == 24) {
     if (req.params.action === 'add') {
-      if (idAccounts.length == 24 && contenue)
-        if (idMessageParent.length == 0 || idMessageParent.length == 24)
+      if (idAccount.length == 24 && contenue)
+        if (idMessageParent.length == 0 || idMessageParent.length == 24) {
           message_add({
             'idTopic': idTopic,
             'idMessageParent': idMessageParent,
-            'idAccounts': idAccounts,
+            'idAccounts': idAccount,
             'contenue': contenue
           });
+        }
     }
     else if (req.params.action === 'get') {
-        message_get({'idTopic': idTopic}).then(function(result) {
-          res.json('message', (message_tree({'list': result, 'root': ''})));
-        });
+      message_get({'idTopic': idTopic}).then(function(result) {
+        res.json('message', (message_tree({'list': result, 'root': ''})));
+      });
+      return ;
     }
     else if (req.params.action === 'del') {
       if (idMessage.length == 24)
         message_del({'idTopic': idTopic, 'idMessage': idMessage});
     }
   }
+  res.json('');
 }
 
 /* http://127.0.0.1:3000/forum/message/get
@@ -136,14 +142,14 @@ function message_tree(argument) {
 // idTopic: topic.id
 // idMessageParent: message.id
 // contenue: message.contenue
-// idAccounts: account.id
 
-function message_add(argument) {
+var message_add = function (argument) {
+  console.log('message_add');
   var idMessageParent = argument.idMessageParent;
   var idTopic = argument.idTopic;
   var idAccounts = argument.idAccounts;
   var contenue = argument.contenue;
-  var message = mongo.collection(('message' + idTopic));
+  var message = mongo.collection('message' + idTopic);
   var date = new Date();
   var data = {
     '_idMessageParent': idMessageParent,
@@ -152,7 +158,9 @@ function message_add(argument) {
     'contenue': contenue
   };
 
-  message.save(data, function(error, results) {
+  message.save(data, function(error, success) {
+    if (success)
+      accounts_topic_new({'idTopic': idTopic});
   });
 }
 
@@ -172,3 +180,5 @@ function message_del(argument) {
   message.removeById(idMessage, function(error, results) {
   });
 }
+
+exports.message_add = message_add;

@@ -5,6 +5,7 @@ var mongo           = new easymongo({dbname: "db"});
 var category_get    = require('./category').category_get;
 var category_url    = require('./category').category_url;
 var category_tree   = require('./category').category_tree;
+var message_add    = require('./message').message_add;
 
 /*
 ** The anonyme function returns void and puts a see on
@@ -35,19 +36,27 @@ exports.get = function (req, res) {
 };
 
 exports.post = function (req, res) {
-  var categoryId = req.body.categoryId;
+  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
+  var idAccount = req.session.account._id;
+  var idCategory = req.body.idCategory;
+  var idTopic = req.body.idTopic;
   var description = req.body.description;
-  var topicId = req.body.topicId;
+  var contenue = req.body.contenue;
 
-  if (categoryId.length == 24) {
-    if (req.params.action === 'del' && topicId.length == 24)
-      topic_del({'categoryId': categoryId, 'topicId': topicId});
+  if (idAccount.length == 24 && idCategory.length == 24) {
+    if (req.params.action === 'del' && idTopic.length == 24)
+      topic_del({'categoryId': idCategory, 'topicId': idTopic});
     else if (req.params.action === 'add' && description)
-      topic_add({'categoryId': categoryId, 'description': description});
+      topic_add({'categoryId': idCategory, 'description': description});
+    else if (req.params.action === 'new' && description && contenue) {
+      topic_new({'categoryId': idCategory, 'description': description,
+                 'idAccount': idAccount, 'contenue': contenue});
+    }
   }
+  res.json('');
 };
 
-/* http://127.0.0.1:3000/topic/538cada300107c05a8547fa4
+/* http://127.0.0.1:3000/forum/topic/538cada300107c05a8547fa4
 ** The function returns all topics from topic' collection
 ** according to the id from category' collection.
 */
@@ -68,7 +77,7 @@ var topic_get = function (argument) {
   return (deferred.promise);
 }
 
-/* http://127.0.0.1:3000/topic/add
+/* http://127.0.0.1:3000/forum/topic/add;
 ** The function returns void and saves the new topic to topic' collection
 ** according to the id from category' collection.
 */
@@ -77,6 +86,7 @@ var topic_get = function (argument) {
 // description: description
 
 function topic_add(argument) {
+  console.log('topic_add');
   var topic = mongo.collection(('topic' + argument.categoryId));
   var name = argument.description.toLowerCase();
   var data = {'description': name};
@@ -85,7 +95,7 @@ function topic_add(argument) {
   });
 }
 
-/* http://127.0.0.1:3000/topic/del
+/* http://127.0.0.1:3000/forum/topic/del
 ** The function returns void and erases the topic from topic' collection
 ** according to the id from category' collection.
 */
@@ -94,6 +104,7 @@ function topic_add(argument) {
 // topicId: id
 
 function topic_del(argument) {
+  console.log('topic_del');
   var categoryId = argument.categoryId;
   var topicId = argument.topicId;
   var topic = mongo.collection(('topic' + argument.categoryId));
@@ -101,8 +112,6 @@ function topic_del(argument) {
   topic.removeById(topicId, function(error, results) {
   });
 }
-
-
 
 /*
 ** The function returns the occurrence from topic' collection according to
@@ -118,6 +127,29 @@ var topic_url = function (argument) {
       return (list[i]._id);
   }
   return (undefined);
+}
+
+/* http://127.0.0.1:3000/forum/topic/new
+** The function returns void and adds a new message from topic' collection according to
+** the id from category' collection.
+*/
+
+function topic_new(argument) {
+  console.log('topic_new');
+  var topic = mongo.collection(('topic' + argument.categoryId));
+  var name = argument.description.toLowerCase();
+  var idAccount = argument.idAccount;
+  var contenue = argument.contenue;
+  var data = {'description': name};
+
+  topic.save(data, function(error, theTopic) {
+    message_add({
+      'idTopic': theTopic._id,
+      'idMessageParent': null,
+      'idAccount': idAccount,
+      'contenue': contenue
+    });
+  });
 }
 
 exports.topic_get = topic_get;

@@ -13,15 +13,12 @@ var accounts_get = require('./accounts').accounts_get;
 exports.get = function (req, res) {
   req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
   var idAccount = req.session.account._id;
-  var isOpenAccount;
   var tree;
 
   accounts_get({'_id': idAccount}).then(function(lstOpen) {
-    isOpenAccount = account.categoryIsOpen;
     category_get().then(function(lstCate) {
-      console.log('s');
-      tree = category_tree({'lstCate': lstCate, 'lstOpen': lstOpen, 'root': ''});
-      res.json([account[0].categoryIsOpen, result]);
+      tree = category_tree({'lstCate': lstCate, 'lstOpen': lstOpen[0].categoryIsOpen});
+      res.json(tree);
     });
   });
 };
@@ -56,6 +53,20 @@ exports.post = function (req, res) {
 }
 
 /*
+** The function returns void, is only calls by category open and erases the
+** element from the list for increase the search gear following.
+*/
+
+function category_open_static(argument) {
+  var valueOpen = argument.valueOpen;
+  var arrayOpen = argument.arrayOpen;
+  var index = arrayOpen.indexOf(valueOpen);
+
+  if (index > -1)
+    arrayOpen.splice(index, 1);
+}
+
+/*
 ** The function returns a boolean if the category is open.
 */
 
@@ -64,7 +75,8 @@ function category_open(argument) {
   var id = argument.id;
 
   for (var i = lstOpen.length - 1; i >= 0; i--) {
-    if (lstOpen[i] === id) {
+    if (lstOpen[i] == id) {
+      category_open_static({'arrayOpen': lstOpen, 'valueOpen': lstOpen[i]});
       return (true);
     }
   }
@@ -81,18 +93,29 @@ var category_tree = function (argument) {
   var lstOpen = argument.lstOpen;
   var root = argument.root;
   var node = [];
+  var children;
 
-  console.log('s');
-  for (var count = 0; count < lstCate.length; count += 1)    /* Propose by @cdenis */
-  /* for (var count = 0; count < lstCate.length; count += 1). */
-    if (root == lstCate[count]._idCategory)
-      node.push({
-        'id': lstCate[count]._id,
-        'name': lstCate[count].name,
-        'url': lstCate[count].url,
-        'isOpen': category_open({'lstOpen': lstOpen, 'id': lstCate[count]._id}),
-        'children': category_tree({'lstCate': lstCate, 'root': lstCate[count]._id})
-      });
+  for (var count = 0; count < lstCate.length; count += 1) {
+    if (root == lstCate[count]._idCategory) {
+      children = category_tree({'lstCate': lstCate, 'lstOpen': lstOpen, 'root': lstCate[count]._id});
+      if (children.length) {
+        node.push({
+          'id': lstCate[count]._id,
+          'name': lstCate[count].name,
+          'url': lstCate[count].url,
+          'isOpen': category_open({'lstOpen': lstOpen, 'id': lstCate[count]._id}),
+          'children': children
+        });
+      } else {
+        node.push({
+          'id': lstCate[count]._id,
+          'name': lstCate[count].name,
+          'url': lstCate[count].url,
+          'children': children
+        });
+      }
+    }
+  }
   return (node);
 }
 

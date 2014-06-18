@@ -102,9 +102,10 @@ var accounts_uid = function (argument) {
 */
 
 var accounts_topic_new = function (argument) {
+  console.log('accounts_topic_new');
   var idTopic = argument.idTopic;
 
-  accounts.update({}, {'$push': {'topicSeeNot': idTopic}},
+  accounts.update({}, {'$pushAll': {'topicSeeNot': idTopic}},
   function(error, result) {
   });
 }
@@ -126,11 +127,10 @@ var accounts_topic_old = function (argument) {
 ** The function adds for one accounts the category close.
 */
 
-var accounts_category_open = function (argument) {
+function accounts_category_open(argument) {
   var idAccounts = argument.idAccounts;
   var idCategory = argument.idCategory;
 
-  console.log('The ' + idAccounts + ' opens ' + 'idCategory');
   accounts.update({'_id': idAccounts}, {'$push': {'categoryIsOpen': idCategory}},
   function(error, result) {
   });
@@ -140,7 +140,7 @@ var accounts_category_open = function (argument) {
 ** The function dels for one accounts the category open.
 */
 
-var accounts_category_close = function (argument) {
+function accounts_category_close(argument) {
   var idAccounts = argument.idAccounts;
   var idCategory = argument.idCategory;
 
