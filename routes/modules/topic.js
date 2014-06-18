@@ -4,7 +4,7 @@ var easymongo       = require("easymongo");
 var mongo           = new easymongo({dbname: "db"});
 var category_get    = require('./category').category_get;
 var category_url    = require('./category').category_url;
-var category_tree    = require('./category').category_tree;
+var category_tree   = require('./category').category_tree;
 
 /*
 ** The anonyme function returns void and puts a see on

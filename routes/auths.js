@@ -71,7 +71,8 @@ function connectToLdap(login, password, req, res) {
                               password: bcrypt.hashSync(password),
                               dateOfCreation: Date.now(),
                               accessRights: 0,
-                              topicSeeNot: []} );
+                              topicSeeNot: [],
+                              categoryIsOpen: []} );
             req.session['logged'] = true;
             res.json( {err: null} );
             return;

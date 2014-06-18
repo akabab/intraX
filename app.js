@@ -35,14 +35,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auths', auths);
 
 //Redirect to auth if not authenticed
-app.all("*", function(req, res, next) {
+/*app.all("*", function(req, res, next) {
   if (req.session && req.session['logged'])
     next();
   else {
     console.log(req.url);
     res.redirect('/auths');
   }
-});
+});*/
 
 app.use('/', index);
 app.use('/user', user);
@@ -83,13 +83,12 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
+/*
 var easymongo        = require("easymongo");
 var mongo            = new easymongo({dbname: "db"});
 var accounts         = mongo.collection("accounts");
 
-
-
 accounts_topic_old({'idAccounts': '539c704ab4d99eed376a5153', 'idTopic': 'test2'});
+*/
 
 module.exports = app;

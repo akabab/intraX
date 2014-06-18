@@ -5,6 +5,44 @@ var mongo            = new easymongo({dbname: "db"});
 var accounts         = mongo.collection("accounts");
 var ObjectId         = require('mongodb').ObjectID;
 
+exports.get = function (req, res) {
+  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
+  var idAccount = req.session.account._id;
+
+  if (idAccount && idAccount.length === 24) {
+    accounts_get().then(function(allAccounts) {
+      res.json(allAccounts);
+    });
+  }
+  else
+    res.json('');
+}
+
+exports.post = function (req, res) {
+  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
+  var idAccount = req.session.account._id;
+  var categoryIsOpen = req.body.categoryIsOpen;
+  var topicSeeNot = req.body.topicSeeNot;
+
+  if (req.params.action === 'add') {
+    if (topicSeeNot && topicSeeNot.length === 24)
+      accounts_topic_new({'idTopic': topicSeeNot});
+    if (idAccount && idAccount.length === 24
+    && categoryIsOpen && categoryIsOpen.length === 24) {
+      accounts_category_open({'idCategory': categoryIsOpen, 'idAccounts': idAccount});
+    }
+  }
+  else if (req.params.action === 'del'
+  && idAccount && idAccount.length === 24) {
+    if (topicSeeNot && topicSeeNot.length === 24)
+      accounts_topic_old({'idTopic': topicSeeNot, 'idAccounts': idAccount});
+    if (categoryIsOpen && categoryIsOpen.length === 24)
+      accounts_category_close({'idCategory': categoryIsOpen,
+                               'idAccounts': idAccount});
+  }
+  res.json('');
+}
+
 /*
 ** The function returns the account list according to
 ** argument's parameter from accounts' collection.
@@ -59,7 +97,7 @@ var accounts_uid = function (argument) {
   return (list);
 }
 
-/*
+/* topicSeeNot
 ** The function adds for all accounts the new event.
 */
 
@@ -71,7 +109,7 @@ var accounts_topic_new = function (argument) {
   });
 }
 
-/*
+/* topicSeeNot
 ** The function dels for the account the old event.
 */
 
@@ -83,6 +121,34 @@ var accounts_topic_old = function (argument) {
   function(error, result) {
   });
 }
+
+/* http://127.0.0.1:3000/forum/accounts/add
+** The function adds for one accounts the category close.
+*/
+
+var accounts_category_open = function (argument) {
+  var idAccounts = argument.idAccounts;
+  var idCategory = argument.idCategory;
+
+  console.log('The ' + idAccounts + ' opens ' + 'idCategory');
+  accounts.update({'_id': idAccounts}, {'$push': {'categoryIsOpen': idCategory}},
+  function(error, result) {
+  });
+}
+
+/* http://127.0.0.1:3000/forum/accounts/del
+** The function dels for one accounts the category open.
+*/
+
+var accounts_category_close = function (argument) {
+  var idAccounts = argument.idAccounts;
+  var idCategory = argument.idCategory;
+
+  accounts.update({'_id': idAccounts}, {'$pull': {'categoryIsOpen': idCategory}},
+  function(error, result) {
+  });
+}
+
 
 exports.accounts_topic_old = accounts_topic_old;
 exports.accounts_topic_new = accounts_topic_new;
