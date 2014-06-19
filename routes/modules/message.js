@@ -1,46 +1,49 @@
-var q                  = require("q");
-var fs                 = require("fs");
-var easymongo          = require("easymongo");
-var mongo              = new easymongo({dbname: "db"});
-var category_get       = require('./category').category_get;
-var category_url       = require('./category').category_url;
-var category_tree      = require('./category').category_tree;
-var topic_get          = require('./topic').topic_get;
-var topic_url          = require('./topic').topic_url;
-var accounts_get       = require('./accounts').accounts_get;
-var accounts_uid       = require('./accounts').accounts_uid;
-var accounts_topic_old = require('./accounts').accounts_topic_old;
-var accounts_topic_new = require('./accounts').accounts_topic_new;
+var q                     = require("q");
+var fs                    = require("fs");
+var easymongo             = require("easymongo");
+var mongo                 = new easymongo({dbname: "db"});
+var category_get          = require('./category').category_get;
+var category_url          = require('./category').category_url;
+var category_tree_message = require('./category').category_tree_message;
+var _topic                = require('./topic');
+var accounts_get          = require('./accounts').accounts_get;
+var accounts_uid          = require('./accounts').accounts_uid;
+var accounts_topic_old    = require('./accounts').accounts_topic_old;
+var accounts_topic_new    = require('./accounts').accounts_topic_new;
 
 /* http://127.0.0.1:3000/forum/message/
 ** The anonyme function returns void.
 */
 
 exports.get = function (req, res) {
+  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
+  var idAccount = req.session.account._id;
   var urlCategory = req.params.topic;
   var urlUnderCategory = req.params.subtopic;
   var urlTopic = req.params.message;
   var path = [urlCategory, urlUnderCategory];
-  var idTopic;
-  var treeTopic;
+  var idCategory;
+  var treeTheTopic;
   var idMessage;
   var treeMessage;
 
-  if (urlCategory && urlTopic) {
-    category_get().then(function(result) {
-      treeTopic = category_tree({'list': result, 'root': ''});
-      idTopic = category_url({'tree': treeTopic, 'path': path});
-      topic_get({'categoryId': idTopic}).then(function(topics) {
-        idMessage = topic_url({'list': topics, 'nameMessage': urlTopic});
-        message_get({'idTopic': idMessage}).then(function(messages) {
-          accounts_get().then(function(accounts) {
-            accounts = accounts_uid({'list': messages, 'accounts': accounts});
-            treeMessage = message_tree({'list': messages, 'root': ''});
-            res.json({'messages': messages});
+  if (idAccount.length == 24) {
+    if (urlCategory && urlTopic) {
+      category_get().then(function(allCathegories) {
+        treeTheTopic = category_tree_message({'list': allCathegories, 'root': null});
+        idCategory = category_url({'tree': treeTheTopic, 'path': path});        
+        _topic.topic_get({'categoryId': idCategory}).then(function(allTopics) {
+          idMessage = _topic.topic_url({'list': allTopics, 'nameMessage': urlTopic});
+          message_get({'idTopic': idMessage, 'idAccount': idAccount}).then(function(messages) {
+            accounts_get().then(function(accounts) {
+              messages = message_uid({'listAccounts': accounts, 'listMessages': messages});
+              treeMessage = message_tree({'list': messages, 'root': null});
+              res.json(treeMessage);
+            });
           });
         });
       });
-    });
+    }
   }
 }
 
@@ -71,7 +74,7 @@ exports.post = function (req, res) {
     }
     else if (req.params.action === 'get') {
       message_get({'idTopic': idTopic}).then(function(result) {
-        res.json('message', (message_tree({'list': result, 'root': ''})));
+        res.json('message', (message_tree({'list': result, 'root': null})));
       });
       return ;
     }
@@ -91,16 +94,21 @@ exports.post = function (req, res) {
 // idTopic: topic.id
 
 function message_get(argument) {
+  console.log('message_get', argument.idTopic);
+  var idAccount = argument.idAccount;
   var idTopic = argument.idTopic;
   var message = mongo.collection(('message' + idTopic));
   var deferred = q.defer();
 
-  console.log('message:', ('message' + idTopic));
   message.find({}, function(error, result) {
     if (error)
       deferred.reject(error);
-    if (result)
+    if (result) {
+      console.log('\n\n\tidTopic', idTopic);
+      console.log('\tidAccounts', idAccount + '\n\n');
+      accounts_topic_old({'idTopic': idTopic, 'idAccounts': idAccount});
       deferred.resolve(result);
+    }
   });
   return (deferred.promise);
 }
@@ -179,6 +187,25 @@ function message_del(argument) {
 
   message.removeById(idMessage, function(error, results) {
   });
+}
+
+/*
+** The function returns a new list of message with the logins rather than ids.
+*/
+
+function message_uid(argument) {
+  var listAccounts = argument.listAccounts;
+  var listMessages = argument.listMessages;
+  var countAccount;
+  var countMessage;
+
+  for (countMessage = listMessages.length - 1; countMessage >= 0; countMessage--)
+    for (countAccount = listAccounts.length - 1; countAccount >= 0; countAccount--)
+      if (listAccounts[countAccount]._id == listMessages[countMessage]._idAccounts) {
+        listMessages[countMessage]._idAccounts = listAccounts[countAccount].login;
+        break ;
+      }
+  return (listMessages);
 }
 
 exports.message_add = message_add;

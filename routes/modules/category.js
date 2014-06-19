@@ -15,12 +15,14 @@ exports.get = function (req, res) {
   var idAccount = req.session.account._id;
   var tree;
 
-  accounts_get({'_id': idAccount}).then(function(lstOpen) {
-    category_get().then(function(lstCate) {
-      tree = category_tree({'lstCate': lstCate, 'lstOpen': lstOpen[0].categoryIsOpen});
-      res.json(tree);
+  if (idAccount.length == 24) {
+    accounts_get({'_id': idAccount}).then(function(lstOpen) {
+      category_get().then(function(lstCate) {
+        tree = category_tree({'lstCate': lstCate, 'lstOpen': lstOpen[0].categoryIsOpen});
+        res.json(tree);
+      });
     });
-  });
+  }
 };
 
 /*
@@ -34,21 +36,24 @@ exports.post = function (req, res) {
   var node = req.body.node;
   var name = req.body.name;
 
-  accounts_get({'_id': idAccount}).then(function(result) {
-    if (result[0].accessRights === Infinity) {
-      if (req.params.action === 'add' && Boolean(name)) {
-        if (!node || node.length === 24)
-          category_add({'parent': node, 'name': name});
+
+  if (idAccount.length == 24) {
+    accounts_get({'_id': idAccount}).then(function(result) {
+      if (result[0].accessRights === Infinity) {
+        if (req.params.action === 'add' && Boolean(name)) {
+          if (!node || node.length === 24)
+            category_add({'parent': node, 'name': name});
+        }
+        else if (req.params.action === 'del' && node.length === 24) {
+          category_del({'id': node});
+        }
+        else if (req.params.action === 'set' && node.length === 24) {
+          if (name)
+            category_set({'id': node, 'name': name});
+        }
       }
-      else if (req.params.action === 'del' && node.length === 24) {
-        category_del({'id': node});
-      }
-      else if (req.params.action === 'set' && node.length === 24) {
-        if (name)
-          category_set({'id': node, 'name': name});
-      }
-    }
-  });
+    });
+  }
   res.json('');
 }
 
@@ -120,7 +125,53 @@ var category_tree = function (argument) {
 }
 
 /*
-** The function returns the final id from path according to a tree root.
+** The function returns a category's tree from
+** category' collection.
+*/
+
+/* Is developed and called by 'get:message.js'. */
+
+var category_tree_message = function (argument) {
+  var list = argument.list;
+  var root = argument.root;
+  var node = [];
+
+  for (var count = 0; count < list.length; count += 1) /* Propose by @cdenis */
+  /* for (var count = 0; count < list.length; count += 1). */
+    if (root == list[count]._idCategory)
+      node.push({
+        'id': list[count]._id,
+        'url': list[count].url,
+        'children': category_tree_message({'list': list, 'root': list[count]._id})
+      });
+  return (node);
+}
+
+/*
+** The function returns a category's tree from
+** category' collection.
+*/
+
+/* Is developed and called by 'get:message.js'. */
+
+var category_tree_topic = function (argument) {
+  var list = argument.list;
+  var root = argument.root;
+  var node = [];
+
+  for (var count = 0; count < list.length; count += 1) /* Propose by @cdenis */
+  /* for (var count = 0; count < list.length; count += 1). */
+    if (root == list[count]._idCategory)
+      node.push({
+        'id': list[count]._id,
+        'url': list[count].url,
+        'children': category_tree_topic({'list': list, 'root': list[count]._id})
+      });
+  return (node);
+}
+
+/*
+** The function returns the url category.
 */
 
 function category_encode(argument) {
@@ -196,6 +247,7 @@ function category_set(argument) {
 */
 
 var category_url = function (argument) {
+  console.log(argument.tree, argument.path);
   var tree = argument.tree;
   var path = argument.path;
   var id = argument.id;
@@ -366,5 +418,8 @@ function latin_to_ascii(argument) {
   return (latin_word);
 }
 
+exports.category_url = category_url;
 exports.category_get = category_get;
 exports.category_tree = category_tree;
+exports.category_tree_message = category_tree_message;
+exports.category_tree_topic = category_tree_topic;
