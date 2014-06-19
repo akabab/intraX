@@ -5,6 +5,9 @@ var modules = require('./modules/mod');
 var activities = require('./modules/activities');
 
 router.get('/', modules.get);
+
+router.get('/getUserActivities', activities.getUserActivities);
+
 router.get('/:module', modules.get);
 router.post('/:action', bodyParser(), modules.post);
 
