@@ -1,2 +1,9 @@
-p hello and welcome to your planning !
-p {{data}}
+p Hello and welcome to your planning !
+p year {{year}}, week : {{weekNumber}}
+button(ng-click="prev()") prev
+button(ng-click="today()") today
+button(ng-click="next()") next
+ul
+  li(ng-repeat="activity in data", ng-show="activity.visible")
+    h2 {{activity.name}} ({{activity.moduleName}})
+    p {{activity}}
