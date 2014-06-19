@@ -72,7 +72,8 @@ var check_activities = function (modules, user) {
     activity_get_all(module._id).then(function (activities) {
       var tab = [];
       activities.forEach(function (activity) {
-        if (activity.users.indexOf(user) !== -1)
+        activity.moduleName = module.name;
+        // if (activity.users.indexOf(user) !== -1)
           tab.push(activity);
       });
       deferred.resolve(tab);
