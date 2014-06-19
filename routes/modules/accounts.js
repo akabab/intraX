@@ -3,7 +3,7 @@ var fs               = require("fs");
 var easymongo        = require("easymongo");
 var mongo            = new easymongo({dbname: "db"});
 var accounts         = mongo.collection("accounts");
-var ObjectId         = require('mongodb').ObjectID;
+var ObjectID         = require('mongodb').ObjectID;
 
 exports.get = function (req, res) {
   req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
@@ -102,10 +102,10 @@ var accounts_uid = function (argument) {
 */
 
 var accounts_topic_new = function (argument) {
-  console.log('accounts_topic_new');
+  console.log('accounts_topic_new ' + argument.idTopic);
   var idTopic = argument.idTopic;
 
-  accounts.update({}, {'$pushAll': {'topicSeeNot': idTopic}},
+  accounts.update({}, {'$addToSet': {'topicSeeNot': String(idTopic)}},
   function(error, result) {
   });
 }
@@ -115,11 +115,12 @@ var accounts_topic_new = function (argument) {
 */
 
 var accounts_topic_old = function (argument) {
-  var idAccounts = argument.idAccounts;
-  var idTopic = argument.idTopic;
+  var idAccounts = String(argument.idAccounts);
+  var idTopic = String(argument.idTopic);
 
-  accounts.update({'_id': idAccounts}, {'$pull': {'topicSeeNot': idTopic}},
+  accounts.update({'_id': new ObjectID(idAccounts)}, {'$pull': {'topicSeeNot': idTopic}},
   function(error, result) {
+    console.log('result', result);
   });
 }
 
@@ -148,7 +149,6 @@ function accounts_category_close(argument) {
   function(error, result) {
   });
 }
-
 
 exports.accounts_topic_old = accounts_topic_old;
 exports.accounts_topic_new = accounts_topic_new;
