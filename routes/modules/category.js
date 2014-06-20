@@ -233,7 +233,6 @@ function category_del(argument) {
 ** the id to category' collection.
 */
 
-<<<<<<< HEAD
 function category_set(argument) {
   var id = argument.id;
   var name = argument.name.toLowerCase();
