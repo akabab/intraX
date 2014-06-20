@@ -1,9 +1,10 @@
-p Hello and welcome to your planning !
-p year {{year}}, week : {{weekNumber}}
-button(ng-click="prev()") prev
-button(ng-click="today()") today
-button(ng-click="next()") next
-ul
-  li(ng-repeat="activity in data", ng-show="activity.visible")
-    h2 {{activity.name}} ({{activity.moduleName}})
-    p {{activity}}
+#planning
+  p year {{year}}, week : {{weekNumber}}
+  button(ng-click="prev()") prev
+  button(ng-click="today()") today
+  button(ng-click="next()") next
+  #activities
+    .activity(ng-repeat="activity in data" ng-show="activity.visible" ng-mouseover="hover=true" ng-mouseleave="hover=false" ng-class="{hovered: hover}" ng-click="reachActivity(activity.moduleName, activity.name)")
+      span.moduleName [{{activity.moduleName}}]
+      span.name {{activity.name}}
+      .desc {{activity.description}}
