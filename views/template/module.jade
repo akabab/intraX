@@ -8,7 +8,7 @@
     #desc-bloc
       .description {{module.description}}
     #activities(ng-init="getActivities(module.name)")
-      h2.title(ng-hide="!activities.length") Activities
+      h3.title(ng-hide="!activities.length") Activities
       
       table
         tr(ng-repeat="activity in activities" ng-init="showTime=false" ng-class-even="'even'" ng-click="reachActivity(activity.name)")

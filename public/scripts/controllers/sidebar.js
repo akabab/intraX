@@ -155,10 +155,10 @@ angular.module('intraX')
 
   $scope.genLink = function (lowpart, highpart, arguments) {
     if (angular.isUndefined(highpart))
-      return (formatLink(lowpart));
+      return ('/#/' + formatLink(lowpart));
     if (angular.isUndefined(arguments))
-      return (formatLink(lowpart) + '/' + formatLink(highpart));
-    return (formatLink(lowpart) + '/' + formatLink(highpart) + '/' + formatLink(arguments));
+      return ('/#/' + formatLink(lowpart) + '/' + formatLink(highpart));
+    return ('/#/' + formatLink(lowpart) + '/' + formatLink(highpart) + '/' + formatLink(arguments));
   }
 
   $scope.selectLink = function (index) {
