@@ -15,12 +15,14 @@ var ObjectId        = require('mongodb').ObjectID;
 
 exports.get = function (req, res) {
   var idAccount = req.session.account._id;
+  // var idAccount = '53a43429706012f2a8c93abf';
   var tree;
 
-  if (idAccount.length == 24) {
+    if (idAccount.length == 24) {
     accounts_get({'_id': idAccount}).then(function(lstOpen) {
       category_get().then(function(lstCate) {
-        tree = category_tree({'lstCate': lstCate, 'lstOpen': lstOpen[0].categoryIsOpen});
+        tree = category_tree({'lstOpen': lstOpen[0].categoryIsOpen,
+                              'lstCate': lstCate});
         res.json(tree);
       });
     });
@@ -34,13 +36,14 @@ exports.get = function (req, res) {
 
 exports.post = function (req, res) {
   var idAccount = req.session.account._id;
+  // var idAccount = '53a43429706012f2a8c93abf';
   var node = req.body.node;
   var name = req.body.name;
 
-
   if (idAccount.length == 24) {
     accounts_get({'_id': idAccount}).then(function(result) {
-      if (result[0].accessRights === Infinity) {
+      //if (result[0].accessRights === Infinity) {
+      if (result[0].accessRights === 0) {
         if (req.params.action === 'add' && Boolean(name)) {
           if (!node || node.length === 24)
             category_add({'parent': node, 'name': name});
@@ -207,6 +210,7 @@ var category_get = function (argument) {
 */
 
 function category_add(argument) {
+  console.log('category_add');
   var parent = argument.parent;
   var name = argument.name.toLowerCase();
   var url = category_encode({'name': name});

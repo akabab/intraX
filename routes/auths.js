@@ -81,6 +81,8 @@ function connectToLdap(login, password, req, res) {
                               'firstName': entry.object['first-name'],
                               'lastName': entry.object['last-name'],
                               'uid': entry.object['uid'],
+                              'topicSeeNot': [],
+                              'categoryIsOpen': [],
                               'dateOfCreation': Date.now(),
                               'accessRights': 0}, function (error, result) {
               req.session.account['password'] = pwd;
