@@ -2,7 +2,6 @@ angular.module('intraX')
 
 .controller('ModuleCtrl', function ($scope, $http, $stateParams, $window, ModuleService, SessionService) {
   $scope.module = {};
-  $scope.moduleAsked = $stateParams.name;
   $scope.activities = [];
   $scope.canRegister = false;
   $scope.isRegistred = true;
@@ -10,6 +9,11 @@ angular.module('intraX')
 
   var user = SessionService.get('user');
 
+  var firstLetterCap = function (str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+  
+  $scope.moduleAsked = firstLetterCap($stateParams.name);
 
   var setRegisterVal = function () {
     var users = $scope.module.users;
@@ -61,7 +65,7 @@ angular.module('intraX')
   };
 
   $scope.reachActivity = function (activityName) {
-    $window.location = $window.location.href + '/' + activityName;
+    $window.location = $window.location.href + '/' + activityName.toLowerCase();
   }
 
   var dateToTimestamp = function (date) {

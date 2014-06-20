@@ -46,7 +46,7 @@ angular.module('intraX')
   };
   
   $scope.reachActivity = function (moduleName, activityName) {
-    $window.location = $window.location.origin + '/#/' + moduleName + '/' + activityName;
+    $window.location = $window.location.origin + '/#/module/' + moduleName + '/' + activityName;
   }
 
   var check_week = function () {
