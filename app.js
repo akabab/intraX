@@ -8,11 +8,14 @@ var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
 // here should be the required route files
-var index = require('./routes/index');
-var user  = require('./routes/user' );
-var auths = require('./routes/auths');
-var dltnt = require('./routes/dltnt');
-var forum = require('./routes/forum');
+var index     = require('./routes/index');
+var user      = require('./routes/user' );
+var auths     = require('./routes/auths');
+var dltnt     = require('./routes/dltnt');
+var forum     = require('./routes/forum');
+var ldap      = require('./routes/ldap');
+var modules   = require('./routes/modules');
+var inbox     = require('./routes/inbox');
 
 var app = express();
 
@@ -33,22 +36,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //routes
 app.use('/auths', auths);
+app.use('/ldap', ldap);
 
 //Redirect to auth if not authenticed
-/*app.all("*", function(req, res, next) {
+app.all("*", function(req, res, next) {
   if (req.session && req.session['logged'])
     next();
   else {
-    console.log(req.url);
     res.redirect('/auths');
   }
-});*/
+});
 
 app.use('/', index);
 app.use('/user', user);
 app.use('/forum', forum);
+app.use('/inbox', inbox);
 app.use('/dltnt', dltnt);
-
+app.use('/modules', modules);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -82,13 +86,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
-/*
-var easymongo        = require("easymongo");
-var mongo            = new easymongo({dbname: "db"});
-var accounts         = mongo.collection("accounts");
-
-accounts_topic_old({'idAccounts': '539c704ab4d99eed376a5153', 'idTopic': 'test2'});
-*/
 
 module.exports = app;

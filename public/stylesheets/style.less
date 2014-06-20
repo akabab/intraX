@@ -2,15 +2,20 @@
 @import 'content.less';
 @import 'ui/topmenu.less';
 @import 'ui/sidebar.less';
+@import 'inbox/inbox.less';
 @import 'auth.less';
 @import 'user.less';
+@import 'elearning.less';
+@import 'ldap.less';
+@import 'admin.less';
+@import 'module.less';
 
 // COLOR VARIABLES
+@blu1: #1c9de5;
+@blu2: #39c7f3;
 @bg: #cbcbcb; // Background Light Grey
 @fg: #404040; // Foreground Dark Grey
 @hl: #39c7f3; // Highlight Light Blue
-@lb: #39c7f3; // Light Blue
-@db: #288baa; // Dark Blue
 @fg-dark:    mix(#000, @fg, 30%);
 @fg-darker:  mix(#000, @fg, 60%);
 @fg-light:   mix(#fff, @fg, 30%);
@@ -19,7 +24,7 @@
 @bg-darker:  mix(#000, @bg, 60%);
 @bg-light:   mix(#fff, @bg, 30%);
 @bg-lighter: mix(#fff, @bg, 60%);
-@hl-dark:    mix(#000, @hl, 30%);
+@hl-dark:    #1C9DE5;
 @hl-darker:  mix(#000, @hl, 60%);
 @hl-light:   mix(#fff, @hl, 30%);
 @hl-lighter: mix(#fff, @hl, 60%);
@@ -47,31 +52,59 @@
 }
 
 // COMMON STYLING
-html { height: 100%; }
+html, body {
+  height: 100%;
+}
 body {
   width: 100%;
   min-width: 780px;
-  // height: 100%;
   background-color: white;
   background-image: url('http://www.42.fr/wp-content/themes/42/img/site42-bg.gif');
   color: @fg;
   padding: 0;
   border: 0;
   margin: 0;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: arial, "Lucida Grande", Helvetica, sans-serif;
+  font-size: 14px;
+}
+h1 {
+  margin-top: 0;
+  // letter-spacing: 0.18em;
+}
+h2 {
+  margin: 0;
+  font-weight: normal;
+  letter-spacing: 0.12em;
 }
 input, button {
+  margin: 2px;
+  padding: 2px;
   border: 1px solid @bg;
   &:focus {
     border-color: @hl-dark;
     outline: none;
   }
 }
+button {
+  cursor: pointer;
+}
+
+.bold { font-weight: bold; }
+.noselect, button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 button::-moz-focus-inner { border: 0; }
 a {
-  color: @hl-dark;
+  color: @fg;
   text-decoration: none;
-  &:hover {
+  &:hover, &:focus {
+    outline: none;
     color: @hl;
   }
 }
@@ -89,6 +122,4 @@ a {
     transition: all 200ms;
   }
 }
-.name { text-transform: capitalize; }
-.surname { text-transform: uppercase; }
 .spacer { clear: both; }

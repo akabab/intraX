@@ -1,18 +1,25 @@
-var app = angular.module('intraX', ['ui.router', 'intraX.services']); // 'ui.bootstrap'
+var app = angular.module('intraX', ['ui.router', 'intraX.services']);
 
 app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
   $urlRouterProvider.otherwise('/');
   $stateProvider
     .state('index', {         url: '/',                         templateUrl: '/template/index',          controller: 'IndexCtrl' })
     .state('user', {          url: '/user/:uid',                templateUrl: '/template/user',           controller: 'UserCtrl' })
+    .state('ldap', {          url: '/ldap',                     templateUrl: '/template/ldap',           controller: 'LdapCtrl' })
     .state('inbox', {         url: '/inbox',                    templateUrl: '/template/inbox',          controller: 'InboxCtrl' })
-    .state('module', {        url: '/module',                   templateUrl: '/template/module',         controller: 'ModuleCtrl' })
+    .state('activity', {      url: '/module/:mName/:aName',     templateUrl: '/template/activity',       controller: 'ActivityCtrl' })
+    .state('module', {        url: '/module/:name',             templateUrl: '/template/module',         controller: 'ModuleCtrl' })
     .state('calendar', {      url: '/calendar',                 templateUrl: '/template/calendar',       controller: 'CalendarCtrl' })
     .state('conferences', {   url: '/conferences',              templateUrl: '/template/conferences',    controller: 'ConferencesCtrl' })
     .state('elearning', {     url: '/elearning',                templateUrl: '/template/elearning',      controller: 'ElearningCtrl' })
+    .state('admin', {         url: '/admin',                    templateUrl: '/template/admin',          controller: 'AdminCtrl' })
     .state('forum', {         url: '/forum',                    templateUrl: '/template/forum',          controller: 'ForumCtrl' })
     .state('category', {      url: '/forum/category/:cat/:sub', templateUrl: '/template/category',       controller: 'CategoryCtrl' })
-    .state('adminCategory', { url: '/admin/category',           templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
+    .state('topics', {        url: '/forum/:cat',               templateUrl: '/template/category',       controller: 'CategoryCtrl' })
+    .state('posts', {         url: '/forum/:cat/:post',         templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('subtopics', {     url: '/forum/:cat/:sub',          templateUrl: '/template/category',       controller: 'CategoryCtrl' })
+    .state('subposts', {      url: '/forum/:cat/:sub/:post',    templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('adminCategory', { url: '/admin/forum/category',     templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
 }]);
 
 app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope, $stateParams, $http) {
@@ -31,61 +38,23 @@ app.controller('UserCtrl', ['$scope', '$stateParams', '$http', function ($scope,
       console.log(data);
     }
   });
-
-}]);
-
-app.controller('SidebarCtrl', ['$scope', '$http', function ($scope, $http) {
-  $scope.links = [
-                  {name: 'Inbox', unseen: 5, sublinks: [{name: 'Messages', unseen: 2}, {name: 'Tickets', unseen: 0}]},
-                  {name: 'Forum', unseen: 2, sublinks: []},
-                  {name: 'Modules', unseen: 5, sublinks: [{name: 'Algo', unseen: 2}]},
-                  {name: 'Conferences', unseen: 1, sublinks: [{name: 'News', unseen: 2}]},
-                  {name: 'Activity', unseen: 0, sublinks: [{name: 'Past', unseen: 2}]}
-                  ];
-
-  $http.get('/forum/category')
-  .success(function (data) {
-    // here are my modifications
-    for (var i in data.tree) {
-      $scope.links[1].sublinks.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
-    }    
-  })
-  .error(function (data, status, headers, config, statusText) {
-    console.log(statusText + " : " + status);
-    console.log(headers);
-    console.log(data);
-  });
-
-  $scope.selectLink = function (index) {
-      $scope.selectedLink = index;
-      $scope.selectedSublink = -1;
-      $scope.selectedSubsublink = -1;
-  }
-
-  $scope.selectSublink = function (index) {
-      $scope.selectedSublink = index;
-      $scope.selectedSubsublink = -1;
-  }
-  
-  $scope.selectSubsublink = function (index) {
-      $scope.selectedSubsublink = index;
-  }
-
 }]);
 
 app.controller('TopmenuCtrl', ['$scope', '$window', function ($scope, $window) {
-  $scope.isDropdown = false;
+  $scope.menu = '';
+  $scope.dropdown = function (value) {
 
-  $scope.dropdown = function () {
-    $window.onclick = null;
-    $scope.isDropdown = !$scope.isDropdown;
-
-    if ($scope.isDropdown) {
-      $window.onclick = function (event) {
-          $scope.isDropdown = false;
+    $window.onclick = function (event) {
+        console.log(event.target.tagName);
+        if (event.target.tagName !== 'A' && event.target.tagName !== 'BUTTON') {
+          $scope.menu = '';
           $scope.$apply();
+        }
       };
-    }
+    if ($scope.menu === value)
+      $scope.menu = '';
+    else
+      $scope.menu = value;
   }
 
   $scope.search = function () {
@@ -100,9 +69,9 @@ app.controller('IndexCtrl', ['$scope', '$rootScope', 'SessionService', function 
     $scope.title = "Index";
 }]);
 
-
 app.controller('InboxCtrl', ['$scope', 'SessionService', function ($scope, SessionService) {
-    $scope.title = "Inbox";
+  $scope.title = "Inbox";
+  console.log($scope.myStyle);
 }]);
 
 
@@ -115,11 +84,27 @@ app.controller('CalendarCtrl', ['$scope', function ($scope) {
     $scope.title = "Calendar";
 }]);
 
-
 app.controller('ConferencesCtrl', ['$scope', function ($scope) {
     $scope.title = "Conferences";
 }]);
 
-app.controller('ElearningCtrl', ['$scope', function ($scope) {
-    $scope.title = "Elearning";
-}]);
+app.directive('resizable', function($window) {
+  return function($scope) {
+    $scope.initializeWindowSize = function() {
+      $scope.windowHeight = $window.innerHeight;
+      $scope.myStyle = function (arg) {
+        return { 'height': ($window.innerHeight - arg) + 'px' };
+      }
+      return $scope.windowWidth = $window.innerWidth;
+    };
+    $scope.initializeWindowSize();
+    return angular.element($window).bind('resize', function() {
+      $scope.initializeWindowSize();
+      $scope.myStyle = function (arg) {
+        return { 'height': ($window.innerHeight - arg) + 'px' };
+      }
+      console.log($scope.myStyle);
+      return $scope.$apply();
+    });
+  };
+});
