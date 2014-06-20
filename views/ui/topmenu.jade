@@ -1,30 +1,58 @@
 div(ng-controller="TopmenuCtrl")
+  a#logo-42(ui-sref="index")
   #search-wrapper
     #search
       form(name="SearchForm" novalidate ng-submit="search()")
-        input.text-input(type="text" ng-model="searchValue" placeholder="Search...")
-        button(type="submit")#search-btn
+        input.text-input(type="text" ng-model="searchValue" placeholder="Search..." tabindex="1" autofocus)
+        button(type="submit" tabindex="-1")#search-btn
           i.fa.fa-search
     #user-name
-      a(ui-sref="index")
+      a(href="#/user/#{account.uid}")
         span.firstName #{account.firstName} 
         span.lastName #{account.lastName}
-  #icons-wrapper
-    a.fa.fa-envelope-o(ui-sref="inbox" alt="inbox")
-    a.fa.fa-cog(ui-sref="index" alt="settings")
-    button.avatar(ng-click="dropdown(); $event.stopPropagation();")
-      #dropdown-menu(ng-show="isDropdown")
-        ul
-          li
-            a(href='#') Profile
+
+  #icons-wrapper.noselect
+    a.fa.fa-envelope-o(ng-click="dropdown('inbox')" ng-class="menu == 'inbox' ? 'active' : ''")
+    a.fa.fa-cog(ng-click="dropdown('settings')" ng-class="menu == 'settings' ? 'active' : ''")
+    button.avatar(ng-click="dropdown('profile')" ng-class="menu == 'profile' ? 'active' : ''")
+    #dropdown-menu(ng-show="menu")
+      div(ng-switch="menu")
+        div(ng-switch-when="inbox")
+          #inbox-pointer.pointer
+          #inbox-menu.menu
+            a(href='#')
               i.fa.fa-user
-          li
-            a(href='#') Marks
+              | Inbox
+            a(href='#')
               i.fa.fa-graduation-cap
-          .divider
-          li
-            a(href='/logout')  Logout
+              | Send new message
+            a(href='/logout')
               i.fa.fa-power-off
+              | Show all
+        div(ng-switch-when="settings")
+          #settings-pointer.pointer
+          #settings-menu.menu
+            a(href='#')
+              i.fa.fa-user
+              | Edit shit
+            a(href='#')
+              i.fa.fa-graduation-cap
+              | Config stuff
+            a(href='/logout')
+              i.fa.fa-power-off
+              | Export settings
+        div(ng-switch-when="profile")
+          #profile-pointer.pointer
+          #profile-menu.menu
+            a(href='#')
+              i.fa.fa-user
+              | Profile
+            a(href='#')
+              i.fa.fa-graduation-cap
+              | Marks
+            a(href='/logout')
+              i.fa.fa-power-off
+              | Logout
     .spacer
   #profile
     include profile

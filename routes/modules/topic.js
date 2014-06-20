@@ -8,13 +8,14 @@ var category_url          = require('./category').category_url;
 var category_tree_topic   = require('./category').category_tree_topic;
 var message_add           = require('./message').message_add;
 
+
 /*
 ** The anonyme function returns void and puts a see on
 ** category' collection.
 */
 
 exports.get = function (req, res) {
-  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
+
   var idAccount = req.session.account._id;
   var urlCategory = req.params.topic;
   var urlUnderCategory = req.params.subtopic;
@@ -47,7 +48,7 @@ exports.get = function (req, res) {
 };
 
 exports.post = function (req, res) {
-  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
+
   var idAccount = req.session.account._id;
   var idCategory = req.body.idCategory;
   var idTopic = req.body.idTopic;
@@ -57,8 +58,6 @@ exports.post = function (req, res) {
   if (idAccount.length == 24 && idCategory.length == 24) {
     if (req.params.action === 'del' && idTopic.length == 24)
       topic_del({'categoryId': idCategory, 'topicId': idTopic});
-/*    else if (req.params.action === 'add' && description)
-      topic_add({'categoryId': idCategory, 'description': description});*/
     else if (req.params.action === 'new' && description && contenue) {
       topic_new({'categoryId': idCategory, 'description': description,
                  'idAccount': idAccount, 'contenue': contenue});
@@ -75,7 +74,6 @@ exports.post = function (req, res) {
 // 'topic' + category.id
 
 var topic_get = function (argument) {
-  console.log('topic_get');
   var categoryId = argument.categoryId;
   var topic = mongo.collection(('topic' + categoryId));
   var deferred = q.defer();
@@ -89,28 +87,6 @@ var topic_get = function (argument) {
   return (deferred.promise);
 }
 
-/* http://127.0.0.1:3000/forum/topic/add;
-** The function returns void and saves the new topic to topic' collection
-** according to the id from category' collection.
-*/
-
-// categoryId: 'topic' + category.id
-// description: description
-
-//! Function not maintened because it's obsolete.
-//! Please, use topic_new
-
-/*function topic_add(argument) {
-  console.log('topic_add');
-  var topic = mongo.collection(('topic' + argument.categoryId));
-  var name = argument.description.toLowerCase();
-  var url = topic_encode({'word': name});
-  var data = {'description': name, 'url': url};
-
-  topic.save(data, function(error, results) {
-  });
-}*/
-
 /* http://127.0.0.1:3000/forum/topic/del
 ** The function returns void and erases the topic from topic' collection
 ** according to the id from category' collection.
@@ -120,7 +96,7 @@ var topic_get = function (argument) {
 // topicId: id
 
 function topic_del(argument) {
-  console.log('topic_del');
+
   var categoryId = argument.categoryId;
   var topicId = argument.topicId;
   var topic = mongo.collection(('topic' + argument.categoryId));
@@ -380,6 +356,7 @@ function latin_to_ascii(argument) {
   }
   return (latin_word);
 }
+
 
 exports.topic_get = topic_get;
 exports.topic_url = topic_url;

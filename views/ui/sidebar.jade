@@ -1,23 +1,25 @@
-div#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
-  div#link-family(ng-repeat="link in links")
-    div#link(ng-click="selectLink($index)" ng-class="{selected: $index==selectedLink, unseen: link.unseen, first: $first}")
-      table
-        tr
-          td {{link.name}}
-          td(ng-show="link.unseen") ({{link.unseen}})
-    div(ng-show="$index==selectedLink")
-      div(ng-repeat="sublink in link.sublinks")
-        div.drop
-        div#sublink(ng-click="selectSublink($index)" ng-class="{selected: $index==selectedSublink, unseen: sublink.unseen, first: $first}")
-          table
-            tr
-              td {{sublink.name}}
-              td(ng-show="sublink.unseen") ({{sublink.unseen}})
-        div(ng-show="$index==selectedSublink")
-          div(ng-repeat="subsublink in sublink.children")
-            div#subsublink(ng-click="selectSubsublink($index)" ng-class="{selected: $index==selectedSubsublink, unseen: subsublink.unseen, first: $first}")
-              table
-                tr
-                  td {{subsublink.name}}
-                  td(ng-show="subsublink.unseen") ({{subsublink.unseen}})
+#sidebar-menu.sidewidth(ng-controller="SidebarCtrl")
+  .link(ng-repeat="link in links" ng-init="show = link.deploy; linkSref = genLink(link.name)")
+    .elem.noselect(id="sb-{{linkSref}}")
+      i.fa(ng-class='{open:show, active:link.sublinks.length > 0}' ng-click="show = !show")
+      a(ui-sref="{{linkSref}}" tabindex="-1" ng-class="link.unseen ? 'bold' : 'wide'") {{link.name}}
+      a.unseen(ng-if="link.unseen" ui-sref="{{linkSref + ':unseen'}}" tabindex="-1") ({{link.unseen}})
+    .sublinks(ng-show="show")
+      .sublink(ng-repeat="sublink in link.sublinks" ng-init="subshow = sublink.deploy; sublinkSref = genLink(link.name, sublink.name)")
+        div(ng-if="sublink.children.length")
+          .elem.noselect(id="sb-{{sublinkSref}}")
+            i.fa.active(ng-class='{open:subshow}' ng-click="subshow = !subshow")
+            a(ui-sref="{{sublinkSref}}" tabindex="-1" ng-class="sublink.unseen ? 'bold' : 'wide'") {{sublink.name}}
+            a.unseen(ng-if="sublink.unseen" ui-sref="{{sublinkSref + ':unseen'}}" tabindex="-1") ({{sublink.unseen}})
+          .childlinks(ng-show="subshow")
+            .childlink(ng-repeat="childlink in sublink.children" ng-init="childlinkSref = genLink(link.name, sublink.name, childlink.name)")
+              .elem.noselect(id="sb-{{childlinkSref}}")
+                i.fa
+                a(ui-sref="{{childlinkSref}}" tabindex="-1" ng-class="childlink.unseen ? 'bold' : 'wide'") {{childlink.name}}
+                a.unseen(ng-if="childlink.unseen" ui-sref="{{childlinkSref + ':unseen'}}" tabindex="-1") ({{childlink.unseen}})
+        div(ng-if="!sublink.children.length")
+          .elem.noselect(id="sb-{{sublinkSref}}")
+            i.fa
+            a(ui-sref="{{sublinkSref}}" tabindex="-1" ng-class="sublink.unseen ? 'bold' : 'wide'") {{sublink.name}}
+            a.unseen(ng-if="sublink.unseen" ui-sref="{{sublinkSref + ':unseen'}}" tabindex="-1") ({{sublink.unseen}})
   .spacer

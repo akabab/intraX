@@ -4,6 +4,9 @@ var easymongo = require("easymongo");
 var mongo = new easymongo({dbname: "db"});
 var category = mongo.collection("category");
 var accounts_get = require('./accounts').accounts_get;
+var ObjectId        = require('mongodb').ObjectID;
+
+
 
 /*
 ** The anonyme function returns void and puts a see on
@@ -11,7 +14,6 @@ var accounts_get = require('./accounts').accounts_get;
 */
 
 exports.get = function (req, res) {
-  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
   var idAccount = req.session.account._id;
   var tree;
 
@@ -31,7 +33,6 @@ exports.get = function (req, res) {
 */
 
 exports.post = function (req, res) {
-  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
   var idAccount = req.session.account._id;
   var node = req.body.node;
   var name = req.body.name;
@@ -232,6 +233,7 @@ function category_del(argument) {
 ** the id to category' collection.
 */
 
+<<<<<<< HEAD
 function category_set(argument) {
   var id = argument.id;
   var name = argument.name.toLowerCase();
