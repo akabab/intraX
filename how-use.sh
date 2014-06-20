@@ -9,28 +9,28 @@
 # http://127.0.0.1:3000/forum/category/add with name
 
 ## The procedure adds the catogory adm.
-#	curl -i \
-#	-H "Content-Type:application/x-www-form-urlencoded" \
-#	-X POST --data 'name=adm' \
-#	http://127.0.0.1:3000/forum/category/add;
+	curl -i \
+	-H "Content-Type:application/x-www-form-urlencoded" \
+	-X POST --data 'name=adm' \
+	http://127.0.0.1:3000/forum/category/add;
 #
 ## The procedure adds the catogory associations.
-#	curl -i \
-#	-H "Content-Type:application/x-www-form-urlencoded" \
-#	-X POST --data 'name=associations' \
-#	http://127.0.0.1:3000/forum/category/add;
+	curl -i \
+	-H "Content-Type:application/x-www-form-urlencoded" \
+	-X POST --data 'name=associations' \
+	http://127.0.0.1:3000/forum/category/add;
 #
 ## The procedure adds the catogory general.
-#	curl -i \
-#	-H "Content-Type:application/x-www-form-urlencoded" \
-#	-X POST --data 'name=general' \
-#	http://127.0.0.1:3000/forum/category/add;
+	curl -i \
+	-H "Content-Type:application/x-www-form-urlencoded" \
+	-X POST --data 'name=general' \
+	http://127.0.0.1:3000/forum/category/add;
 #
 ## The procedure adds the catogory ns.
-#	curl -i \
-#	-H "Content-Type:application/x-www-form-urlencoded" \
-#	-X POST --data 'name=ns' \
-#	http://127.0.0.1:3000/forum/category/add;
+	curl -i \
+	-H "Content-Type:application/x-www-form-urlencoded" \
+	-X POST --data 'name=ns' \
+	http://127.0.0.1:3000/forum/category/add;
 #
 ## The procedure adds the catogory algo.
 #	curl -i \
@@ -60,15 +60,15 @@
 # Simple exemple of adds of second category.
 # http://127.0.0.1:3000/forum/category/add with name and node
 
-#	curl -i \
-#	-H "Content-Type:application/x-www-form-urlencoded" \
-#	-X POST --data 'name=boiteaidee&node=539f1dc4b4e842bfa36a5ded' \
-#	http://127.0.0.1:3000/forum/category/add;
+	curl -i \
+	-H "Content-Type:application/x-www-form-urlencoded" \
+	-X POST --data 'name=boiteaidee&node=53a4379f3f79546da90c2b51' \
+	http://127.0.0.1:3000/forum/category/add;
 #
-#	curl -i \
-#	-H "Content-Type:application/x-www-form-urlencoded" \
-#	-X POST --data 'name=objetsperdus&node=539f1dc4b4e842bfa36a5ded' \
-#	http://127.0.0.1:3000/forum/category/add;
+	curl -i \
+	-H "Content-Type:application/x-www-form-urlencoded" \
+	-X POST --data 'name=objets%20perdus&node=53a4379f3f79546da90c2b51' \
+	http://127.0.0.1:3000/forum/category/add;
 #
 #	curl -i \
 #	-H "Content-Type:application/x-www-form-urlencoded" \
@@ -218,3 +218,6 @@
 # Simple exemple of sees of a topic's group.
 
 #curl -is http://127.0.0.1:3000/forum/topic/ns
+
+
+http://127.0.0.1:3000/forum/category

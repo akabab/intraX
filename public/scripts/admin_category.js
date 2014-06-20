@@ -22,16 +22,22 @@ function ($scope, $rootScope, SessionService, $http) {
   };
   
   $scope.add = function (name) {
-    
-    var parentId = (($scope.selectedCategory === false) ? "" : $scope.selectedCategory);
+    var node = (($scope.selectedCategory == false) ? null : $scope.selectedCategory);
     $http({
       method:"post",
       url:"forum/category/add",
-      data: {addName: name, addIdParent: parentId}
+      data: {name: name, node: node}
     })
     .success(function (data) {
-        console.log("success : ", data);
-        $scope.data = data.tree;
+      console.log("success");
+      $http({
+        method: "get",
+        url: "forum/category",
+        headers: {'Content-Type': 'application/json'}
+      })
+      .success(function (data) {
+        $scope.data = data;
+      });
     })
     .error(function (data) {
         console.log("error : ", data);
@@ -45,16 +51,23 @@ function ($scope, $rootScope, SessionService, $http) {
     $scope.selectedCategory = false;
   };
   
-  $scope.delete = function (id) {
+  $scope.delete = function (id, name) {
     
     $http({
       method:"post",
       url:"forum/category/del",
-      data: {delIdChild: id}
+      data: {node: id}
     })
     .success(function (data) {
-        console.log("success : ", data);
-        $scope.data = data.tree;
+        console.log("success");
+        $http({
+          method: "get",
+          url: "forum/category",
+          headers: {'Content-Type': 'application/json'}
+        })
+        .success(function (data) {
+          $scope.data = data;
+        });
     })
     .error(function (data) {
         console.log("error : ", data);
@@ -67,14 +80,33 @@ function ($scope, $rootScope, SessionService, $http) {
   $scope.modify = function (id) {
     $scope.modifyCategory = id;
     $scope.modifying = true;
-    
-    /*** here add modifying api call ***/
-    
     $scope.flash = id + " is ready to be modified";
   };
   
   // valid a modification
   $scope.valid = function (id) {
+    
+    $http({
+      method:"post",
+      url:"forum/category/set",
+      data: {node: id, name: $scope.modifiedName}
+    })
+    .success(function (data) {
+        console.log("success");
+        $http({
+          method: "get",
+          url: "forum/category",
+          headers: {'Content-Type': 'application/json'}
+        })
+        .success(function (data) {
+          $scope.data = data;
+          $scope.modifiedName = "";
+        });
+    })
+    .error(function (data) {
+        console.log("error : ", data);
+    });
+    
     $scope.modifying = false;
     $scope.flash = id + " has been modified";
     $scope.selectedCategory = false;
@@ -88,6 +120,7 @@ function ($scope, $rootScope, SessionService, $http) {
   // blur after modification
   $scope.blured = function (id) {
     $scope.flash = id + " has been blured";
+    $scope.modifiedName = document.getElementById(id).childNodes[0].nodeValue;
   };
   
   $scope.clear = function () {
@@ -102,8 +135,7 @@ function ($scope, $rootScope, SessionService, $http) {
     headers: {'Content-Type': 'application/json'}
   })
   .success(function (data) {
-    $scope.data = data.tree;
-    console.log(data.tree);
+    $scope.data = data;
   })
   .error(function (data, status, headers, config, statusText) {
     console.log(statusText + " : " + status);
