@@ -4,16 +4,13 @@ var express = require('express');
 var router = express.Router();
 
 router.get(['/', '/index'], function (req, res) {
-// <<<<<<< HEAD
   if (req.session && req.session['logged']) {
     res.render('index', { account: req.session['account'] });
   }
-  else
+  else {
     res.redirect('auths');
-// =======
-//   res.render('index', { account: req.session['account'] });
-// >>>>>>> master
-// });
+  }
+});
 
 router.get('/template/:name', function (req, res) {
   var name = req.params.name;
