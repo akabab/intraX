@@ -45,6 +45,10 @@ angular.module('intraX')
     check_week();
   };
   
+  $scope.reachActivity = function (moduleName, activityName) {
+    $window.location = $window.location.origin + '/#/' + moduleName + '/' + activityName;
+  }
+
   var check_week = function () {
     $scope.data.forEach(function (elem) {
       var workStart = elem.workStart.split("-");
