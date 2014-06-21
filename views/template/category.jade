@@ -1,6 +1,8 @@
 p(ng-hide="subName") Welcome to category {{catName}}
 p(ng-show="subName") Welcome to category {{subName}}, daughter of {{catName}}
 
+p Category Id is {{categoryId}}
+
 p Here are the topics availabe in this category :
 ul
   li(ng-repeat="topic in topics")
@@ -9,6 +11,12 @@ ul
         button(ng-click="del(topic._id)") remove
     - }
 
-p add a topic :
-  input(type="text", ng-model="topicName")
-  button(ng-click="add(topicName)") add
+fieldset
+  legend add a topic
+  label sujet
+  input(type="text", ng-model="title")
+  br
+  label message
+  textarea(ng-model="content")
+  br
+  button(ng-click="add(title, content)") add
