@@ -2,12 +2,12 @@ angular.module('intraX')
 
 .controller('SidebarCtrl', function ($scope, $http, ModuleService) {
   $scope.links = [
-                  {"name": 'Inbox', "deploy":false, "unseen": 5, "sublinks": [{"name": 'Messages', "unseen": 2}, {"name": 'Tickets', "unseen": 0}]},
-                  {"name": 'Forum', "deploy":false, "unseen": 2, "sublinks": []},
-                  {"name": 'Ldap', "deploy":false, "unseen": 2, "sublinks": []},
-                  {"name": 'Elearning', "deploy":false, "unseen": 2, "sublinks": []},
-                  {"name": 'Module', "deploy":false, "unseen": 5, "sublinks": []},
-                  {"name": 'Conferences', "deploy":false, "unseen": 1, "sublinks": [{"name": 'News', "unseen": 2}]}
+                  {"name": 'Inbox', "deploy":false, "unseen": 5, "children": [{"name": 'Messages', "unseen": 2}, {"name": 'Tickets', "unseen": 0}]},
+                  {"name": 'Forum', "deploy":false, "unseen": 2, "children": []},
+                  {"name": 'Ldap', "deploy":false, "unseen": 2, "children": []},
+                  {"name": 'Elearning', "deploy":false, "unseen": 2, "children": []},
+                  {"name": 'Module', "deploy":false, "unseen": 5, "children": []},
+                  {"name": 'Conferences', "deploy":false, "unseen": 1, "children": [{"name": 'News', "unseen": 2}]}
                   ];
 
 
@@ -15,7 +15,7 @@ angular.module('intraX')
   $http.get('/forum/category')
   .success(function (data) {
     for (var i in data.tree) {
-      $scope.links[1].sublinks.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
+      $scope.links[1].children.push({name:data.tree[i].name, unseen:2, children:data.tree[i].children});
     }    
   })
   .error(function (data, status, headers, config, statusText) {
@@ -39,7 +39,7 @@ angular.module('intraX')
   function linkActivities(module) {
     ModuleService.getActivities(module.name).then(function (data) {
       module.activities = data;
-      $scope.links[4].sublinks.push({'name': module.name, 'unseen': 0, 'children': module.activities})
+      $scope.links[4].children.push({'name': module.name, 'unseen': 0, 'children': module.activities})
     }, function (err) {
       console.log(err);
     });
@@ -155,10 +155,10 @@ angular.module('intraX')
 
   $scope.genLink = function (lowpart, highpart, arguments) {
     if (angular.isUndefined(highpart))
-      return ('/#/' + formatLink(lowpart));
+      return (formatLink(lowpart));
     if (angular.isUndefined(arguments))
-      return ('/#/' + formatLink(lowpart) + '/' + formatLink(highpart));
-    return ('/#/' + formatLink(lowpart) + '/' + formatLink(highpart) + '/' + formatLink(arguments));
+      return (formatLink(lowpart) + '/' + formatLink(highpart));
+    return (formatLink(lowpart) + '/' + formatLink(highpart) + '/' + formatLink(arguments));
   }
 
   $scope.selectLink = function (index) {

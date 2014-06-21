@@ -2,24 +2,24 @@
   .link(ng-repeat="link in links" ng-init="show = link.deploy; linkSref = genLink(link.name)")
     .elem.noselect(id="sb-{{linkSref}}")
       i.fa(ng-class='{open:show, active:link.children.length > 0}' ng-click="show = !show")
-      a(href="#/{{linkSref}}" tabindex="-1" ng-class="link.unseen ? 'bold' : 'wide'") {{link.name}}
-      a.unseen(ng-if="link.unseen" href="#/{{linkSref}}:unseen" tabindex="-1") ({{link.unseen}})
+      a(href="/#/{{linkSref}}" tabindex="-1" ng-class="link.unseen ? 'bold' : 'wide'") {{link.name}}
+      a.unseen(ng-if="link.unseen" href="/#/{{linkSref}}:unseen" tabindex="-1") ({{link.unseen}})
     .sublinks(ng-show="show")
       .sublink(ng-repeat="sublink in link.children" ng-init="subshow = sublink.deploy; sublinkSref = genLink(link.name, sublink.name)")
         div(ng-if="sublink.children.length")
           .elem.noselect(id="sb-{{sublinkSref}}")
             i.fa.active(ng-class='{open:subshow}' ng-click="subshow = !subshow")
-            a(href="#/{{sublinkSref}}" tabindex="-1" ng-class="sublink.unseen ? 'bold' : 'wide'") {{sublink.name}}
-            a.unseen(ng-if="sublink.unseen" href="#/{{sublinkSref}}:unseen" tabindex="-1") ({{sublink.unseen}})
+            a(href="/#/{{sublinkSref}}" tabindex="-1" ng-class="sublink.unseen ? 'bold' : 'wide'") {{sublink.name}}
+            a.unseen(ng-if="sublink.unseen" href="/#/{{sublinkSref}}:unseen" tabindex="-1") ({{sublink.unseen}})
           .childlinks(ng-show="subshow")
             .childlink(ng-repeat="childlink in sublink.children" ng-init="childlinkSref = genLink(link.name, sublink.name, childlink.name)")
               .elem.noselect(id="sb-{{childlinkSref}}")
                 i.fa
-                a(href="#/{{childlinkSref}}" tabindex="-1" ng-class="childlink.unseen ? 'bold' : 'wide'") {{childlink.name}}
-                a.unseen(ng-if="childlink.unseen" href="#/{{childlinkSref}}:unseen" tabindex="-1") ({{childlink.unseen}})
+                a(href="/#/{{childlinkSref}}" tabindex="-1" ng-class="childlink.unseen ? 'bold' : 'wide'") {{childlink.name}}
+                a.unseen(ng-if="childlink.unseen" href="/#/{{childlinkSref}}:unseen" tabindex="-1") ({{childlink.unseen}})
         div(ng-if="!sublink.children.length")
           .elem.noselect(id="sb-{{sublinkSref}}")
             i.fa
-            a(href="#/{{sublinkSref}}" tabindex="-1" ng-class="sublink.unseen ? 'bold' : 'wide'") {{sublink.name}}
-            a.unseen(ng-if="sublink.unseen" href="#/{{sublinkSref}}:unseen" tabindex="-1") ({{sublink.unseen}})
+            a(href="/#/{{sublinkSref}}" tabindex="-1" ng-class="sublink.unseen ? 'bold' : 'wide'") {{sublink.name}}
+            a.unseen(ng-if="sublink.unseen" href="/#/{{sublinkSref}}:unseen" tabindex="-1") ({{sublink.unseen}})
   .spacer
