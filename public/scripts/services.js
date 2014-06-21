@@ -21,13 +21,3 @@ angular.module('intraX.services', [])
 		}
 	}
 });
-// .factory("FlashService", function($rootScope) {
-// 	return {
-// 		show: function(message) {
-// 			$rootScope.flash = "Flash : " + message;
-// 		},
-// 		clear: function() {
-// 			$rootScope.flash = "";
-// 		}
-// 	}
-// });

@@ -1,0 +1,88 @@
+#module, #activity {
+
+  .panel {
+    padding: 10px;
+    padding-top: 15px;
+    max-width: 700px;
+    box-shadow: 0 0 9px rgba(0, 164, 255, 0.33);
+    background-color: rgba(255, 255, 255, 0.6);;
+    border: 1px solid #9CA4B8;
+  }
+
+  .title {
+    margin-left: 10px;
+    margin-bottom: 0px;
+  }
+
+  #activity-title {
+    font-size: 18px;
+    margin-left: 10px;
+    color: @hl-dark;
+  }
+
+  #register {
+    float: right;
+    margin-top: -30px;
+  }
+
+  #desc-bloc {
+    background-color: @fg-dark;
+    margin: 10px;
+    margin-top: 15px;
+    padding: 10px;
+  }
+  
+  .description {
+    color: @hl-light;
+    font-size: 12px;
+    white-space: pre-wrap;
+  }
+
+  .timeline {
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 150px;
+    height: 15px;
+  }
+
+  .timebar {
+    background-color: @hl;
+    height: 100%;
+  }
+
+  .time {
+    position: relative;
+    top: -15px;
+  }
+  .startTime {
+    left: 2px;
+  }
+  .endTime {
+    left: 73px;
+  }
+
+  #activities {
+    margin: 10px;
+
+    table {
+      border-collapse: collapse;
+    }
+    tr {
+      background-color: @fg-dark;
+      color: white;
+      &.even {
+        background-color: @fg;
+      }
+      &:hover {
+        background-color: @fg-darker;
+        cursor: pointer;
+      }
+
+    }
+    td {
+      height: 30px;
+      text-overflow: ellipsis;
+      padding: 10px;
+      vertical-align: middle;
+    }
+  }
+}
