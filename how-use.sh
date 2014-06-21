@@ -6,37 +6,37 @@
 
 #
 # Simple exemple of adds of first category.
-# http://127.0.0.1:3000/forum/category/add with name
-
-## The procedure adds the catogory adm.
-	curl -i \
-	-H "Content-Type:application/x-www-form-urlencoded" \
-	-X POST --data 'name=adm' \
-	http://127.0.0.1:3000/forum/category/add;
-#
-## The procedure adds the catogory associations.
-	curl -i \
-	-H "Content-Type:application/x-www-form-urlencoded" \
-	-X POST --data 'name=associations' \
-	http://127.0.0.1:3000/forum/category/add;
-#
-## The procedure adds the catogory general.
-	curl -i \
-	-H "Content-Type:application/x-www-form-urlencoded" \
-	-X POST --data 'name=general' \
-	http://127.0.0.1:3000/forum/category/add;
-#
-## The procedure adds the catogory ns.
-	curl -i \
-	-H "Content-Type:application/x-www-form-urlencoded" \
-	-X POST --data 'name=ns' \
-	http://127.0.0.1:3000/forum/category/add;
+# # http://127.0.0.1:3000/forum/category/add with name
+# 
+# ## The procedure adds the catogory adm.
+# 	curl -i \
+# 	-H "Content-Type:application/x-www-form-urlencoded" \
+# 	-X POST --data 'name=adm' \
+# 	http://127.0.0.1:3000/forum/category/add;
+# #
+# ## The procedure adds the catogory associations.
+# 	curl -i \
+# 	-H "Content-Type:application/x-www-form-urlencoded" \
+# 	-X POST --data 'name=associations' \
+# 	http://127.0.0.1:3000/forum/category/add;
+# #
+# ## The procedure adds the catogory general.
+# 	curl -i \
+# 	-H "Content-Type:application/x-www-form-urlencoded" \
+# 	-X POST --data 'name=general' \
+# 	http://127.0.0.1:3000/forum/category/add;
+# #
+# ## The procedure adds the catogory ns.
+# 	curl -i \
+# 	-H "Content-Type:application/x-www-form-urlencoded" \
+# 	-X POST --data 'name=ns' \
+# 	http://127.0.0.1:3000/forum/category/add;
 #
 ## The procedure adds the catogory algo.
-#	curl -i \
-#	-H "Content-Type:application/x-www-form-urlencoded" \
-#	-X POST --data 'name=algo-1-001' \
-#	http://127.0.0.1:3000/forum/category/add;
+	# curl -i \
+	# -H "Content-Type:application/x-www-form-urlencoded" \
+	# -X POST --data 'name=algo-1-001' \
+	# http://127.0.0.1:3000/forum/category/add;
 #
 ## The procedure adds the catogory embq.
 #	curl -i \
@@ -59,16 +59,16 @@
 #
 # Simple exemple of adds of second category.
 # http://127.0.0.1:3000/forum/category/add with name and node
-
-	curl -i \
-	-H "Content-Type:application/x-www-form-urlencoded" \
-	-X POST --data 'name=boiteaidee&node=53a4379f3f79546da90c2b51' \
-	http://127.0.0.1:3000/forum/category/add;
-#
-	curl -i \
-	-H "Content-Type:application/x-www-form-urlencoded" \
-	-X POST --data 'name=objets%20perdus&node=53a4379f3f79546da90c2b51' \
-	http://127.0.0.1:3000/forum/category/add;
+# 
+# 	curl -i \
+# 	-H "Content-Type:application/x-www-form-urlencoded" \
+# 	-X POST --data 'name=boiteaidee&node=53a4379f3f79546da90c2b51' \
+# 	http://127.0.0.1:3000/forum/category/add;
+# #
+# 	curl -i \
+# 	-H "Content-Type:application/x-www-form-urlencoded" \
+# 	-X POST --data 'name=objets%20perdus&node=53a4379f3f79546da90c2b51' \
+# 	http://127.0.0.1:3000/forum/category/add;
 #
 #	curl -i \
 #	-H "Content-Type:application/x-www-form-urlencoded" \
@@ -151,10 +151,10 @@
 # Simple exemple of adds of a new topic and a new message from this topic.
 # http://127.0.0.1:3000/forum/topic/new with idCategory, description and contenue.
 
-#	curl -i \
-#	-H "Content-Type:application/x-www-form-urlencoded" \
-#	-X POST --data 'idCategory=539f1dc4b4e842bfa36a5dee&description=topic-ns-1&contenue=message-ns-2' \
-#	http://127.0.0.1:3000/forum/topic/new;
+	curl -i \
+	-H "Content-Type:application/x-www-form-urlencoded" \
+	-X POST --data 'idCategory=539f1dc4b4e842bfa36a5dee&description=topic-ns-1&contenue=message-ns-2' \
+	http://127.0.0.1:3000/forum/topic/new;
 
 #curl -i \
 #-H "Content-Type:application/x-www-form-urlencoded" \

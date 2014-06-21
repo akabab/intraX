@@ -133,7 +133,7 @@ function message_tree(argument) {
 // contenue: message.contenue
 // idAccounts: account.id
 
-function message_add(argument) {
+var message_add = function (argument) {
   var idMessageParent = argument.idMessageParent;
   var idTopic = argument.idTopic;
   var idAccounts = argument.idAccounts;
@@ -146,8 +146,8 @@ function message_add(argument) {
     'dateOfCreation': date,
     'contenue': contenue
   };
-
   message.save(data, function(error, results) {
+    console.log("saved");
   });
 }
 
@@ -167,3 +167,5 @@ function message_del(argument) {
   message.removeById(idMessage, function(error, results) {
   });
 }
+
+exports.message_add = message_add;

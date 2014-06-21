@@ -16,9 +16,9 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('forum', {         url: '/forum',                    templateUrl: '/template/forum',          controller: 'ForumCtrl' })
     .state('category', {      url: '/forum/category/:cat/:sub', templateUrl: '/template/category',       controller: 'CategoryCtrl' })
     .state('topics', {        url: '/forum/:cat',               templateUrl: '/template/category',       controller: 'CategoryCtrl' })
-    .state('posts', {         url: '/forum/:cat/:post',         templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('posts', {         url: '/forum/:cat/post/:post',         templateUrl: '/template/message',       controller: 'MessageCtrl' })
     .state('subtopics', {     url: '/forum/:cat/:sub',          templateUrl: '/template/category',       controller: 'CategoryCtrl' })
-    .state('subposts', {      url: '/forum/:cat/:sub/:post',    templateUrl: '/template/message',       controller: 'MessageCtrl' })
+    .state('subposts', {      url: '/forum/:cat/:sub/post/:post',    templateUrl: '/template/message',       controller: 'MessageCtrl' })
     .state('adminCategory', { url: '/admin/forum/category',     templateUrl: '/template/admin_category', controller: 'AdminCategoryCtrl' });
 }]);
 

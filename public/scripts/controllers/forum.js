@@ -5,7 +5,6 @@ function ($scope, $rootScope, SessionService, $http) {
 
   //static scope variables
   $scope.welcome = "Welcome to our forum !";
-  $scope.speach = "Here are the categories :"
 
   $scope.userTopics = [
     {title:"The cake is a lie", author:"grebett", date:new Date().toString()}
@@ -34,6 +33,7 @@ function ($scope, $rootScope, SessionService, $http) {
 .controller('CategoryCtrl', ["$scope", "$rootScope", "SessionService", "$http", "$stateParams",
 function ($scope, $rootScope, SessionService, $http, $stateParams) {
 
+  console.log($stateParams);
   //static scope variables
   $scope.catName = $stateParams.cat; 
   $scope.subName = $stateParams.sub;
@@ -43,27 +43,47 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
     $scope._prefix = $scope.catName + "/" + $scope.subName + "/";
   else
     $scope._prefix = $scope.catName + "/";
-    
+  
   $http({
     method: "get",
-    url: "/forum/  topic/123456789012345678901234"
+    url: "/forum/category"
   })
   .success(function (data) {
-    $scope.topics = data;
+    data.forEach(function (cat) {
+      if (cat.url === $scope.catName) {
+        if (typeof($scope.subName) !== "undefined") {
+          cat.children.forEach(function (sub) {
+            $scope.categoryId = sub.id;
+          });
+        }
+        else {
+          $scope.categoryId = cat.id;
+        }
+      }
+    });
+  });
+      
+  $http({
+    method: "get",
+    url: "/forum/topic/123456789012345678901234"
+  })
+  .success(function (data) {
+    $scope.topics = 0; //
+    console.log(data);
   })
   .error(function (data) {
     console.log("error");
   });
   
-  $scope.add = function (topicName) {
-    console.log(topicName);
+  $scope.add = function (title, content) {
+    console.log(content);
     $http({
       method:"post",
-      url: "/forum/topic/add",
-      data: {description: topicName, categoryId:"123456789012345678901234"}
+      url: "/forum/topic/new",
+      data: {description: title, contenue: content, idCategory: $scope.categoryId}
     })
     .success(function (data) {
-      $scope.topics = data;
+      $scope.topics = 0; //
       console.log("success : ", data);
     })
     .error(function (data) {
