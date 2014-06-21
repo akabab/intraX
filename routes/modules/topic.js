@@ -24,7 +24,7 @@ exports.get = function (req, res) {
   var treeTopic;
   var idMessage;
   var treeMessage;
-
+  
   if (idAccount.length == 24) {
     if (urlCategory && path) {
       accounts_get().then(function(allAccounts) {
@@ -77,12 +77,16 @@ var topic_get = function (argument) {
   var categoryId = argument.categoryId;
   var topic = mongo.collection(('topic' + categoryId));
   var deferred = q.defer();
-
-  topic.find({}, function(error, result) {
-    if (error)
+  console.log(categoryId);
+  topic.find(function(error, result) {
+    if (error) {
+      console.log("error > " + error);
       deferred.reject(error);
-    if (result)
+    }
+    if (result) {
+      console.log("> " + result + " -- " + error);
       deferred.resolve(result);
+    }
   });
   return (deferred.promise);
 }
