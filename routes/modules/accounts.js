@@ -6,7 +6,6 @@ var accounts         = mongo.collection("accounts");
 var ObjectID         = require('mongodb').ObjectID;
 
 exports.get = function (req, res) {
-  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
   var idAccount = req.session.account._id;
 
   if (idAccount && idAccount.length === 24) {
@@ -19,7 +18,6 @@ exports.get = function (req, res) {
 }
 
 exports.post = function (req, res) {
-  req.session.account = {'_id': '539f1781a592e3309e9f34ce'}; /* /!\ Warming, must be erase. */
   var idAccount = req.session.account._id;
   var categoryIsOpen = req.body.categoryIsOpen;
   var topicSeeNot = req.body.topicSeeNot;
@@ -52,10 +50,13 @@ var accounts_get = function (argument) {
   var deferred = q.defer();
 
   accounts.find(argument, function(error, result) {
-    if (error)
+    if (error) {
+      console.log('error: ', error);
       deferred.reject(error);
-    if (result)
+    }
+    if (result) {
       deferred.resolve(result);
+    }
   });
   return (deferred.promise);
 }

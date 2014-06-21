@@ -59,16 +59,18 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
         else {
           $scope.categoryId = cat.id;
         }
+        console.log($scope.catName, $scope.subName, $scope.categoryId);
       }
     });
   });
-      
+  
+  
   $http({
     method: "get",
-    url: "/forum/topic/123456789012345678901234"
+    url: "/forum/topic/" + $scope.catName + "/" + $scope.subName
   })
   .success(function (data) {
-    $scope.topics = 0; //
+    $scope.topics = data.topics;
     console.log(data);
   })
   .error(function (data) {
@@ -83,8 +85,17 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
       data: {description: title, contenue: content, idCategory: $scope.categoryId}
     })
     .success(function (data) {
-      $scope.topics = 0; //
-      console.log("success : ", data);
+      $http({
+        method: "get",
+        url: "/forum/topic/" + $scope.catName + "/" + $scope.subName
+      })
+      .success(function (data) {
+        $scope.topics = data.topics;
+        console.log(data);
+      })
+      .error(function (data) {
+        console.log("error");
+      });
     })
     .error(function (data) {
       console.log("error : ", data);
@@ -113,27 +124,19 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
   var a = $stateParams;
   console.log(a.cat + " / " + a.sub + " / " + a.post);
   
-//   $http({
-//     method:"post",
-//     url:"forum/topic/post/id"
-//     data:{something:somewhat}
-//   })
-//   .success(function (data) {
-//     $scope.messages = data;
-//   })
-//   .error(function (data) {
-//     console.log("error");
-//   });
-// });
+  $http({
+    method:"get",
+    url:"forum/message/" + a.cat + "/" + a.sub + "/" + a.post
+  })
+  .success(function (data) {
+    $scope.messages = data.tree;
+    $scope.idTopic = data.idTopic;
+    console.log("data:", data);
+  })
+  .error(function (data) {
+    console.log("error");
+  });
 
-  // dummy data
-  $scope.messages = [
-    {id:"1234567890", author:"grebett", content:"lorem ipsum sic dolor", date:"21/01/1970", comments: [{author:"ycribier", content:"et felice pacem !", date:"22/04/1087"}]},
-    {id:"0987654321", author:"cdenis", content:"lorem ipsum sic dolor", date:"01/11/1990", comments: [
-      {author:"adjivas", content:"et felice pacem !", date:"05/09/3085"},
-      {author:"grebett", content:"et felice pacem !", date:"05/09/2085"}]
-    }
-  ];
 
   $scope.comment = function (id) {
     $scope.commenting = id;
@@ -154,8 +157,30 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
   
   $scope.answer = function (content) {
     $scope.bouh = content;
-    console.log(content);
-  }
+    
+    $http({
+      method:"post",
+      url:"forum/message/add",
+      data:{idTopic:$scope.idTopic, contenue:content, idMessageParent:""}
+    })
+    .success(function (data) {
+      $http({
+        method:"get",
+        url:"forum/message/" + a.cat + "/" + a.sub + "/" + a.post
+      })
+      .success(function (data) {
+        $scope.messages = data.tree;
+        $scope.idTopic = data.idTopic;
+        console.log("data:", data);
+      })
+      .error(function (data) {
+        console.log("error");
+      });
+    })
+    .error(function (data) {
+      console.log(data);
+    });
+  };
   
   
   

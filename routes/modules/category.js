@@ -19,14 +19,16 @@ exports.get = function (req, res) {
   var tree;
 
     if (idAccount.length == 24) {
-    accounts_get({'_id': idAccount}).then(function(lstOpen) {
-      category_get().then(function(lstCate) {
-        tree = category_tree({'lstOpen': lstOpen[0].categoryIsOpen,
-                              'lstCate': lstCate});
-        res.json(tree);
+      console.log('idAccount', idAccount);
+      accounts_get({'_id': idAccount}).then(function(lstOpen) {
+        console.log('lstOpen', lstOpen);
+        category_get().then(function(lstCate) {
+          tree = category_tree({'lstOpen': lstOpen[0].categoryIsOpen,
+                                'lstCate': lstCate});
+          res.json(tree);
+        });
       });
-    });
-  }
+    }
 };
 
 /*
@@ -140,8 +142,7 @@ var category_tree_message = function (argument) {
   var root = argument.root;
   var node = [];
 
-  for (var count = 0; count < list.length; count += 1) /* Propose by @cdenis */
-  /* for (var count = 0; count < list.length; count += 1). */
+  for (var count = 0; count < list.length; count += 1)
     if (root == list[count]._idCategory)
       node.push({
         'id': list[count]._id,
@@ -251,8 +252,7 @@ function category_set(argument) {
 ** The function returns the final id from path according to a tree root.
 */
 
-var category_url = function (argument) {
-  console.log(argument.tree, argument.path);
+function category_url(argument) {
   var tree = argument.tree;
   var path = argument.path;
   var id = argument.id;
@@ -262,7 +262,7 @@ var category_url = function (argument) {
   for (var i = tree.length - 1; i >= 0; i -= 1) {
       if (path[0] == tree[i].url) {
         path.shift();
-        return (category_url({'tree': tree, 'path': path, 'id': tree[i].id}));
+        return (category_url({'tree': tree[i].children, 'path': path, 'id': tree[i].id}));
       }
   }
   return (undefined);
