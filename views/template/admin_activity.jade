@@ -1,0 +1,59 @@
+#activity(ng-init="hideList=true;hideForm=false")
+  #list-activity
+    button.dark-btn.smart-btn(ng-click="hideList=!hideList") List
+    select.dark-btn.smart-btn(ng-options="module.name for module in modules" ng-model="moduleSelected" ng-change="getActivities(moduleSelected);resetActivityForm()")
+      option(value="") -- pick a module --
+    .panel(ng-class="{hidden:hideList}")
+      div(ng-show="moduleSelected.name" ng-repeat="activity in activities")
+        button.dark-btn(ng-click="delActivity(moduleSelected, activity);")
+          i.fa.fa-minus
+        button.dark-btn(ng-click="editActivity(activity);$parent.hideForm=false")
+          i.fa.fa-pencil
+        span.activity {{activity.name}} 
+        span ({{activity._id}})
+  #form-activity(ng-hide="!moduleSelected.name")
+    button.dark-btn.smart-btn(ng-click="hideForm=!hideForm" ng-bind="isEditingActivity ? 'Edit' : 'New'")
+    .panel(ng-class="{hidden:hideForm}")
+      form(name="Form" novalidate ng-submit="isEditingActivity ? updateActivity(moduleSelected, curActivity) : addActivity(moduleSelected, curActivity)")
+        label.inline Name
+          input(type='text' ng-model="curActivity.name")
+        label.inline Type
+          select(ng-model="curActivity.type" required)
+            option Project
+            option Exam
+            option TD
+        label Description
+          textarea(ng-model="curActivity.description")
+        label.inline Slots
+          input(type="number" ng-model="curActivity.slots" placeholder="unlimited if empty")
+        br
+        label.inline Subscribe Start
+          input(type="date" ng-model="curActivity.subStart")
+        label.inline End 
+          input(type="date" ng-model="curActivity.subEnd")
+        br
+        label.inline Work Start
+          input(type="date" ng-model="curActivity.workStart")
+        label.inline End 
+          input(type="date" ng-model="curActivity.workEnd")
+        br
+        label.inline Group Size
+          input(type="number" ng-model="curActivity.groupSize" placeholder="individual if empty")
+        label.inline Peers
+          input(type="number" ng-model="curActivity.peerNumber")
+        br
+        label.inline Auto Group
+          input(type="checkbox" ng-model="curActivity.autoGroup")
+        br
+        label.inline Subject
+          input(type="file" ng-model="curActivity.subject")
+        br
+        button.dark-btn(type="submit")
+          i.fa(ng-class="isEditingActivity ? 'fa-pencil' : 'fa-plus'")
+          |  to {{moduleSelected.name}}
+        button.dark-btn(type="button" ng-show="isEditingActivity" ng-click="resetActivityForm()")
+          i.fa.fa-ban
+          |  back
+  #message-activity.message(ng-show="activityMessage")
+    i
+    |  {{activityMessage}}

@@ -3,7 +3,7 @@ angular.module('intraX')
 .controller('UserCtrl', function ($scope, $stateParams, $http, $timeout, SessionService) {
   $scope.user = {};
   $scope.user.uid = $stateParams.uid;
-  $scope.user.Found = false;
+  $scope.user.found = false;
   $scope.isRequesting = true;
   $scope.askingToken = false;
 

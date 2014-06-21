@@ -1,0 +1,26 @@
+#activity(ng-init="getModule(moduleAsked);getActivity(moduleAsked, activityAsked)")
+  .panel(ng-if="activity.name")
+    h1.title [{{module.name}}]
+      span#activity-title {{activity.name}}
+    #register
+      button.dark-btn(ng-if="!isRegistred && canRegister" ng-click="subscribe(module.name, activity)") doit
+      span(ng-if="isRegistred") registred
+      span(ng-if="!isRegistred && !canRegister") too late!
+    #desc-bloc
+      .description {{activity.description}}
+  //-   #activities(ng-init="getActivities(module.name)")
+  //-     h2.title(ng-hide="!activities.length") Activities
+      
+  //-     table
+  //-       tr(ng-repeat="activity in activities" ng-init="showTime=false" ng-class-even="'even'" ng-click="test()")
+  //-         td.name {{activity.name}}
+  //-         td.description {{activity.description}}
+  //-         td
+  //-           .timeline(ng-mouseover="showTime=true" ng-mouseleave="showTime=false")
+  //-             .timebar(ng-style="{width: '{{activity.deltaTimePercent}}%'}")
+  //-             span.time.startTime(ng-show="showTime") {{activity.workStart_ts | date:'dd-MM'}}
+  //-             span.time.endTime(ng-show="showTime") {{activity.workEnd_ts | date:'dd-MM'}}
+  #module-notfound(ng-if="!isRequesting && !module.name")
+    h1 Module '{{moduleAsked}}' not found
+  #activity-notfound(ng-if="!isRequesting && module.name && !activity.name")
+    h1 Activity '{{activityAsked}}' not found

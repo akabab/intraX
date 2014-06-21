@@ -1,0 +1,23 @@
+#module(ng-init="getModule(moduleAsked)")
+  .panel(ng-if="module.name")
+    h1.title [{{module.name}}]
+    #register
+      button.dark-btn(ng-if="!isRegistred && canRegister" ng-click="subscribe(module)") doit
+      span(ng-if="isRegistred") registred
+      span(ng-if="!isRegistred && !canRegister") too late!
+    #desc-bloc
+      .description {{module.description}}
+    #activities(ng-init="getActivities(module.name)")
+      h3.title(ng-hide="!activities.length") Activities
+      
+      table
+        tr(ng-repeat="activity in activities" ng-init="showTime=false" ng-class-even="'even'" ng-click="reachActivity(activity.name)")
+          td.name {{activity.name}}
+          td.description {{activity.description}}
+          td
+            .timeline(ng-mouseover="showTime=true" ng-mouseleave="showTime=false")
+              .timebar(ng-style="{width: '{{activity.deltaTimePercent}}%'}")
+              span.time.startTime(ng-show="showTime") {{activity.workStart_ts | date:'dd-MM'}}
+              span.time.endTime(ng-show="showTime") {{activity.workEnd_ts | date:'dd-MM'}}
+  #module-notfound(ng-if="!isRequesting && !module.name")
+      h1 Module '{{moduleAsked}}' not found

@@ -9,11 +9,15 @@ app.config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider,
     .state('inbox', {         url: '/inbox',                    templateUrl: '/template/inbox',          controller: 'InboxCtrl' })
     .state('messages', {      url: '/inbox/messages',           templateUrl: '/template/messages',       controller: 'InboxCtrl' })
     .state('tickets', {       url: '/inbox/tickets',            templateUrl: '/template/tickets',        controller: 'InboxCtrl' })
-    .state('module', {        url: '/module',                   templateUrl: '/template/module',         controller: 'ModuleCtrl' })
+    .state('module', {        url: '/module/:name',             templateUrl: '/template/module',         controller: 'ModuleCtrl' })
+    .state('activity', {      url: '/module/:mName/:aName',     templateUrl: '/template/activity',       controller: 'ActivityCtrl' })
     .state('calendar', {      url: '/calendar',                 templateUrl: '/template/calendar',       controller: 'CalendarCtrl' })
     .state('conferences', {   url: '/conferences',              templateUrl: '/template/conferences',    controller: 'ConferencesCtrl' })
     .state('elearning', {     url: '/elearning',                templateUrl: '/template/elearning',      controller: 'ElearningCtrl' })
+    .state('admin', {         url: '/admin',                    templateUrl: '/template/admin',          controller: 'AdminCtrl' })
+    .state('planning', {      url: '/planning',                 templateUrl: '/template/planning',       controller: 'PlanningCtrl' })
     .state('forum', {         url: '/forum',                    templateUrl: '/template/forum',          controller: 'ForumCtrl' })
+    .state('category', {      url: '/forum/category/:cat/:sub', templateUrl: '/template/category',       controller: 'CategoryCtrl' })
     .state('topics', {        url: '/forum/:cat',               templateUrl: '/template/category',       controller: 'CategoryCtrl' })
     .state('posts', {         url: '/forum/:cat/:post',         templateUrl: '/template/message',        controller: 'MessageCtrl' })
     .state('subtopics', {     url: '/forum/:cat/:sub',          templateUrl: '/template/category',       controller: 'CategoryCtrl' })
@@ -485,11 +489,4 @@ app.directive('resizable', function($window) {
       return $scope.$apply();
     });
   };
-});
-
-app.directive('insertHtml', function() {
-  return function ($scope) {
-    console.log(angular.element(document.getElementById('#search-input')));
-    console.log($scope);
-  }
 });

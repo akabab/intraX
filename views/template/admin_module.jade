@@ -1,0 +1,43 @@
+#module(ng-init="hideList=true;hideForm=false")
+  #list-module
+    button.dark-btn.smart-btn(ng-click="hideList=!hideList") List
+    .panel(ng-class="{hidden:hideList}")
+      div(ng-repeat="module in modules")
+        div
+          button.dark-btn(ng-click="delModule(module)")
+            i.fa.fa-minus
+          button.dark-btn(ng-click="editModule(module);$parent.hideForm=false")
+            i.fa.fa-pencil
+          span.module {{module.name}} ({{module._id}})
+  #form-module
+    button.dark-btn.smart-btn(ng-click="hideForm=!hideForm" ng-bind="isEditingModule ? 'Edit' : 'New'")
+    .panel(ng-class="{hidden:hideForm}")
+      form(name="Form" novalidate ng-submit="isEditingModule ? updateModule(curModule) : addModule(curModule)")
+        label Name
+          input(type='text' ng-model="curModule.name")
+        label Description
+          textarea(ng-model="curModule.description")
+        label.inline Slots
+          input(type="number" ng-model="curModule.slots" placeholder="unlimited if empty")
+        label.inline Credits
+          input(type="number" ng-model="curModule.credits")
+        br
+        label.inline Subscribe Start
+          input(type="date" ng-model="curModule.subStart")
+        label.inline End 
+          input(type="date" ng-model="curModule.subEnd")
+        br
+        label.inline Work Start
+          input(type="date" ng-model="curModule.workStart")
+        label.inline End 
+          input(type="date" ng-model="curModule.workEnd")
+        br
+        button.dark-btn(type="submit")
+          i.fa(ng-class="isEditingActivity ? 'fa-pencil' : 'fa-plus'")
+        button.dark-btn(type="button" ng-show="isEditingModule" ng-click="resetModuleForm()")
+          i.fa.fa-ban
+          |  back
+  #message-module.message(ng-show="moduleMessage")
+    i
+    |  {{moduleMessage}}
+
