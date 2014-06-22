@@ -6,14 +6,6 @@ function ($scope, $rootScope, SessionService, $http) {
   //static scope variables
   $scope.welcome = "Welcome to our forum !";
 
-  $scope.userTopics = [
-    {title:"The cake is a lie", author:"grebett", date:new Date().toString()}
-  ];
-  $scope.followedTopics = [
-    {title:"Ycribier is awesome", author:"ycribier", date:new Date().toString()},
-    {title:"Please help me !", author:"anonymous", date:new Date().toString()}
-  ];
-
   //dynamic scope variables
   $http({
     method: "get",
@@ -21,7 +13,7 @@ function ($scope, $rootScope, SessionService, $http) {
     headers: {'Content-Type': 'application/json'}
   })
   .success(function (data) {
-    $scope.data = data.tree;
+    $scope.data = data;
   })
   .error(function (data, status, headers, config, statusText) {
     console.log(statusText + " : " + status);
@@ -122,8 +114,6 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
 .controller('MessageCtrl', ["$scope", "$rootScope", "SessionService", "$http", "$stateParams",
 function ($scope, $rootScope, SessionService, $http, $stateParams) {
   var a = $stateParams;
-  console.log(a.cat + " / " + a.sub + " / " + a.post);
-  
   $http({
     method:"get",
     url:"forum/message/" + a.cat + "/" + a.sub + "/" + a.post
@@ -138,22 +128,33 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
   });
 
 
-  $scope.comment = function (id) {
-    $scope.commenting = id;
-  };
-  $scope.valid = function (content, index) {
-    console.log(content);
-    document.getElementById("commentBox" + index).firstChild.value = "";
-    $scope.commenting = false;
+  $scope.comment = function (content, id) {
+    console.log("id: %s /// content: %s", id, content)
+    $http({
+      method:"post",
+      url:"forum/message/add",
+      data:{idTopic:$scope.idTopic, contenue:content, idMessageParent:id}
+    })
+    .success(function (data) {
+      console.log("it works!");
+      $http({
+        method:"get",
+        url:"forum/message/" + a.cat + "/" + a.sub + "/" + a.post
+      })
+      .success(function (data) {
+        $scope.messages = data.tree;
+        $scope.idTopic = data.idTopic;
+        console.log("data:", data);
+      })
+      .error(function (data) {
+        console.log("error");
+      });
+    })
+    .error(function (data) {
+      console.log(data);
+    });
   };
   
-  $scope.editMessage = function (id, content) {
-    $scope.messages = id, content;
-  };
-  
-  $scope.editComment = function (id, content) {
-    $scope.comments = content;
-  };
   
   $scope.answer = function (content) {
     $scope.bouh = content;
