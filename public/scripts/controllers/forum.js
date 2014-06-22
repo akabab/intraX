@@ -6,14 +6,6 @@ function ($scope, $rootScope, SessionService, $http) {
   //static scope variables
   $scope.welcome = "Welcome to our forum !";
 
-  $scope.userTopics = [
-    {title:"The cake is a lie", author:"grebett", date:new Date().toString()}
-  ];
-  $scope.followedTopics = [
-    {title:"Ycribier is awesome", author:"ycribier", date:new Date().toString()},
-    {title:"Please help me !", author:"anonymous", date:new Date().toString()}
-  ];
-
   //dynamic scope variables
   $http({
     method: "get",
@@ -21,8 +13,7 @@ function ($scope, $rootScope, SessionService, $http) {
     headers: {'Content-Type': 'application/json'}
   })
   .success(function (data) {
-    $scope.data = data.tree;
-    console.log(data);
+    $scope.data = data;
   })
   .error(function (data, status, headers, config, statusText) {
     console.log(statusText + " : " + status);
