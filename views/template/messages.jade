@@ -1,10 +1,15 @@
 #inbox
   .inbox-wrapper(resizable ng-style="myStyle(120)")
-    .compact.dark.last
+    .wide
       .ontop
-        h2 Notifications
+        h2 Messages
+      #messages-wide.scroll
+        .line-dark
+        .content-wrapper
+    .compact.dark.merge
+      .ontop
+        h2 Recent
       #messages-compact.scroll
-        .line-light
         .content-wrapper
           .line-light
           div(ng-repeat="elem in tickets track by $index")
@@ -16,18 +21,6 @@
               .msg
                 h3 {{elem.from}}
                 span {{elem.content}}
-    .compact
-      .ontop
-        h2 Tickets
-      #tickets-compact.scroll
-        .line-dark
-        .content-wrapper
-    .compact.dark
-      .ontop
-        h2 Messages
-      #notif-compact.scroll
-        .line-light
-        .content-wrapper
     .spacer
   .spacer
 .spacer

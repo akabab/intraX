@@ -2,15 +2,45 @@ div(ng-controller="TopmenuCtrl")
   a#logo-42(ui-sref="index")
   #search-wrapper
     #search
-      form(name="SearchForm" novalidate ng-submit="search()")
-        input.text-input(type="text" ng-model="searchValue" placeholder="Search..." tabindex="1" autofocus)
-        button(type="submit" tabindex="-1")#search-btn
-          i.fa.fa-search
+      #search-box.noselect(ng-keydown="onKeyPress($event)")
+        #search-selector(ng-class="{active:searchShow !== 'All' || searchValue || showSearchMenu}")
+          button#remove-search(ng-click="optionSelected()" ng-class="{hidden:searchShow === 'All'}")
+            i.fa.fa-times
+          .select(dir="rtl" ng-click="showSearchMenu = !showSearchMenu") : {{searchShow}}
+        .spacer
+        #search-options(ng-click="showSearchMenu = false")
+          .noselect(ng-show="searchValue && !searchDone")
+            .option(ng-repeat="option in searchOptions | fuzzyFilter:searchValue | orderBy:'score':true"
+                    ng-click="optionSelected(this); showSearchMenu = false"
+                    ng-class='{active:!$index && option.matched}'
+                    ng-show="searchShow != option.name")
+              span(arg="{{option.matched ? option.name : false}}" ng-bind-html="option.html" id="el-{{$index}}")
+            .option.notice hit tab to select
+          .noselect(ng-show="showSearchMenu && !searchValue")
+            .option(ng-repeat="option in searchOptions" ng-click="optionSelected(this)" ng-show="searchShow != option.name")
+              | {{option.name}}
+        form(name="SearchForm" novalidate ng-submit="search()" autocomplete="off")
+          input#search-input.text-input(type="text" ng-model="searchValue" placeholder="{{searchHelp}}" tabindex="1" autofocus)
+          button#search-btn(type="submit" tabindex="-1")
+            i.fa.fa-search
+        #search-results.noselect(ng-show="searchValue && !searchDone" ng-switch="searchShow")
+          .container.ldap-search(ng-switch-when="LDAP")
+            .option(ng-repeat="user in users | fuzzyFilter:searchValue | orderBy:'score':true | limitTo:10" ng-click="commandSelected(this)" ng-class='{active:$index == searchPosition}')
+              .default
+                .img(style="background-image: url('https://cdn.42.fr/userprofil/icon/{{user.uid}}.jpg')")
+              span(arg="{{user.uid}}" ng-bind-html="user.html" id="res-{{$index}}")
+              .spacer
+          .container.default-search(ng-switch-default)
+            .option(ng-repeat="command in commands | fuzzyFilter:searchValue | orderBy:'score':true | limitTo:10" ng-click="commandSelected(this)" ng-class='{active:$index == searchPosition}')
+              .img.fa(class="fa-{{command.icon}}")
+              span(arg="{{command.name}}" ng-bind-html="command.html" id="res-{{$index}}")
+              span.description(ng-if="command.description") : {{command.description}}
+              span.alias(ng-if="command.alias") alias :
+              .spacer
     #user-name
       a(href="#/user/#{account.uid}")
         span.firstName #{account.firstName} 
         span.lastName #{account.lastName}
-
   #icons-wrapper.noselect
     a.fa.fa-envelope-o(ng-click="dropdown('inbox')" ng-class="menu == 'inbox' ? 'active' : ''")
     a.fa.fa-cog(ng-click="dropdown('settings')" ng-class="menu == 'settings' ? 'active' : ''")

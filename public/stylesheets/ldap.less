@@ -15,7 +15,9 @@
 
     .ldap-user {
       cursor: pointer;
-
+      &.even {
+        background-color: @bg-lighter;
+      }
       &:hover {
         background: @fg-darker;
         color: @hl;
@@ -23,7 +25,7 @@
     }
 
     img {
-      width: 40px;
+      width: 32px;
       vertical-align: middle;
     }
 

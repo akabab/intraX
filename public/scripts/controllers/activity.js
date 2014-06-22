@@ -2,13 +2,18 @@ angular.module('intraX')
 
 .controller('ActivityCtrl', function ($scope, $http, $stateParams, ModuleService, SessionService) {
 
-  $scope.moduleAsked = $stateParams.mName;
-  $scope.activityAsked = $stateParams.aName;
   $scope.module = {};
   $scope.activity = {};
   $scope.canRegister = false;
   $scope.isRegistred = true;
   $scope.isRequesting = true;
+
+  var firstLetterCap = function (str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+  
+  $scope.moduleAsked = firstLetterCap($stateParams.mName);
+  $scope.activityAsked = firstLetterCap($stateParams.aName);
 
   var user = SessionService.get('user');
 

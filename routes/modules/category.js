@@ -1,9 +1,9 @@
-var q = require("q");
-var fs = require("fs");
-var easymongo = require("easymongo");
-var mongo = new easymongo({dbname: "db"});
-var category = mongo.collection("category");
-var accounts_get = require('./accounts').accounts_get;
+var q               = require("q");
+var fs              = require("fs");
+var easymongo       = require("easymongo");
+var mongo           = new easymongo({dbname: "db"});
+var category        = mongo.collection("category");
+var accounts_get    = require('./accounts').accounts_get;
 var ObjectId        = require('mongodb').ObjectID;
 
 
