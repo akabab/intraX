@@ -2,7 +2,67 @@
   .inbox-wrapper { margin: auto; max-width: 1220px; }
   padding: 12px 0 0 6px;
   .content-wrapper {
-    padding: 15px;
+    .line-light {
+      height: 1px;
+      background-position: center -3px;
+    }
+  }
+  .ontop {
+    border-radius: 5px 5px 0 0;
+    position: absolute;
+    width: 100%;
+  }
+  .elem {
+    cursor: pointer;
+    padding: 7px 15px 8px 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &:hover {
+      background-color: @fg;
+      .msg span {
+        color: @bg;
+      }
+      .pic {
+        border-color: @hl;
+      }
+    }
+    .pic {
+      border: 1px solid black;
+      float: left;
+      .border {
+        height: 50px;
+        overflow: hidden;
+        border: 1px solid #4f4f4f;
+      }
+      img {
+        margin-top: -3px;
+        width: 50px;
+      }
+    }
+    .msg {
+      width: calc(~'100% - 55px');
+      float: left;
+      color: #9B9B9B;
+      h3 {
+        padding: 0 8px;
+        margin-bottom: 2px;
+        margin-top: 9px;
+        font-size: 14px;
+        color: rgb(0, 214, 255);
+      }
+      span {
+        white-space: nowrap;
+        width: 100%;
+        display: inline-block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 8px;
+        font-size: 12px;
+      }
+    }
+  }
+  .txt {
+    white-space: pre-wrap;
   }
   h2 {
     text-align: center;
@@ -18,25 +78,50 @@
   .line-dark {
     background-position-y: 0;
   }
-  .compact {
+  .compact, .wide {
+    position: relative;
     height: 100%;
-    width:33%;
     float: right;
-    > div {
+    &.merge {
+      .ontop {
+        border-radius: 5px 0 0 0;
+        margin-right: 0;
+      }
+      margin-right: 0;
+      border-radius: 5px 0 0 0;
+      border-right-color: #000;
+      .scroll {
+        margin-right: 0;
+      }
+    }
+    .scroll {
+      padding-top: 52px;
+      overflow: auto;
       background-color: @bg-light;
       min-height: 450px;
       height: 100%;
       border-radius: 5px 5px 0 0;
-      margin-right: 15px;
       border: 1px solid @bg;
     }
-    #tickets-compact {
-      h2 {
-        text-shadow: 0 -2px @fg-darker;
-      }
+  }
+  .dark {
+    h2 { text-shadow: 0 -2px @fg-darker; }
+    .ontop, .scroll, .txt {
       border-color: @fg-darker;
       color: @bg-light;
       background-color: @fg-dark;
+    }
+  }
+  .compact { width:33%; }
+  .wide {
+    width:66%;
+    .scroll {
+      border-radius: 0 5px 0 0;
+      border-left-color: #E2E2E2;
+      h2 {
+        background-color: #1F1F1F;
+        border-radius: 5px 0 0 0;
+      }
     }
   }
   @media (max-width: 950px) {
@@ -44,8 +129,8 @@
     padding-left: 0;
     margin-left: -2px;
     .compact {
-      > div {
-        margin-right: 3px;
+      .scroll {
+        margin-right: 0;
         border-radius: 0;
       }
     }
