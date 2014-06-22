@@ -36,6 +36,7 @@ exports.get = function (req, res) {
           message_get({'idTopic': idMessage, 'idAccount': idAccount}).then(function(messages) {
             accounts_get().then(function(accounts) {
               messages = message_uid({'listAccounts': accounts, 'listMessages': messages});
+              console.log(messages);
               treeMessage = message_tree({'list': messages, 'root': ''});
               res.json({idTopic:idMessage, tree:treeMessage});
             });
@@ -130,7 +131,7 @@ function message_tree(argument) {
       node.push({
         'parent': {
            'id': list[count]._id,
-           'idAccounts': list[count].idAccounts,
+           'idAccounts': list[count]._idAccounts,
            'dateOfCreation': list[count].dateOfCreation,
            'contenue': list[count].contenue
          },
