@@ -22,6 +22,7 @@ function ($scope, $rootScope, SessionService, $http) {
   })
   .success(function (data) {
     $scope.data = data.tree;
+    console.log(data);
   })
   .error(function (data, status, headers, config, statusText) {
     console.log(statusText + " : " + status);

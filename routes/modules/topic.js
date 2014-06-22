@@ -167,7 +167,7 @@ function topic_new(argument) {
   topic.save(data, function(error, theTopic) {
     message_add({
       'idTopic': theTopic._id,
-      'idMessageParent': null,
+      'idMessageParent': "",
       'idAccounts': idAccount,
       'contenue': contenue
     });
