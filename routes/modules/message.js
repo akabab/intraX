@@ -30,20 +30,14 @@ exports.get = function (req, res) {
     if (urlCategory && urlTopic) {
       category_get().then(function(allCathegories) {
         treeTheTopic = category_tree_message({'list': allCathegories, 'root': null});
-        idCategory = category_url({'tree': treeTheTopic, 'path': path});        
+        idCategory = category_url({'tree': treeTheTopic, 'path': path});
         _topic.topic_get({'categoryId': idCategory}).then(function(allTopics) {
           idMessage = _topic.topic_url({'list': allTopics, 'nameMessage': urlTopic});
           message_get({'idTopic': idMessage, 'idAccount': idAccount}).then(function(messages) {
             accounts_get().then(function(accounts) {
               messages = message_uid({'listAccounts': accounts, 'listMessages': messages});
-              
-              
-              
-              
-              console.log('\tlist:\t %x', result);
-              console.log('%x', message_tree);
-              treeMessage = message_tree({'list': messages, 'root': null});
-              res.json({tree:treeMessage, idTopic:idMessage});
+              treeMessage = message_tree({'list': messages, 'root': ''});
+              res.json({idTopic:idMessage, tree:treeMessage});
             });
           });
         });
@@ -65,7 +59,7 @@ exports.post = function (req, res) {
   var contenue = req.body.contenue;
 
   if (idTopic.length == 24) {
-    if (req.params.action === 'add') {
+    if (contenue && req.params.action === 'add') {
       if (idAccount.length == 24 && contenue)
         if (idMessageParent.length == 0 || idMessageParent.length == 24) {
           message_add({
@@ -129,13 +123,14 @@ function message_tree(argument) {
   var list = argument.list;
   var root = argument.root;
   var node = [];
+  var count;
 
-  for (var count = 0; count < list.length; count += 1) {
-    if (root == list[count].idMessageParent) {
+  for (count = 0; count < list.length; count += 1) {
+    if (root == list[count]._idMessageParent) {
       node.push({
         'parent': {
-           'id': root,
-           'idAccounts': list[count]._idAccounts,
+           'id': list[count]._id,
+           'idAccounts': list[count].idAccounts,
            'dateOfCreation': list[count].dateOfCreation,
            'contenue': list[count].contenue
          },
