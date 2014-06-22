@@ -6,7 +6,7 @@ p Category Id is {{categoryId}}
 p Here are the topics availabe in this category :
 ul
   li(ng-repeat="topic in topics")
-    a(ng-href="{{'#/forum/' + _prefix + 'post/' + topic.description}}") {{topic.description}} / {{topic.idAccounts}} / {{topic.dateOfCreation}}
+    a(ng-href="{{'#/forum/' + _prefix + 'post/' + topic.url}}") {{topic.description}} / {{topic.idAccounts}} / {{topic.dateOfCreation}}
     - if (account.isAdmin) {
         button(ng-click="del(topic._id)") remove
     - }

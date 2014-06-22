@@ -1,8 +1,8 @@
 p {{welcome}}
-p My subjects
+p Here are the categories
   ul
-    li(ng-repeat="userTopic in userTopics") {{userTopic.title}} / {{userTopic.date}}
-
-p Subjects followed
-  ul
-    li(ng-repeat="followedTopic in followedTopics") {{followedTopic.title}} / {{followedTopic.author}} / {{ followedTopic.date}}
+    li(ng-repeat="cat in data")
+      a(ng-href="#/forum/{{cat.url}}") {{cat.name}}
+      ul
+        li(ng-repeat="sub in cat.children")
+          a(ng-href="#/forum/{{cat.url}}/{{sub.url}}") {{sub.name}}
