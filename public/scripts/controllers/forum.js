@@ -128,6 +128,8 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
   else
     var url = "forum/message/" + a.cat + "/" + a.sub + "/" + a.post;
     
+  $scope.title = a.post;
+  
   $http({
     method:"get",
     url: url
