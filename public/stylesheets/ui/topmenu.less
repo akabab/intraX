@@ -25,12 +25,215 @@
   }
   #search-wrapper {
     height: 26px;
-    overflow: hidden;
     margin: 12px 0 12px 68px;
     border: 0;
     float: left;
     width: calc(~'100% - 172px');
     #search {
+      #search-results {
+        .default-search {
+          line-height: 32px;
+          .alias {
+            float: right;
+            color: @fg-light;
+            margin-right: 0.4em;
+          }
+          .description {
+            float: left;
+            color: @fg-light;
+            font-size: 12px;
+          }
+          .fuzzy {
+            float: left;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            &.pt-2 {
+              float: right;
+              max-width: 20%;
+              color: @fg-light;
+            }
+            &.pt-1 {
+              padding-left: 6px;
+              max-width: 66%;
+              max-width: calc(~'75% - 40px');
+            }
+          }
+          .img {
+            &.fa {
+              font-size: 26px;
+              text-align: center;
+            }
+            float: left;
+            width: 32px;
+            display: block;
+            min-width: 32px;
+            min-height: 32px;
+            max-height: 32px;
+            border-radius: 20%;
+          }
+        }
+        .ldap-search {
+          .fuzzy {
+            float: left;
+            line-height: 32px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            &.pt-1 {
+              float: right;
+              max-width: 20%;
+            }
+            &.pt-2 {
+              padding-left: 6px;
+              max-width: 66%;
+              max-width: calc(~'75% - 40px');
+            }
+          }
+          .default {
+            width: 32px;
+            display: block;
+            min-width: 32px;
+            min-height: 32px;
+            max-height: 32px;
+            background-image: url('https://intra.42.fr/static6854/img/nopicture-profilview.png');
+            background-position: center;
+            background-size: 100%;
+            border-radius: 20%;
+            float: left;
+          }
+          .img {
+            float: left;
+            width: 32px;
+            display: block;
+            min-width: 32px;
+            min-height: 32px;
+            max-height: 32px;
+            border-radius: 20%;
+            background-position: center;
+            background-size: 100%;
+          }
+        }
+        .option {
+          padding: 2px 5px;
+          border-bottom: 1px solid @bg;
+          font-size: 14px;
+          letter-spacing: 0.06em;
+          &.active {
+            border-bottom: 1px solid @hl-dark;
+            b {
+              color: white;
+              font-weight: normal;
+            }
+            background-color: @hl;
+            color: @fg-dark;
+          }
+          b { color: @hl-dark; }
+        }
+        padding-left: 162px;
+        background-color: black;
+        width: calc(~'65% - 31px');
+        box-shadow: 0 11px 56px rgba(4, 92, 133, 0.56);
+        .container {
+          min-height: 365px;
+          background-color: lighten(@bg-lighter, 5%);
+          border-right: 1px solid #6EA0D6;
+          border-bottom: 1px solid #6EA0D6;
+        }
+      }
+      #remove-search {
+        background: none;
+        border: 0;
+        float: left;
+        text-shadow: 0 -1px rgba(0, 0, 0, 0.46);
+        &:hover { text-shadow: 0 1px rgba(0, 0, 0, 0.76); }
+        &.hidden {
+          text-shadow:none;
+          border-color: transparent!important;
+          color: transparent!important;
+          background-color: transparent!important;
+          display: hidden;
+        }
+      }
+      #search-selector {
+        float: left;
+        position: fixed;
+        left: 68px;
+        color: @fg-light!important;
+        &.active {
+          .select {
+            color: #fff;
+            text-shadow: 0 -1px rgba(0, 0, 0, 0.46);
+            &:hover { text-shadow: 0 1px rgba(0, 0, 0, 0.76); }
+          }
+          background-color: #00C2FF;
+          border-color: #06A!important;
+          color: #fff;
+          box-shadow: 0 0 9px rgba(0, 0, 0, 0.3) inset;
+          text-shadow: 0 -1px rgba(0, 0, 0, 0.46);
+        }
+      }
+      #search-options {
+        z-index: 9999;
+        letter-spacing: 0.06em;
+        position: fixed;
+        top: 37px;
+        width: 162px;
+        b {
+          font-weight: normal;
+          color: @hl;
+        }
+        .option {
+          &.active {
+            background-color: @fg;
+            .disabled {
+              background-color: @fg-dark;
+            }
+          }
+          text-align: right;
+          background-color: @fg-dark;
+          color: @bg-lighter;
+          padding: 2px 5px;
+          border-bottom: 1px solid @fg;
+          cursor: pointer;
+          &.notice {
+            background-color: black;
+            color: @bg-darker;
+            border: none;
+            &:hover {
+              background-color: black;
+              color: @bg-darker;
+            }
+          }
+          &:hover {
+            background-color: @fg;
+            color: @hl-light;
+            border-color: transparent;
+          }
+        }
+      }
+      .select {
+        cursor: pointer;
+        float: left;
+        width: 131px;
+        height: 26px;
+        &:hover { color: @fg-dark;}
+        border-radius: 0;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        padding-right: 5px;
+        line-height: 26px;
+        font-size: 16px;
+        &:focus {
+          outline: 0;
+        }
+      }
+      form {
+        display: inline-block;
+        width: 65%;
+        margin-left: 161px;
+      }
       width: 60%;
       float: left;
       input {
