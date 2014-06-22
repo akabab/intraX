@@ -166,8 +166,10 @@ var message_add = function (argument) {
   };
 
   message.save(data, function(error, success) {
-    if (success)
+    if (success) {
       accounts_topic_new({'idTopic': idTopic});
+      console.log("message added");
+    }
   });
 }
 
