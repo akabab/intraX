@@ -8,9 +8,12 @@
       a(ng-click="predicate='uid'; reverse=!reverse") uid
       a(ng-click="predicate='firstName'; reverse=!reverse") firstName
       a(ng-click="predicate='lastName'; reverse=!reverse") lastName
-    div.ldap-user(ng-if="searchValue.length" ng-repeat="user in users | filter: searchValue | orderBy:predicate:reverse | limitTo: 10" ng-click="showUser(user.uid)")
-      div.ldap-info
-        img(src="https://cdn.42.fr/userprofil/profilview/{{user.uid}}.jpg" onerror="this.src='https://intra.42.fr/static6854/img/nopicture-profilview.png'")
-      span.ldap-info {{user.uid}}
-      span.ldap-info {{user.firstName}}
-      span.ldap-info {{user.lastName}}
+    table
+      tbody
+        th
+        tr.ldap-user(ng-if="searchValue.length" ng-repeat="user in users | filter: searchValue | orderBy:predicate:reverse | limitTo: 10" ng-click="showUser(user.uid)" ng-class-even="'even'")
+          td.ldap-info
+            img(src="https://cdn.42.fr/userprofil/icon/{{user.uid}}.jpg" onerror="this.src='https://intra.42.fr/static6854/img/nopicture-profilview.png'")
+          td.ldap-info {{user.uid}}
+          td.ldap-info {{user.firstName}}
+          td.ldap-info {{user.lastName}}

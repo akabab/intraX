@@ -18,7 +18,6 @@ var modules   = require('./routes/modules');
 var inbox     = require('./routes/inbox');
 
 var app = express();
-
 /*
 ** View engine setup.
 */
@@ -38,7 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auths', auths);
 app.use('/ldap', ldap);
 
-//Redirect to auth if not authenticed
+// Redirect to auth if not authenticed
 app.all("*", function(req, res, next) {
   if (req.session && req.session['logged'])
     next();

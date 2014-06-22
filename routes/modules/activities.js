@@ -4,6 +4,7 @@ var mongo = new easymongo({dbname: "db"});
 var modules = mongo.collection("modules");
 
 exports.get = function (req, res) {
+  
   var moduleName = req.params.module;
 
   module_get(moduleName).then(function (result) {
@@ -48,11 +49,51 @@ exports.post = function (req, res) {
   });
 };
 
+exports.getUserActivities = function (req, res) {
+  module_get().then(function (modules) {
+    check_activities(modules, req.session.account["uid"]).then(function (result) {
+      // put all in a single data tab
+      var data = [];
+      result.forEach(function (tab) {
+        tab.forEach(function (elem) {
+          data.push(elem);
+        });
+      });
+      res.json(data);
+    });
+  });
+};
+
+var check_activities = function (modules, user) {
+  var the_promises = [];
+
+  modules.forEach(function (module) {
+    var deferred = q.defer();
+    activity_get_all(module._id).then(function (activities) {
+      var tab = [];
+      activities.forEach(function (activity) {
+        activity.moduleName = module.name;
+        // if (activity.users.indexOf(user) !== -1)
+          tab.push(activity);
+      });
+      deferred.resolve(tab);
+    });
+    the_promises.push(deferred.promise);
+  });
+  return q.all(the_promises);
+};
+
+
 //Get module identified by name
 var module_get = function (moduleName) {
   var deferred = q.defer();
-
-  modules.find({'name': moduleName}, function (error, result) {
+  
+  if (typeof(moduleName) === "undefined")
+    var what = "";
+  else
+    var what = {'name': moduleName};
+    
+  modules.find(what, function (error, result) {
     if (error)
       deferred.reject(error);
     if (result.length == 0)
@@ -68,7 +109,7 @@ var activity_get = function (moduleId, activityName) {
   var deferred = q.defer();
 
   var activity = mongo.collection("activity" + moduleId);
-
+  console.log(activityName);
   activity.find({'name': activityName}, function (error, result) {
     if (error)
       deferred.reject(error);
