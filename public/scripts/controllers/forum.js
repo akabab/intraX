@@ -56,10 +56,14 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
     });
   });
   
-  
+  if (typeof($scope.subName) === "undefined")
+    var plus = "";
+  else
+    var plus = "/" + $scope.subName;
+    
   $http({
     method: "get",
-    url: "/forum/topic/" + $scope.catName + "/" + $scope.subName
+    url: "/forum/topic/" + $scope.catName + plus
   })
   .success(function (data) {
     $scope.topics = data.topics;
@@ -77,9 +81,14 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
       data: {description: title, contenue: content, idCategory: $scope.categoryId}
     })
     .success(function (data) {
+      if (typeof($scope.subName) === "undefined")
+        var plus = "";
+      else
+        var plus = "/" + $scope.subName;
+        
       $http({
         method: "get",
-        url: "/forum/topic/" + $scope.catName + "/" + $scope.subName
+        url: "/forum/topic/" + $scope.catName + plus
       })
       .success(function (data) {
         $scope.topics = data.topics;
@@ -114,9 +123,14 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
 .controller('MessageCtrl', ["$scope", "$rootScope", "SessionService", "$http", "$stateParams",
 function ($scope, $rootScope, SessionService, $http, $stateParams) {
   var a = $stateParams;
+  if (typeof(a.sub) === "undefined")
+    var url = "forum/message/" + a.cat + "/" + a.post;
+  else
+    var url = "forum/message/" + a.cat + "/" + a.sub + "/" + a.post;
+    
   $http({
     method:"get",
-    url:"forum/message/" + a.cat + "/" + a.sub + "/" + a.post
+    url: url
   })
   .success(function (data) {
     $scope.messages = data.tree;
@@ -139,7 +153,7 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
       console.log("it works!");
       $http({
         method:"get",
-        url:"forum/message/" + a.cat + "/" + a.sub + "/" + a.post
+        url: url
       })
       .success(function (data) {
         $scope.messages = data.tree;
@@ -167,7 +181,7 @@ function ($scope, $rootScope, SessionService, $http, $stateParams) {
     .success(function (data) {
       $http({
         method:"get",
-        url:"forum/message/" + a.cat + "/" + a.sub + "/" + a.post
+        url: url
       })
       .success(function (data) {
         $scope.messages = data.tree;
